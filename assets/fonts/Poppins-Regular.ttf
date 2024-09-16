@@ -1,0 +1,18 @@
+import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import fonts from './fonts'; 
+
+export default function Example() {
+  return (
+    <View>
+      <Text style={styles.boldText}>Texto en Poppins Bold</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  boldText: {
+    fontFamily: fonts['poppins-regular'],
+    fontSize: 18,
+  },
+});

@@ -1,3 +1,24 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+/*es necesario installar @react-navigation: npm install @react-navigation/native
+ */
+import AppNavigator from './AppNavigator'; 
+
+
+//esto seria como el "Main" que llama a los demas componentes
+export default function App() {
+  return (
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
+  );
+}
+
+
+
+/*r
+este el por defecto 
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -18,3 +39,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+*/

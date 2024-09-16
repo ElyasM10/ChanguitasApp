@@ -29,6 +29,7 @@ const PantallaBienvenida = () => {
           style={styles.imageBackground}
           resizeMode="contain"
           source={require('../assets/Bricklayer.png')}
+          /*la imagen la saque de https://storyset.com */
         />
         <View style={styles.textContainer}>
           <Text style={styles.text}>ChanguitasApp</Text>

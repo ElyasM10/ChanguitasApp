@@ -3,19 +3,36 @@ import { NavigationContainer } from '@react-navigation/native';
 /*es necesario installar @react-navigation: npm install @react-navigation/native
  */
 import AppNavigator from './AppNavigator'; 
-
+import axios from 'axios'
 
 //esto seria como el "Main" que llama a los demas componentes
-export default function App() {
-  return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
-  );
+// Este sería el "Main" que llama a los demás componentes
+class App extends React.Component {
+  state = { details: [] };
+
+  componentDidMount() {
+    axios.get('http://localhost:8000')
+      .then(res => {
+        const data = res.data; 
+        this.setState({
+          details: data
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+  render() {
+    return (
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    );
+  }
 }
 
-
-
+export default App;
 /*r
 este el por defecto 
 

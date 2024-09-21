@@ -6,8 +6,15 @@ import Font from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import { TypeFormatFlags } from "typescript";
 import { Ionicons } from "@expo/vector-icons";//es una libreria que trae iconos npm install @expo/vector-icons
+import PruebaEmpleado from "./pruebaEmpleado";
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../AppNavigator';
 
 const PantallaInicioSesion = () => {
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -55,6 +62,7 @@ const PantallaInicioSesion = () => {
         shadowOpacity:0.3,
         shadowRadius:Spacing,
        }}
+       onPress={() => navigation.navigate('PruebaEmpleado')}
        >
          <Text style={{
           fontFamily:Font["poppins-bold"],
@@ -174,3 +182,4 @@ const styles = StyleSheet.create({
 });
 
 export default PantallaInicioSesion;
+

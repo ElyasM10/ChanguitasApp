@@ -9,13 +9,7 @@ import './estilos/PantallaChat.css';
 
 // Configuracion de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBkjrjqvbkn0pPSdvLyKz79uwU5OOPJMJ0",
-  authDomain: "changuitasapp.firebaseapp.com",
-  projectId: "changuitasapp",
-  storageBucket: "changuitasapp.appspot.com",
-  messagingSenderId: "698330432372",
-  appId: "1:698330432372:web:b22fa08ea2012b8b3ca221",
-  measurementId: "G-GJ6QDYW5N8"
+
 };
 
 const app = initializeApp(firebaseConfig);

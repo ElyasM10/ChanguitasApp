@@ -6,9 +6,14 @@ import Font from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import { TypeFormatFlags } from "typescript";
 import { Ionicons } from "@expo/vector-icons";//es una libreria que trae iconos npm install @expo/vector-icons
-
+import { RootStackParamList } from '../AppNavigator';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 const PantallaRegistro= () => {
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+
   return(
     <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
@@ -49,32 +54,33 @@ const PantallaRegistro= () => {
         </Text>
      </View>
 
-     <TouchableOpacity
-     style={{
-      padding: Spacing*2,
+      <TouchableOpacity
+    style={{
+      padding: Spacing * 2,
       backgroundColor: '#ffffff',
-      marginVertical: Spacing*3,
+      marginVertical: Spacing * 3,
       borderRadius: Spacing,
-      shadowColor:Colors.primary,
-      shadowOffset:{
-         width:0,
-         height:Spacing,
+      shadowColor: Colors.primary,
+      shadowOffset: {
+        width: 0,
+        height: Spacing,
       },
-      shadowOpacity:0.3,
-      shadowRadius:Spacing,
-     }}
-     >
-       <Text style={{
-        fontFamily:Font["poppins-bold"],
+      shadowOpacity: 0.3,
+      shadowRadius: Spacing,
+    }}
+    onPress={() => navigation.navigate('PantallaChat')}
+  >
+    <Text
+      style={{
+        fontFamily: Font["poppins-bold"],
         color: "#f46524",
-        textAlign:"center",
-        fontSize:FontSize.large,
-
-       }}
-       >
-         Registrarse
-       </Text>
-      </TouchableOpacity> 
+        textAlign: "center",
+        fontSize: FontSize.large,
+      }}
+    >
+      Registrarse
+    </Text>
+  </TouchableOpacity>
  
       <TouchableOpacity
      style={{
@@ -184,3 +190,4 @@ const styles = StyleSheet.create({
   
 
 export default PantallaRegistro;
+

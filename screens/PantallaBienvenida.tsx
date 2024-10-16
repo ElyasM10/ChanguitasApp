@@ -49,7 +49,8 @@ const PantallaBienvenida = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('PantallaInicioSesion')}
+          //  onPress={() => navigation.navigate('PantallaInicioSesion')}
+          onPress={() => navigation.navigate('PruebaEmpleado')}
           >
             <Text style={styles.buttonText}>Iniciar Sesion</Text>
           </TouchableOpacity>

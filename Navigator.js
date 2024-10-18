@@ -29,6 +29,7 @@ const Navigator = () => {
             options={{ title: 'Prueba de Empleados' }} 
           />
 
+   
     <Stack.Screen 
             name="PantallaChat" 
             component={PantallaChat} 

@@ -1,114 +1,102 @@
-// PantallaBienvenida.tsx
 import React from 'react';
 import {
-  Dimensions, // Proporciona informacion sobre las dimensiones de la pantalla.
-  SafeAreaView,  // Asegura que el contenido no se superponga con las áreas de "safe area" (las barras de estado).
+  SafeAreaView,
   Text,
   View,
-  ImageBackground,//Permite establecer una imagen de fondo
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../AppNavigator'; // usado para poder navegar en entre las pestañas
-import Spacing from '../constants/Spacing';
-import FontSize from '../constants/FontSize';
-import Font from '../constants/Fonts';
-
-
-const { height } = Dimensions.get('window');
+import { RootStackParamList } from '../AppNavigator';
 
 const PantallaBienvenida = () => {
-  // define el tipo de navegación
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <ImageBackground
-          style={styles.imageBackground}
-          resizeMode="contain"
-          source={require('../assets/Bricklayer.png')}
-          /*la imagen la saque de https://storyset.com */
-        />
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>ChanguitasApp</Text>
-
-          <Text
-            style={{
-              fontSize: FontSize.small,
-              color: '#ffffff',
-              fontFamily: Font['poppins-regular'],
-              textAlign: 'center',
-              marginTop: Spacing * 2,
-            }}
-          >
-            Alguna Descripcion
-          </Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-          //  onPress={() => navigation.navigate('PantallaInicioSesion')}
-          onPress={() => navigation.navigate('PruebaEmpleado')}
-          >
-            <Text style={styles.buttonText}>Iniciar Sesion</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('PantallaRegistro')}
-          >
-            <Text style={styles.buttonText}>Registrarse</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.title}>ChanguitasApp</Text>
+        
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('PantallaRegistro')}
+        >
+          <Text style={styles.buttonText}>Crear perfil</Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.orText}>O</Text>
+        
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('PantallaInicioSesion')}
+        >
+          <Text style={styles.buttonText}>Iniciar sesión</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.helpButton}
+          onPress={() => navigation.navigate('PantallaChat')}
+        >
+          <Text style={styles.helpButtonText}>Ayuda</Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.footerText}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          sed do eiusmod tempor
+        </Text>
       </View>
     </SafeAreaView>
   );
 };
 
-// Definicion de estilos para los diferentes componentes
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,//Ocupa todo el espacio disponible en la pantalla
-    backgroundColor: '#f46524',// Color de fondo de la pantalla (naranja).
+    flex: 1,
+    backgroundColor: '#F5F5F5',
   },
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
-  imageBackground: {
-    height: height / 2.5,
-  },
-  textContainer: {
-    paddingHorizontal: Spacing * 4,// Margen horizontal alrededor del texto.
-    paddingTop: Spacing * 2,// Margen superior
-    marginTop: Spacing * 2,
-  },
-  text: {
-    fontSize: FontSize.xxLarge,
-    color: '#ffffff',// Color blanco
-    fontFamily: Font['poppins-bold'],
-    textAlign: 'center',
-  },
-  buttonContainer: {
-    paddingHorizontal: Spacing * 2,
-    paddingVertical: Spacing * 4,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 40,
   },
   button: {
-    backgroundColor: '#ffffff',
-    paddingVertical: Spacing * 1.5,
-    paddingHorizontal: Spacing * 2,
-    width: '48%',
-    borderRadius: Spacing,
+    backgroundColor: '#4DB6AC',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   buttonText: {
-    color: '#f46524',
-    fontFamily: Font['poppins-bold'],
-    fontSize: FontSize.large,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  orText: {
+    fontSize: 16,
+    marginVertical: 10,
+  },
+  helpButton: {
+    marginTop: 20,
+  },
+  helpButtonText: {
+    color: '#4DB6AC',
+    fontSize: 16,
+  },
+  footerText: {
     textAlign: 'center',
+    color: '#888',
+    fontSize: 12,
+    marginTop: 40,
+    paddingHorizontal: 20,
   },
 });
 
 export default PantallaBienvenida;
-

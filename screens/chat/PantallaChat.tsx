@@ -1,20 +1,33 @@
+/*
 import React, { useRef, useState } from 'react';
 import { initializeApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, User } from "firebase/auth";
 import { getFirestore, collection, query, orderBy, limit, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import './estilos/PantallaChat.css'; 
 
-
 // Configuracion de Firebase
 const firebaseConfig = {
+  apiKey: "AIzaSyBkjrjqvbkn0pPSdvLyKz79uwU5OOPJMJ0",
+  authDomain: "changuitasapp.firebaseapp.com",
+  projectId: "changuitasapp",
+  storageBucket: "changuitasapp.appspot.com",
+  messagingSenderId: "698330432372",
+  appId: "1:698330432372:web:b22fa08ea2012b8b3ca221",
+  measurementId: "G-GJ6QDYW5N8"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Obtiene la instancia de autenticacion
-const firestore = getFirestore(app); //Obtiene la instacia de firestore
 
+// Inicializa la autenticación con AsyncStorage
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
+
+const firestore = getFirestore(app); //Obtiene la instacia de firestore
 
 // Componente principal de la pantalla de chat
 function PantallaChat() {
@@ -63,7 +76,6 @@ function SalaChat() {
   const [mensajes] = useCollectionData(q); // Obtiene los mensajes usando el hook
   const [valorFormulario, setValorFormulario] = useState('');// Estado para el valor del formulario de mensaje
 
-
   // Función para enviar un mensaje
   const enviarMensaje = async (e: React.FormEvent) => {
     e.preventDefault(); // Previene el comportamiento por defecto del formulario
@@ -92,6 +104,7 @@ function SalaChat() {
     </>
   );
 }
+
 // Componente para mostrar un mensaje
 function MensajeChat(props: { mensaje: any }) {
   const { texto, uid, photoURL } = props.mensaje;// Desestructura los props del mensaje
@@ -106,4 +119,4 @@ function MensajeChat(props: { mensaje: any }) {
 }
 
 export default PantallaChat;
-
+*/

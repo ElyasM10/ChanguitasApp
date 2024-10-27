@@ -8,51 +8,75 @@ import {
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../AppNavigator';
+import {LinearGradient} from 'expo-linear-gradient';
 
 const PantallaBienvenida = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Text style={styles.title}>ChanguitasApp</Text>
-        
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('PantallaRegistro')}
-        >
-          <Text style={styles.buttonText}>Crear perfil</Text>
-        </TouchableOpacity>
-        
-        <Text style={styles.orText}>O</Text>
-        
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('PantallaInicioSesion')}
-        >
-          <Text style={styles.buttonText}>Iniciar sesión</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={styles.helpButton}
-          onPress={() => navigation.navigate('PantallaChat')}
-        >
-          <Text style={styles.helpButtonText}>Ayuda</Text>
-        </TouchableOpacity>
-        
-        <Text style={styles.footerText}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor
-        </Text>
-      </View>
-    </SafeAreaView>
+    <LinearGradient
+      colors={['#B7B7B7', '#B7B7B7', '#B7B7B7']}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <Text style={styles.title}>ChanguitasApp</Text>
+          
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={() => navigation.navigate('PantallaRegistro')}
+          >
+            <LinearGradient
+              colors={['#197278', '#9BCDC8']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.buttonText}>Crear perfil</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          
+          <View style={styles.orContainer}>
+            <Text style={styles.orText}>O</Text>
+          </View>
+          
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={() => navigation.navigate('PantallaInicioSesion')}
+          >
+            <LinearGradient
+              colors={['#197278', '#9BCDC8']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.buttonText}>Iniciar sesión</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={styles.helpButton}
+            onPress={() => navigation.navigate('PantallaChat')}
+          >
+            <Text style={styles.helpButtonText}>Ayuda</Text>
+          </TouchableOpacity>
+          
+          <Text style={styles.footerText}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            sed do eiusmod tempor
+          </Text>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
   },
   container: {
     flex: 1,
@@ -62,40 +86,48 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 40,
+    color: 'white',
+    marginBottom: 160,
+    marginRight: 189,
   },
-  button: {
-    backgroundColor: '#4DB6AC',
+  buttonContainer: {
+    width: '100%',
+    marginVertical: 10,
+  },
+  buttonGradient: {
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 25,
-    width: '100%',
     alignItems: 'center',
-    marginBottom: 20,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    marginVertical: 5,
+  },
+  orContainer: {
+    alignItems: 'center',
+    width: '100%',
+    marginVertical: 30,
   },
   orText: {
     fontSize: 16,
-    marginVertical: 10,
+    color: 'white',
+    marginBottom: 3,
   },
   helpButton: {
-    marginTop: 20,
+    marginTop: 60,
   },
   helpButtonText: {
-    color: '#4DB6AC',
+    color: 'white',
     fontSize: 16,
   },
   footerText: {
     textAlign: 'center',
-    color: '#888',
-    fontSize: 12,
-    marginTop: 40,
-    paddingHorizontal: 20,
+    color: 'white',
+    fontSize: 14,
+    marginTop: 100,
+    paddingHorizontal: 40,
   },
 });
 

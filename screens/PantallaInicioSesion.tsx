@@ -1,183 +1,149 @@
-import {SafeAreaView, StyleSheet,Text,TextInput,TouchableOpacity,View} from "react-native";
-import React from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Font from "../constants/Fonts";
-import Colors from "../constants/Colors";
-import { TypeFormatFlags } from "typescript";
-import { Ionicons } from "@expo/vector-icons";//es una libreria que trae iconos npm install @expo/vector-icons
-import PruebaEmpleado from "./pruebaEmpleado";
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { lazy, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../AppNavigator';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const PantallaInicioSesion = () => {
-
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
+        {/* boton volver */}
         <View style={styles.header}>
-          <Text style={styles.title}>Iniciar Sesion</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Iniciar sesión</Text>
         </View>
+
+        {/*  fields */}
         <View style={styles.inputContainer}>
+          <Text style={styles.label}>Correo electrónico</Text>
           <TextInput
-            placeholder="Email"
-            placeholderTextColor={Colors.darkText}
+            placeholder="changuitas@app.com"
+            placeholderTextColor="#666"
             style={styles.input}
           />
-          <TextInput
-            placeholder="Contraseña"
-            placeholderTextColor={Colors.darkText}
-            style={styles.input}
-            secureTextEntry={true} // Esto es secureTextEntry para ocultar la contraseña
-          />
+
+          <Text style={styles.label}>Contraseña</Text>
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              placeholder="***************"
+              placeholderTextColor="#666"
+              secureTextEntry={!showPassword}
+              style={styles.passwordInput}
+            />
+            <TouchableOpacity 
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Ionicons 
+                name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                size={20} 
+                color="#666" 
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
-       <View>
-         <Text
-          style={{
-            fontFamily:Font["poppins-semiBold"],
-            fontSize: FontSize.small,
-            color: "#ffffff",
-            alignSelf:"flex-end",
-          }}
+        {/* ingresarbotton */}
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')}>
+          <LinearGradient
+            colors={['#197278', '#9BCDC8']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.buttonGradient}
           >
-            Olvidaste tu contraseña?
-          </Text>
-       </View>
+            <Text style={styles.buttonText}>Ingresar</Text>
+          </LinearGradient>
+        </TouchableOpacity>
 
-       <TouchableOpacity
-       style={{
-        padding: Spacing*2,
-        backgroundColor: '#ffffff',
-        marginVertical: Spacing*3,
-        borderRadius: Spacing,
-        shadowColor:Colors.primary,
-        shadowOffset:{
-           width:0,
-           height:Spacing,
-        },
-        shadowOpacity:0.3,
-        shadowRadius:Spacing,
-       }}
-       onPress={() => navigation.navigate('PruebaEmpleado')}
-       >
-         <Text style={{
-          fontFamily:Font["poppins-bold"],
-          color: "#f46524",
-          textAlign:"center",
-          fontSize:FontSize.large,
-
-         }}
-         >
-           Iniciar Sesion
-         </Text>
-        </TouchableOpacity> 
-   
-        <TouchableOpacity
-       style={{
-        padding: Spacing,
-       }}
-       >
-         <Text style={{
-          fontFamily:Font["poppins-semibold"],
-          color: '#ffffff',
-          textAlign:"center",
-          fontSize:FontSize.small,
-
-         }}
-         >
-           Crear una Cuenta
-         </Text>
-        </TouchableOpacity> 
-
-        <View style={{
-          marginVertical:Spacing*3,
-        }}
-        >
-        <Text style={{
-          fontFamily:Font["poppins-semibold"],
-          color: '#ffffff',
-          textAlign:"center",
-          fontSize:FontSize.small,
-
-         }}
-         >
-           o continua con
-         </Text>
-
-           <View style={{
-              marginTop:Spacing,
-              flexDirection:"row",
-              justifyContent:"center",
-           }}>
-             <TouchableOpacity style={{
-                padding:Spacing,
-                backgroundColor:'#ffffff',
-                borderRadius: Spacing/2,
-                marginHorizontal:Spacing,
-             }} 
-             >
-              <Ionicons name="logo-google" color={Colors.text} size={Spacing*2}/>
-             </TouchableOpacity>
-
-             <TouchableOpacity style={{
-                padding:Spacing,
-                backgroundColor:'#ffffff',
-                borderRadius: Spacing/2,
-                marginHorizontal:Spacing,
-             }} 
-             >
-              <Ionicons name="logo-apple" color={Colors.text} size={Spacing*2}/>
-             </TouchableOpacity>
-
-             <TouchableOpacity style={{
-                padding:Spacing,
-                backgroundColor:'#ffffff',
-                borderRadius: Spacing/2,
-                marginHorizontal:Spacing,
-             }} 
-             >
-              <Ionicons name="logo-facebook" color={Colors.text} size={Spacing*2}/>
-             </TouchableOpacity>
-              
-           </View>
-        </View>
+        {/* Footer texto */}
+        <Text style={styles.footerText}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        </Text>
       </View>
     </SafeAreaView>
   );
 };
 
-//Defino los estilos 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f46524", //color de fondo
+    backgroundColor: '#B7B7B7',
   },
   container: {
-    padding: Spacing * 2,
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    justifyContent: 'flex-end',
   },
   header: {
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   title: {
-    fontSize: FontSize.xLarge,
-    color: "#ffffff", //  blanco
-    fontFamily: Font["poppins-bold"],
-    marginVertical: Spacing * 3,
+    fontSize: 24,
+    color: '#fff',
+    marginLeft: 10,
+    marginBottom: 80, 
+    justifyContent: 'flex-end',
+  
   },
   inputContainer: {
-    marginVertical: Spacing * 3,
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: '#fff',
+    marginBottom: 8,
   },
   input: {
-    fontFamily: Font["poppins-regular"],
-    fontSize: FontSize.small,
-    padding: Spacing * 2,
-    backgroundColor: Colors.lightPrimary,
-    borderRadius: Spacing,
-    marginVertical: Spacing,
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    padding: 15,
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  passwordInputContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    padding: 15,
+    fontSize: 16,
+    flex: 1,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+  },
+  buttonGradient: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignItems: 'center',   
+    justifyContent: 'center', 
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  footerText: {
+    color: '#fff',
+    textAlign: 'center',
+    marginTop: 'auto',
+    marginBottom: 20,
+    paddingHorizontal: 40,
   },
 });
 

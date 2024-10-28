@@ -22,10 +22,26 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function AppNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="PantallaBienvenida" component={PantallaBienvenida} />
-      <Stack.Screen name="PantallaInicioSesion" component={PantallaInicioSesion} />
-      <Stack.Screen name="PantallaRegistro" component={PantallaRegistro} />
-      <Stack.Screen name="PruebaEmpleado" component={PruebaEmpleado} /> 
+      <Stack.Screen 
+        name="PantallaBienvenida" 
+        component={PantallaBienvenida} 
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen 
+        name="PantallaInicioSesion" 
+        component={PantallaInicioSesion} 
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen 
+        name="PantallaRegistro" 
+        component={PantallaRegistro} 
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen 
+        name="PruebaEmpleado" 
+        component={PruebaEmpleado} 
+        options={{ headerShown: false }}  
+      /> 
     </Stack.Navigator>
   );
 }

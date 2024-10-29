@@ -1,193 +1,196 @@
-import {SafeAreaView, StyleSheet,Text,TextInput,TouchableOpacity,View} from "react-native";
-import React from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Font from "../constants/Fonts";
-import Colors from "../constants/Colors";
-import { TypeFormatFlags } from "typescript";
-import { Ionicons } from "@expo/vector-icons";//es una libreria que trae iconos npm install @expo/vector-icons
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from '../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const PantallaRegistro= () => {
-
+const PantallaRegistro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [mostrarContraseña, setMostrarContraseña] = useState(false);
+  const [mostrarConfirmarContraseña, setMostrarConfirmarContraseña] = useState(false);
 
-
-  return(
-    <SafeAreaView style={styles.safeArea}>
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Registrarse</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor={Colors.darkText}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Contraseña"
-          placeholderTextColor={Colors.darkText}
-          style={styles.input}
-          secureTextEntry={true}
-        />
-           <TextInput
-          placeholder="Confirmar Contraseña"
-          placeholderTextColor={Colors.darkText}
-          style={styles.input}
-          secureTextEntry={true} 
-        />
-
-      </View>
-
-     <View>
-       <Text
-        style={{
-          fontFamily:Font["poppins-semiBold"],
-          fontSize: FontSize.small,
-          color: "#ffffff",
-          alignSelf:"flex-end",
-        }}
-        >
-          Ya tengo una cuenta
-        </Text>
-     </View>
-
-      <TouchableOpacity
-    style={{
-      padding: Spacing * 2,
-      backgroundColor: '#ffffff',
-      marginVertical: Spacing * 3,
-      borderRadius: Spacing,
-      shadowColor: Colors.primary,
-      shadowOffset: {
-        width: 0,
-        height: Spacing,
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: Spacing,
-    }}
-    onPress={() => navigation.navigate('PantallaChat')}
-  >
-    <Text
-      style={{
-        fontFamily: Font["poppins-bold"],
-        color: "#f46524",
-        textAlign: "center",
-        fontSize: FontSize.large,
-      }}
+  return (
+    <LinearGradient
+      colors={['#B7B7B7', '#B7B7B7']}
+      style={estilos.degradado}
     >
-      Registrarse
-    </Text>
-  </TouchableOpacity>
- 
-      <TouchableOpacity
-     style={{
-      padding: Spacing,
-     }}
-     >
-       <Text style={{
-        fontFamily:Font["poppins-semibold"],
-        color: '#ffffff',
-        textAlign:"center",
-        fontSize:FontSize.small,
+      <SafeAreaView style={estilos.areaSegura}>
+        <View style={estilos.contenedor}>
+          <View style={estilos.encabezado}>
+            <TouchableOpacity 
+              style={estilos.botonAtras} 
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+            <Text style={estilos.titulo}>Crear perfil</Text>
+          </View>
 
-       }}
-       >
-         Crear una Cuenta
-       </Text>
-      </TouchableOpacity> 
+          <View style={estilos.formulario}>
+            <View style={estilos.campo}>
+              <Text style={estilos.etiqueta}>Nombre</Text>
+              <TextInput
+                placeholder="Nombre"
+                placeholderTextColor="#666"
+                style={estilos.entradaTexto}
+              />
+            </View>
 
-      <View style={{
-        marginVertical:Spacing*3,
-      }}
-      >
-      <Text style={{
-        fontFamily:Font["poppins-semibold"],
-        color: '#ffffff',
-        textAlign:"center",
-        fontSize:FontSize.small,
+            <View style={estilos.campo}>
+              <Text style={estilos.etiqueta}>Apellido</Text>
+              <TextInput
+                placeholder="Apellido"
+                placeholderTextColor="#666"
+                style={estilos.entradaTexto}
+              />
+            </View>
 
-       }}
-       >
-         o continua con
-       </Text>
+            <View style={estilos.campo}>
+              <Text style={estilos.etiqueta}>Fecha de nacimiento</Text>
+              <TextInput
+                placeholder="dd/mm/aaaa"
+                placeholderTextColor="#666"
+                style={estilos.entradaTexto}
+              />
+            </View>
 
-         <View style={{
-            marginTop:Spacing,
-            flexDirection:"row",
-            justifyContent:"center",
-         }}>
-           <TouchableOpacity style={{
-              padding:Spacing,
-              backgroundColor:'#ffffff',
-              borderRadius: Spacing/2,
-              marginHorizontal:Spacing,
-           }} 
-           >
-            <Ionicons name="logo-google" color={Colors.text} size={Spacing*2}/>
-           </TouchableOpacity>
+            <View style={estilos.campo}>
+              <Text style={estilos.etiqueta}>Correo electrónico</Text>
+              <TextInput
+                placeholder="changuitas@app.com"
+                placeholderTextColor="#666"
+                style={estilos.entradaTexto}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
 
-           <TouchableOpacity style={{
-              padding:Spacing,
-              backgroundColor:'#ffffff',
-              borderRadius: Spacing/2,
-              marginHorizontal:Spacing,
-           }} 
-           >
-            <Ionicons name="logo-apple" color={Colors.text} size={Spacing*2}/>
-           </TouchableOpacity>
+            <View style={estilos.campo}>
+              <Text style={estilos.etiqueta}>Contraseña</Text>
+              <View style={estilos.contenedorContraseña}>
+                <TextInput
+                  placeholder="************"
+                  placeholderTextColor="#666"
+                  style={estilos.entradaContraseña}
+                  secureTextEntry={!mostrarContraseña}
+                />
+                <TouchableOpacity onPress={() => setMostrarContraseña(!mostrarContraseña)}>
+                  <Ionicons 
+                    name={mostrarContraseña ? "eye-outline" : "eye-off-outline"}
+                    size={24} 
+                    color="#666" 
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
 
-           <TouchableOpacity style={{
-              padding:Spacing,
-              backgroundColor:'#ffffff',
-              borderRadius: Spacing/2,
-              marginHorizontal:Spacing,
-           }} 
-           >
-            <Ionicons name="logo-facebook" color={Colors.text} size={Spacing*2}/>
-           </TouchableOpacity>
-            
-         </View>
-      </View>
-    </View>
-  </SafeAreaView>
+            <View style={estilos.campo}>
+              <Text style={estilos.etiqueta}>Confirme contraseña</Text>
+              <View style={estilos.contenedorContraseña}>
+                <TextInput
+                  placeholder="************"
+                  placeholderTextColor="#666"
+                  style={estilos.entradaContraseña}
+                  secureTextEntry={!mostrarConfirmarContraseña}
+                />
+                <TouchableOpacity onPress={() => setMostrarConfirmarContraseña(!mostrarConfirmarContraseña)}>
+                  <Ionicons 
+                    name={mostrarConfirmarContraseña ? "eye-outline" : "eye-off-outline"}
+                    size={24} 
+                    color="#666" 
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('PantallaChat')}
+          >
+            <LinearGradient
+              colors={['#197278', '#9BCDC8']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={estilos.botonDegradado}
+            >
+              <Text style={estilos.textoBotonRegistro}>Registrarse</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
-
-
-const styles = StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: "#f46524",
-    },
-    container: {
-      padding: Spacing * 2,
-    },
-    header: {
-      alignItems: "center",
-    },
-    title: {
-      fontSize: FontSize.xLarge,
-      color: "#ffffff", 
-      fontFamily: Font["poppins-bold"],
-      marginVertical: Spacing * 3,
-    },
-    inputContainer: {
-      marginVertical: Spacing * 3,
-    },
-    input: {
-      fontFamily: Font["poppins-regular"],
-      fontSize: FontSize.small,
-      padding: Spacing * 2,
-      backgroundColor: Colors.lightPrimary,
-      borderRadius: Spacing,
-      marginVertical: Spacing,
-    },
-  });
-  
+const estilos = StyleSheet.create({
+  degradado: {
+    flex: 1,
+  },
+  areaSegura: {
+    flex: 1,
+  },
+  contenedor: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  encabezado: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 60,
+    marginBottom: 8,
+  },
+  botonAtras: {
+    marginRight: 10,
+  },
+  titulo: {
+    fontSize: 20,
+    color: '#fff',
+    fontWeight: '500',
+    justifyContent: 'flex-end',
+  },
+  formulario: {
+    marginTop: 10,
+  },
+  campo: {
+    marginBottom: 16,
+  },
+  etiqueta: {
+    color: '#fff',
+    marginBottom: 8,
+    fontSize: 16,
+  },
+  entradaTexto: {
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    padding: 15,
+    fontSize: 16,
+    color: '#000',
+  },
+  contenedorContraseña: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    paddingHorizontal: 15,
+  },
+  entradaContraseña: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+    color: '#000',
+  },
+  botonDegradado: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignItems: 'center',
+  },
+  textoBotonRegistro: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
 
 export default PantallaRegistro;
-

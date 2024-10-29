@@ -4,6 +4,7 @@ import PantallaBienvenida from './screens/PantallaBienvenida';
 import PantallaInicioSesion from './screens/PantallaInicioSesion';
 import PantallaRegistro from './screens/PantallaRegistro';
 import PruebaEmpleado from './screens/pruebaEmpleado';
+import PantallaVerificacion5 from './screens/Verificacion/PantallaVerificacion5';
 import PantallaVerificacion4 from './screens/Verificacion/PantallaVerificacion4';
 import PantallaVerificacion3 from './screens/Verificacion/PantallaVerificacion3';
 import PantallaVerificacion2 from './screens/Verificacion/PantallaVerificacion2';
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   PantallaVerificacion2: undefined;
   PantallaVerificacion3: undefined;
   PantallaVerificacion4: undefined;
+  PantallaVerificacion5: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
@@ -70,6 +72,12 @@ export default function AppNavigator() {
         component={PantallaVerificacion4} 
         options={{ headerShown: false }}  
       /> 
+       <Stack.Screen 
+        name="PantallaVerificacion5" 
+        component={PantallaVerificacion5} 
+        options={{ headerShown: false }}  
+      /> 
+
 
 
 

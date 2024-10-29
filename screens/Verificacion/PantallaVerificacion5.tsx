@@ -1,53 +1,34 @@
-
-/*
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+
 
 const PantallaVerificacion5 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
 
-  const seleccionarImagenDeGaleria = async () => {
-    let resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
 
-    if (!resultado.canceled) {
-      setImagenSeleccionada(resultado.uri);
-    }
+  const seleccionarImagenDeGaleria = () => {
+      // Esto seria para mas  adelante 
   };
 
-  const tomarFotoConCamara = async () => {
-    let resultado = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!resultado.canceled) {
-      setImagenSeleccionada(resultado.uri);
-    }
+  const tomarFotoConCamara = () => {
+    // Esto seria para mas  adelante 
   };
 
   return (
     <SafeAreaView style={styles.areaSegura}>
       <View style={styles.contenedor}>
         <Text style={styles.titulo}>Verificación</Text>
-        
         <Text style={styles.textoPaso}>PASO 5</Text>
         <Text style={styles.subtitulo}>Subir foto de perfil</Text>
 
         <View style={styles.contenedorImagenPerfil}>
           {imagenSeleccionada ? (
-            <Image source={{ uri: imagenSeleccionada }} style={styles.imagenPerfil} />
+            <Image source={require('../../assets/icon.png')} style={styles.imagenPerfil} />
           ) : (
             <Ionicons name="person-circle-outline" size={100} color="#B7B7B7" />
           )}
@@ -84,7 +65,7 @@ const styles = StyleSheet.create({
   contenedor: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 70,
     alignItems: 'center',
   },
   titulo: {
@@ -129,8 +110,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,
-    alignItems: 'center',   
-    justifyContent: 'center', 
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textoBoton: {
     color: '#fff',
@@ -140,4 +121,3 @@ const styles = StyleSheet.create({
 });
 
 export default PantallaVerificacion5;
-*/

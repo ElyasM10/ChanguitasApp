@@ -1,0 +1,18 @@
+import React from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../AppNavigator';
+import { Ionicons } from "@expo/vector-icons";
+
+const PantallaHome = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const caracteristicas = [
+    '+30 servicios',
+    'Chat integrado',
+    'Ushuaia'
+  ];
+};
+  
+
+
+export default PantallaHome;

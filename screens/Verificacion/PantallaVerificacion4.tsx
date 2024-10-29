@@ -27,7 +27,7 @@ const PantallaVerificacion4 = () => {
         {/* Botón de siguiente */}
         <TouchableOpacity 
           style={estilos.botonSiguiente} 
-          onPress={() => navigation.navigate('PantallaVerificacion3')}
+          onPress={() => navigation.navigate('PantallaVerificacion5')}
         >
           <Text style={estilos.textoBoton}>Siguiente</Text>
           <Ionicons name="arrow-forward" size={20} color="#197278" />

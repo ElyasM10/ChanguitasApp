@@ -2,8 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import PantallaBienvenida from './PantallaBienvenida';
 import PantallaInicioSesion from './PantallaInicioSesion';
-import PruebaEmpleado from './screens/pruebaEmpleado';
 import PantallaChat from './screens/chat/PantallaChat';
+import PruebaSolicitud from './screens/pruebaSolicitud';
 
 // Se crea una instancia del navegador de pilas (stack navigator) de React Navigation para poder navegar entre las pantallas
 const Stack = createStackNavigator();
@@ -24,9 +24,9 @@ const Navigator = () => {
       />
 
     <Stack.Screen 
-            name="PruebaEmpleado" 
-            component={PruebaEmpleado} 
-            options={{ title: 'Prueba de Empleados' }} 
+            name="PruebaSolicitud" 
+            component={PruebaSolicitud} 
+            options={{ title: 'Prueba de Solicitudes' }} 
           />
 
    

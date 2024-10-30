@@ -3,12 +3,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PantallaBienvenida from './screens/PantallaBienvenida';
 import PantallaInicioSesion from './screens/PantallaInicioSesion';
 import PantallaRegistro from './screens/PantallaRegistro';
-import PruebaEmpleado from './screens/pruebaEmpleado';
 import PantallaVerificacion5 from './screens/Verificacion/PantallaVerificacion5';
 import PantallaVerificacion4 from './screens/Verificacion/PantallaVerificacion4';
 import PantallaVerificacion3 from './screens/Verificacion/PantallaVerificacion3';
 import PantallaVerificacion2 from './screens/Verificacion/PantallaVerificacion2';
 import PantallaVerificacion1 from './screens/Verificacion/PantallaVerificacion1';
+import PantallaHome from './screens/Home/PantallaHome';
+import PruebaSolicitud from './screens/pruebaSolicitud';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -16,13 +17,14 @@ export type RootStackParamList = {
   PantallaBienvenida: undefined;
   PantallaInicioSesion: undefined;
   PantallaRegistro: undefined;
-  PruebaEmpleado: undefined;
+  PruebaSolicitud: undefined;
   PantallaChat: undefined;
   PantallaVerificacion1: undefined;
   PantallaVerificacion2: undefined;
   PantallaVerificacion3: undefined;
   PantallaVerificacion4: undefined;
   PantallaVerificacion5: undefined;
+  PantallaHome:undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
@@ -48,8 +50,8 @@ export default function AppNavigator() {
         options={{ headerShown: false }}  
       />
       <Stack.Screen 
-        name="PruebaEmpleado" 
-        component={PruebaEmpleado} 
+        name="PruebaSolicitud" 
+        component={PruebaSolicitud} 
         options={{ headerShown: false }}  
       /> 
         <Stack.Screen 
@@ -77,6 +79,12 @@ export default function AppNavigator() {
         component={PantallaVerificacion5} 
         options={{ headerShown: false }}  
       /> 
+      <Stack.Screen 
+        name="PantallaHome" 
+        component={PantallaHome} 
+        options={{ headerShown: false }}  
+      /> 
+
 
 
 

@@ -42,7 +42,7 @@ const PantallaVerificacion5 = () => {
           <Text style={styles.textoOpcion}>+ Sacar foto con la cámara</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')}>
           <LinearGradient
             colors={['#197278', '#9BCDC8']}
             start={{ x: 0, y: 0 }}

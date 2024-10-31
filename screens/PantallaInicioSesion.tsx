@@ -54,7 +54,7 @@ const PantallaInicioSesion = () => {
         </View>
 
         {/* Botón de ingresar */}
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaVerificacion1')}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')}>
           <LinearGradient
             colors={['#197278', '#9BCDC8']}
             start={{ x: 0, y: 0 }}

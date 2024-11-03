@@ -15,13 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include 
 from ChanguitasApi.views import *
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
    # path('', ReactView.as_view(), name="xxx"),
      path('', DireccionView.as_view(), name='direccion_view'),
-     path('usuario/', UsuarioView.as_view(), name='usuario_view')
+     path('usuario/', UsuarioView.as_view(), name='usuario_view'),
+     path('clientes/', ClienteView.as_view(), name='clientes'),
+     path('api/', include(router.urls), name='usuario-create'),
      
 ]

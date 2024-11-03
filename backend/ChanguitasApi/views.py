@@ -1,9 +1,12 @@
 
 from django.shortcuts import render,get_object_or_404
 from rest_framework.views import APIView
+from rest_framework import status
 from . models import *
 from rest_framework.response import Response
 from . serializer import *
+from rest_framework import viewsets
+
 # Create your views here.
 
 
@@ -48,43 +51,21 @@ class DireccionView(APIView):
             direcciones = Direccion.objects.all()
             serializer = DireccionSerializer(direcciones, many=True)
             return Response(serializer.data)
-        
-class UsuarioView(APIView):
-    
-    def create_hardcoded_usuario(self):
-    # Verifica si el usuario ya existe en la base de datos
-     if not Usuario.objects.filter(username="usuario_ejemplo").exists():
-        # Verifica si la dirección ya existe
-        direccion, created = Direccion.objects.get_or_create(
-            altura=123,            
-            calle="Calle Ejemplo", 
-            defaults={
-                'nroDepto': 1,
-                'piso': 2,
-                'barrio': "Barrio Ejemplo"
-            }
-        )
-        
-        # Crea un nuevo usuario
-        usuario = Usuario(
-            username="usuario_ejemplo",
-            first_name="Nombre",
-            last_name="Apellido",
-            email="usuario@example.com",
-            documento=12345678,
-            telefono=5551234,
-            fechaNacimiento="1990-01-01",
-            direccion=direccion  # Asigna la dirección aquí
-        )
-        
-        # Establece la contraseña del usuario
-        usuario.set_password('contraseña123')
-        
-        # Guarda el usuario en la base de datos
-        usuario.save()
 
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            # Guarda el nuevo usuario en la base de datos
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UsuarioView(APIView):
     def get(self, request, pk=None, *args, **kwargs):
-        self.create_hardcoded_usuario()  # Crea el usuario si no existe
         if pk:
             usuario = get_object_or_404(Usuario, pk=pk)
             serializer = UsuarioSerializer(usuario)
@@ -93,3 +74,23 @@ class UsuarioView(APIView):
             usuarios = Usuario.objects.all()
             serializer = UsuarioSerializer(usuarios, many=True)
             return Response(serializer.data)
+    
+    def post(self, request, *args, **kwargs):
+        serializer = UsuarioSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ClienteView(APIView):
+    def get(self,request): #obtener la lista de todos los clientes.
+        clientes=Cliente.objects.all()
+        serializer=ClienteSerializer(clientes,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK) #Get exitoso
+    
+    def post(self,request): #para crear un nuevo cliente
+        serializer = ClienteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED) #creado exitosamente
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) #datos enviados en POST invalidos

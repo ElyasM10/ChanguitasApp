@@ -106,7 +106,7 @@ const PantallaRegistro = () => {
           </View>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('PantallaChat')}
+            onPress={() => navigation.navigate('PantallaVerificacion1')}
           >
             <LinearGradient
               colors={['#197278', '#9BCDC8']}

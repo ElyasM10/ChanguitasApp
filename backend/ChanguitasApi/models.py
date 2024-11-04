@@ -13,7 +13,8 @@ class Usuario(AbstractUser):
     #nombre, apellido, contraseña y email lo trae por defecto el usuario de django
     documento = models.IntegerField(unique=True, blank=False, null=False)
     telefono = models.IntegerField(blank=True, null=True)
-    fotoPerfil = models.ImageField(upload_to='faltaPonerLaCarpeta')
+    # fotoPerfil - blank=True se debe sacar una vez terminado el proyecto
+    fotoPerfil = models.ImageField(blank=True, upload_to='imagenesUsuario')
     fechaNacimiento = models.DateField(blank=False, null=True)
     direccion = models.OneToOneField(Direccion, on_delete=models.CASCADE, null=False, blank=True)
 
@@ -64,8 +65,8 @@ class Servicio (models.Model):
 class ProveedorServicio(models.Model):
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='proveedores_servicio')
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='servicios_ofrecidos')
-    fechaDesde = models.DateField();
-    fechaHasta = models.DateField();
+    fechaDesde = models.DateField()
+    fechaHasta = models.DateField()
 
 class Categoria (models.Model):
     nombre = models.CharField(max_length=100, null=True)

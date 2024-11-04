@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include 
+from django.conf.urls.static import static
+from django.conf import settings
 from ChanguitasApi.views import *
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet)
@@ -26,8 +29,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
    # path('', ReactView.as_view(), name="xxx"),
      path('', DireccionView.as_view(), name='direccion_view'),
-     path('usuario/', UsuarioView.as_view(), name='usuario_view'),
+    #  path('usuario/', UsuarioView.as_view(), name='usuario_view') !!!! quizas no va ya que usuarioViewSet seria lo mismo y mejor !!!!,
      path('clientes/', ClienteView.as_view(), name='clientes'),
      path('api/', include(router.urls), name='usuario-create'),
-     
-]
+     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -17,3 +17,6 @@ npm install firebase
 
 Para el degrade: expo install expo-linear-gradient y importar la siguente linea en donde se utiliza: import {LinearGradient} from 'expo-linear-gradient';
 
+#TOKEN
+pip install djangorestframework-simplejwt
+

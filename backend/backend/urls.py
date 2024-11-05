@@ -24,6 +24,15 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet)
+router.register(r'categorias', CategoriaViewSet)
+router.register(r'clientes', ClienteViewSet)
+router.register(r'direcciones', DireccionViewSet)
+router.register(r'fotos', FotosViewSet)
+router.register(r'notificaciones', NotificacionViewSet)
+router.register(r'proveedores-servicios', ProveedorServicioViewSet)
+router.register(r'proveedores', ProveedorViewSet)
+router.register(r'servicios', ServicioViewSet)
+router.register(r'solicitudes', SolicitudViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -42,7 +42,7 @@ class Proveedor(models.Model):
     horarioDisponible = models.TimeField()
 
 class Fotos(models.Model):
-    fotos = models.ImageField(upload_to='faltaPonerLaCarpeta')
+    fotos = models.ImageField(upload_to='imagenesProveedor')
     fechaHora = models.DateTimeField(blank=True, null=False)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='fotos')
 

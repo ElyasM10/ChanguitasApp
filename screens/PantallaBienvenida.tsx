@@ -24,7 +24,7 @@ const PantallaBienvenida = () => {
           
           <TouchableOpacity
             style={styles.buttonContainer}
-            onPress={() => navigation.navigate('PantallaRegistro')}
+            onPress={() => navigation.navigate('pruebaUsuario')}
           >
             <LinearGradient
               colors={['#197278', '#9BCDC8']}

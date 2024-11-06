@@ -3,8 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Direccion(models.Model):
-    altura = models.IntegerField(unique=True)
-    calle = models.CharField(max_length=100, unique=True)
+    calle = models.CharField(max_length=100, null=False)
+    altura = models.IntegerField(null=False)
     nroDepto = models.IntegerField(blank=True, null=True)
     piso = models.IntegerField(blank=True, null=True)
     barrio = models.CharField(max_length=100, blank=True, null=True)

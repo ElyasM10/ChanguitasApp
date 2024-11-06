@@ -16,22 +16,7 @@ class Usuario(AbstractUser):
     # fotoPerfil - blank=True se debe sacar una vez terminado el proyecto
     fotoPerfil = models.ImageField(blank=True, upload_to='imagenesUsuario')
     fechaNacimiento = models.DateField(blank=False, null=True)
-    direccion = models.OneToOneField(Direccion, on_delete=models.CASCADE, null=False, blank=True)
-
-    groups = models.ManyToManyField( #Es como crear "roles" o "tipos de usuario"
-        'auth.Group', 
-        related_name='usuariosEnGrupo',
-        blank=True,
-        verbose_name='GruposDeUsuario',
-        help_text='Grupos a los que pertenece este usuario en el sistema.',
-    )
-    user_permissions = models.ManyToManyField(  #Son permisos específicos para acciones individuales. Django crea automáticamente permisos básicos para cada modelo
-        'auth.Permission',
-        related_name='usuariosConPermiso',
-        blank=True,
-        verbose_name='PermisosDeUsuario',
-        help_text='Permisos específicos asignados a este usuario',
-    )
+    direccion = models.OneToOneField(Direccion, on_delete=models.CASCADE, null=False)
 
 class Cliente(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='cliente')

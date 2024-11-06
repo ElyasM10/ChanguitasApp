@@ -14,7 +14,7 @@ class Usuario(AbstractUser):
     documento = models.IntegerField(unique=True, blank=False, null=False)
     telefono = models.IntegerField(blank=True, null=True)
     # fotoPerfil - blank=True se debe sacar una vez terminado el proyecto
-    fotoPerfil = models.ImageField(blank=True, upload_to='imagenesUsuario')
+    fotoPerfil = models.ImageField(blank=True, upload_to='imagenesUsuario',null=True)
     fechaNacimiento = models.DateField(blank=False, null=True)
     direccion = models.OneToOneField(Direccion, on_delete=models.CASCADE, null=False)
 

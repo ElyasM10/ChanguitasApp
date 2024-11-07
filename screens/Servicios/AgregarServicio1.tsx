@@ -75,7 +75,7 @@ const AgregarServicio1 = () => {
           <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('AgregarServicio2')}>
             <Text style={styles.nextButtonText}>Siguiente</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate('MisServicios')}>
             <Text style={styles.cancelButtonText}>Cancelar</Text>
           </TouchableOpacity>
         </View>

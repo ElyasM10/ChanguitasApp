@@ -34,7 +34,7 @@ const PantallaPerfiEditarUsuario = () => {
         <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
           <Text style={estilos.textoPestanaInactiva}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('PantallaBienvenida')}>
+        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
           <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
         </TouchableOpacity>
         <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('PantallaBienvenida')}>

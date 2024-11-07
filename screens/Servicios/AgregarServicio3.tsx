@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const AgregarServicio2 = () => {
+const AgregarServicio3 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [description, setDescription] = useState('');
   const [days, setDays] = useState({
@@ -39,52 +39,27 @@ const AgregarServicio2 = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Agregar un servicio (2/3)</Text>
+      <Text style={styles.header}>Agregar un servicio (3/3)</Text>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.label}>Descripción del Servicio:</Text>
-        <TextInput
-          style={styles.descriptionInput}
-          placeholder="Descripción"
-          value={description}
-          onChangeText={setDescription}
-          multiline
-        />
+        <Text style={styles.label}>Subir Fotos (Opcional):</Text>
 
-        <View style={styles.dayContainer}>
-          <Text style={styles.dayLabel}>Día</Text>
-          <Text style={styles.hourLabel}>Hora</Text>
-          {Object.keys(days).map((day) => (
-            <View style={styles.dayRow} key={day}>
-              <Switch
-                value={days[day]}
-                onValueChange={() => toggleDay(day)}
-              />
-              <Text style={styles.dayText}>{day}</Text>
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Inicio"
-                value={hours[day].start}
-                onChangeText={(value) => handleTimeChange(day, 'start', value)}
-                editable={days[day]}
-              />
-              <Text style={styles.toText}>a</Text>
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Fin"
-                value={hours[day].end}
-                onChangeText={(value) => handleTimeChange(day, 'end', value)}
-                editable={days[day]}
-              />
-            </View>
-          ))}
+        {/* Encabezado para subir fotos */}
+        <View style={styles.encabezado}>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio3')}>
+            <Text style={styles.opcion}>+ Buscar en el teléfono</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio3')}>
+            <Text style={styles.opcion}>+ Sacar foto con la cámara</Text>
+        </TouchableOpacity>
         </View>
 
+        {/* Botones */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('AgregarServicio3')}>
-            <Text style={styles.nextButtonText}>Siguiente</Text>
+            <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('MisServicios')}>
+            <Text style={styles.nextButtonText}>Publicar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.prevButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={styles.prevButton} onPress={() => navigation.navigate('AgregarServicio2')}>
             <Text style={styles.prevButtonText}>Atrás</Text>
           </TouchableOpacity>
         </View>
@@ -103,6 +78,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     padding: 20,
     marginTop: 40,
+  },
+  encabezado: {
+    paddingVertical: 10,
+    backgroundColor: 'white',
+  },
+  opcion: {
+    fontSize: 16,
+    color: '#197278',
+    padding: 10,
   },
   scrollContainer: {
     paddingHorizontal: 20,
@@ -191,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AgregarServicio2;
+export default AgregarServicio3;

@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const EditarDatosPersonales = () => {
+const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
@@ -20,39 +20,24 @@ const EditarDatosPersonales = () => {
             <Text style={estilos.opcion}>Perfil</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('EditarDatosPersonales')}>
-            <Text style={[estilos.opcion, estilos.opcionSeleccionada]}>Editar</Text>
+            <Text style={estilos.opcion}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('MisServicios')}>
-            <Text style={estilos.opcion}>Mis servicios</Text>
+            <Text style={[estilos.opcion, estilos.opcionSeleccionada]}>Mis servicios</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')}>
             <Text style={estilos.opcion}>Section</Text>
         </TouchableOpacity>
         </View>
 
-      {/* Sección para cambiar la foto */}
-      <View style={estilos.seccionFoto}>
-        <Image source={{ uri: 'https://via.placeholder.com/80' }} style={estilos.imagenUsuario} />
-        <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
-      </View>
-
-      {/* Formulario de datos personales */}
-      <View style={estilos.formulario}>
-        <Text style={estilos.label}>Nombre</Text>
-        <TextInput style={estilos.input} placeholder="Nombre" />
-
-        <Text style={estilos.label}>Apellido</Text>
-        <TextInput style={estilos.input} placeholder="Apellido" />
-
-        <Text style={estilos.label}>Fecha de nacimiento</Text>
-        <TextInput style={estilos.input} placeholder="dd/mm/aaaa" />
-
-        <Text style={estilos.label}>Correo electrónico</Text>
-        <TextInput style={estilos.input} placeholder="changuitas@app.com" />
-
-        <Text style={estilos.label}>Teléfono</Text>
-        <TextInput style={estilos.input} placeholder="Número de teléfono" />
-      </View>
+        {/* Botón Agregar Servicio */}
+        <TouchableOpacity 
+          style={estilos.botonAgregarServicio} 
+          onPress={() => navigation.navigate('AgregarServicio1')}
+        >
+          <Ionicons name="add" size={20} color="#197278" />
+          <Text style={estilos.textoBoton}>Agregar servicio</Text>
+        </TouchableOpacity>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -74,10 +59,7 @@ const EditarDatosPersonales = () => {
         </TouchableOpacity>
       </View>
 
-        {/* Botón Guardar Cambios */}
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.botonGuardarCambios}>
-        <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
-      </TouchableOpacity>
+        
     </SafeAreaView>
 
   );
@@ -178,6 +160,25 @@ const estilos = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  botonAgregarServicio: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',
+    alignSelf: 'center',
+    marginTop: 20, 
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: '#197278',
+    borderRadius: 50,
+  },
+  textoBoton: {
+    color: '#197278',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 5,
+  },
 });
 
-export default EditarDatosPersonales;
+export default MisServicios;

@@ -19,7 +19,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
-        if data['password'] != data['password2']:
+        if data['password'] != data['password2']: #agregue para la confimacion de contraseñas que seria como un validar
             raise serializers.ValidationError("Las contraseñas no coinciden.")
         return data
     

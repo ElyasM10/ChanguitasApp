@@ -1,5 +1,4 @@
 
-from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -49,16 +48,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny'],  # Corregido, fuera de MIDDLEWARE
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
 }
-
-
-#son parametros de autenticacion de tokens que usa JWT (recomendacion del chat para seguirdad en los inicios de sesion de los usuarios)
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-}
-
 
 # Permitir todos los orígenes (CORS)
 CORS_ALLOW_ALL_ORIGINS = True  # Correcto

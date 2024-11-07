@@ -44,12 +44,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
         )
         return usuario
     
-    def save(self, **kwargs):
-        usuario = super().save(**kwargs)
-        usuario.set_password(self.validated_data['password'])
-        usuario.save()
-        return usuario
-    
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()

@@ -44,6 +44,12 @@ class UsuarioSerializer(serializers.ModelSerializer):
         )
         return usuario
     
+    def save(self, **kwargs):
+        usuario = super().save(**kwargs)
+        usuario.set_password(self.validated_data['password'])
+        usuario.save()
+        return usuario
+    
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
@@ -51,5 +57,5 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         usuario = authenticate(username=data['username'], password=data['password'])
         if usuario and usuario.is_active:
-            return usuario
+            return {'user': usuario}
         raise serializers.ValidationError("Nombre de usuario o contraseña inválidos")

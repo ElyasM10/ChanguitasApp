@@ -25,6 +25,7 @@ const PantallaBienvenida = () => {
           <TouchableOpacity
             style={styles.buttonContainer}
             onPress={() => navigation.navigate('pruebaUsuario')}
+          // onPress={() => navigation.navigate('AgregarServicio1')}
           >
             <LinearGradient
               colors={['#197278', '#9BCDC8']}
@@ -42,7 +43,7 @@ const PantallaBienvenida = () => {
           
           <TouchableOpacity
             style={styles.buttonContainer}
-            onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')}
+            onPress={() => navigation.navigate('PantallaInicioSesion')}
           >
             <LinearGradient
               colors={['#197278', '#9BCDC8']}

@@ -20,3 +20,5 @@ Para el degrade: expo install expo-linear-gradient y importar la siguente linea 
 #TOKEN
 pip install djangorestframework-simplejwt
 
+#CheckBox en Servicios
+npm install react-native-paper

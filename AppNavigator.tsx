@@ -16,6 +16,8 @@ import PantallaEditarDatosUsuario from './screens/Admin/PantallaEditarDatosUsuar
 import PantallaPerfilEditarUsuario from './screens/Usuario/PantallaPerfilEditarUsuario';
 import EditarDatosPersonales from './screens/Usuario/EditarDatosPersonales';
 import pruebaUsuario from './screens/pruebaUsuario';
+import AgregarServicio1 from './screens/Servicios/AgregarServicio1';
+import AgregarServicio2 from './screens/Servicios/AgregarServicio2';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -37,6 +39,8 @@ export type RootStackParamList = {
   PantallaPerfilEditarUsuario: undefined;
   EditarDatosPersonales: undefined;
   pruebaUsuario: undefined;
+  AgregarServicio1: undefined;
+  AgregarServicio2: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
@@ -126,6 +130,18 @@ export default function AppNavigator() {
         component={pruebaUsuario} 
         options={{ headerShown: false }}  
       /> 
+        <Stack.Screen 
+        name="AgregarServicio1" 
+        component={AgregarServicio1} 
+        options={{ headerShown: false }}  
+      /> 
+        <Stack.Screen 
+        name="AgregarServicio2" 
+        component={AgregarServicio2} 
+        options={{ headerShown: false }}  
+      /> 
+ 
+ 
  
  
  

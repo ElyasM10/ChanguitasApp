@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from ChanguitasApi.models import Usuario, Direccion
 from rest_framework import serializers
 from .direccionSerializer import DireccionSerializer
@@ -23,3 +24,13 @@ class UsuarioSerializer(serializers.ModelSerializer):
         # Crea el usuario y asocia la dirección creada
         usuario = Usuario.objects.create(direccion=direccion, **validated_data)
         return usuario
+    
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        usuario = authenticate(**data)
+        if usuario and usuario.is_active:
+            return usuario
+        raise serializers.ValidationError("Nombre de usuario o contraseña inválidos")

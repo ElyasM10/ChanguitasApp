@@ -37,9 +37,6 @@ const PantallaPerfiEditarUsuario = () => {
         <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
           <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('PantallaBienvenida')}>
-          <Text style={estilos.textoPestanaInactiva}>Section</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Información del Usuario */}
@@ -82,7 +79,7 @@ const PantallaPerfiEditarUsuario = () => {
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>

@@ -14,21 +14,18 @@ const MisServicios = () => {
         <Text style={estilos.textoEncabezado}>Perfil</Text>
       </View>
 
-     {/* Encabezado con opciones de navegación */}
-        <View style={estilos.encabezado}>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')}>
-            <Text style={estilos.opcion}>Perfil</Text>
+     {/* Barra de pestañas */}
+     <View style={estilos.barraPestanas}>
+        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')}>
+          <Text style={estilos.textoPestanaInactiva}>Perfil</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('EditarDatosPersonales')}>
-            <Text style={estilos.opcion}>Editar</Text>
+        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
+          <Text style={estilos.textoPestanaInactiva}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MisServicios')}>
-            <Text style={[estilos.opcion, estilos.opcionSeleccionada]}>Mis servicios</Text>
+        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('MisServicios')}>
+          <Text style={estilos.textoPestanaActiva}>Mis servicios</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')}>
-            <Text style={estilos.opcion}>Section</Text>
-        </TouchableOpacity>
-        </View>
+      </View>
 
         {/* Botón Agregar Servicio */}
         <TouchableOpacity 
@@ -45,7 +42,7 @@ const MisServicios = () => {
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
@@ -89,6 +86,30 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+  },
+  barraPestanas: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    marginBottom: 20,
+  },
+  pestanaActiva: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#197278',
+  },
+  pestanaInactiva: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  textoPestanaActiva: {
+    fontSize: 16,
+    color: '#197278',
+  },
+  textoPestanaInactiva: {
+    fontSize: 16,
+    color: '#666',
   },
   opcion: {
     fontSize: 16,

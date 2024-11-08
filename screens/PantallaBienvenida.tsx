@@ -24,7 +24,7 @@ const PantallaBienvenida = () => {
           
           <TouchableOpacity
             style={styles.buttonContainer}
-            onPress={() => navigation.navigate('pruebaUsuario')}
+            onPress={() => navigation.navigate('PantallaRegistro')}
           // onPress={() => navigation.navigate('AgregarServicio1')}
           >
             <LinearGradient

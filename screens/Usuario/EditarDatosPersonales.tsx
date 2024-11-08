@@ -56,7 +56,7 @@ const EditarDatosPersonales = () => {
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
@@ -66,7 +66,7 @@ const EditarDatosPersonales = () => {
         </TouchableOpacity>
         <TouchableOpacity style={estilos.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
-          <Text style={estilos.textoNavegacion}>Servicios</Text>
+          <Text style={estilos.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.iconoNavegacion}>
           <Ionicons name="person-outline" size={24} color="gray" />

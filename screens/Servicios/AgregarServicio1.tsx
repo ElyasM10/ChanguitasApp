@@ -83,9 +83,9 @@ const AgregarServicio1 = () => {
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomNav}>
-        {renderNavItem("home-outline", "Inicio", "PantallaBienvenida", navigation)}
+        {renderNavItem("home-outline", "Inicio", "PantallaHome", navigation)}
         {renderNavItem("search-outline", "Buscar", "PantallaBuscar", navigation)}
-        {renderNavItem("grid-outline", "Servicios", "PantallaServicios", navigation)}
+        {renderNavItem("grid-outline", "Historial", "PantallaServicios", navigation)}
         {renderNavItem("person-outline", "Perfil", "PantallaPerfil", navigation)}
       </View>
     </View>

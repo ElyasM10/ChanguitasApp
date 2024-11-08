@@ -75,9 +75,45 @@ const PantallaRegistro = () => {
               </View>
 
               <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Dirección</Text>
+                <Text style={estilos.etiqueta}>Calle</Text>
                 <TextInput
-                  placeholder="San Martín 123"
+                  placeholder="San Martín"
+                  placeholderTextColor="#666"
+                  style={estilos.entradaTexto}
+                />
+              </View>
+
+              <View style={estilos.campo}>
+                <Text style={estilos.etiqueta}>Altura</Text>
+                <TextInput
+                  placeholder="456"
+                  placeholderTextColor="#666"
+                  style={estilos.entradaTexto}
+                />
+              </View>
+
+              <View style={estilos.campo}>
+                <Text style={estilos.etiqueta}>Piso (opcional)</Text>
+                <TextInput
+                  placeholder="1"
+                  placeholderTextColor="#666"
+                  style={estilos.entradaTexto}
+                />
+              </View>
+
+              <View style={estilos.campo}>
+                <Text style={estilos.etiqueta}>Nro. dpto. (opcional)</Text>
+                <TextInput
+                  placeholder="A"
+                  placeholderTextColor="#666"
+                  style={estilos.entradaTexto}
+                />
+              </View>
+
+              <View style={estilos.campo}>
+                <Text style={estilos.etiqueta}>Barrio</Text>
+                <TextInput
+                  placeholder="Centro"
                   placeholderTextColor="#666"
                   style={estilos.entradaTexto}
                 />

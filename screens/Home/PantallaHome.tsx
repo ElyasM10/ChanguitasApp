@@ -46,7 +46,7 @@ const PantallaHome = () => {
 
       {/* Barra de navegacion de abajo */}
       <View style={estilos.barraNavegacion}>
-        <TouchableOpacity onPress={() => handlePress('Inicio')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
@@ -56,9 +56,9 @@ const PantallaHome = () => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handlePress('Servicios')} style={estilos.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
-          <Text style={estilos.textoNavegacion}>Servicios</Text>
+          <Text style={estilos.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress('Perfil')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={estilos.iconoNavegacion}>
           <Ionicons name="person-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Perfil</Text>
         </TouchableOpacity>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { Checkbox } from 'react-native-paper';  // Importar Checkbox de react-native-paper
-
+import { Checkbox } from 'react-native-paper';  // Asegúrate de que esté instalado
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -10,11 +9,11 @@ const AgregarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [selectedServices, setSelectedServices] = useState({
-    "Depilacion":false,
-    "Maquillaje":false,
+    "Depilacion": false,
+    "Maquillaje": false,
     "Manicura": false,
-    "Peluqueria":false,
-    "Podologia":false,
+    "Peluqueria": false,
+    "Podologia": false,
     "Corte de pasto": false,
     "Arreglo jardín": false,
     "Limpieza jardín": false,
@@ -56,12 +55,12 @@ const AgregarServicio1 = () => {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Sección de servicios */}
-        {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura","Peluqueria","Podologia"], selectedServices, toggleService)}
+        {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura", "Peluqueria", "Podologia"], selectedServices, toggleService)}
         {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedServices, toggleService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedServices, toggleService)}
         {renderCategory("HOGAR", [
-          "Gasista", "Electricista", "Plomero", "Carpintero", 
-          "Pintor", "Albañil", "Ziguería", "Gomería", 
+          "Gasista", "Electricista", "Plomero", "Carpintero",
+          "Pintor", "Albañil", "Ziguería", "Gomería",
           "Electrodomésticos", "Calderista"
         ], selectedServices, toggleService)}
         {renderCategory("CUIDADO DE PERSONAS", ["Niñero/a", "Cuidado de adultos mayores"], selectedServices, toggleService)}
@@ -82,11 +81,23 @@ const AgregarServicio1 = () => {
       </ScrollView>
 
       {/* Barra de navegación inferior */}
-      <View style={styles.bottomNav}>
-        {renderNavItem("home-outline", "Inicio", "PantallaHome", navigation)}
-        {renderNavItem("search-outline", "Buscar", "PantallaBuscar", navigation)}
-        {renderNavItem("grid-outline", "Historial", "PantallaServicios", navigation)}
-        {renderNavItem("person-outline", "Perfil", "PantallaPerfil", navigation)}
+      <View style={styles.barraNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+          <Ionicons name="home-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Inicio</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio2')} style={styles.iconoNavegacion}>
+          <Ionicons name="search-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Buscar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+          <Ionicons name="grid-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Historial</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={styles.iconoNavegacion}>
+          <Ionicons name="person-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Perfil</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -108,14 +119,6 @@ const renderCategory = (title, options, selectedServices, toggleService) => (
   </View>
 );
 
-// Funcion para renderizar los items de la barra de navegación inferior
-const renderNavItem = (iconName, label, route, navigation) => (
-  <TouchableOpacity onPress={() => navigation.navigate(route)} style={styles.navItem}>
-    <Ionicons name={iconName} size={24} color="gray" />
-    <Text style={styles.navText}>{label}</Text>
-  </TouchableOpacity>
-);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -125,11 +128,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     padding: 20,
-    marginTop:40,
-
+    marginTop: 40,
   },
   scrollContainer: {
     paddingHorizontal: 20,
+    paddingBottom: 80,
   },
   categoryTitle: {
     fontSize: 16,
@@ -175,23 +178,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  bottomNav: {
+  barraNavegacion: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 60,
+    backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
-  navItem: {
+  iconoNavegacion: {
     alignItems: 'center',
   },
-  navText: {
+  textoNavegacion: {
     fontSize: 12,
     color: 'gray',
   },
 });
 
 export default AgregarServicio1;
+
 
 // npm install react-native-paper

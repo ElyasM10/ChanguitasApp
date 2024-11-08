@@ -64,6 +64,27 @@ const AgregarServicio3 = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+       {/* Barra de navegación inferior */}
+       <View style={styles.barraNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+          <Ionicons name="home-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Inicio</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+          <Ionicons name="search-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Buscar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+          <Ionicons name="grid-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Historial</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={styles.iconoNavegacion}>
+          <Ionicons name="person-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Perfil</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };
@@ -172,6 +193,25 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  barraNavegacion: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  iconoNavegacion: {
+    alignItems: 'center',
+  },
+  textoNavegacion: {
+    fontSize: 12,
+    color: 'gray',
   },
 });
 

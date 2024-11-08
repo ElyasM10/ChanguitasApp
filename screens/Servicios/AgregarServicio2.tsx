@@ -26,11 +26,11 @@ const AgregarServicio2 = () => {
     Domingo: { start: '', end: '' },
   });
 
-  const toggleDay = (day) => {
+  const toggleDay = (day: string) => {
     setDays(prev => ({ ...prev, [day]: !prev[day] }));
   };
 
-  const handleTimeChange = (day, timeType, value) => {
+  const handleTimeChange = (day: string, timeType: 'start' | 'end', value: string) => {
     setHours(prev => ({
       ...prev,
       [day]: { ...prev[day], [timeType]: value },
@@ -51,44 +51,65 @@ const AgregarServicio2 = () => {
           multiline
         />
 
-        <View style={styles.dayContainer}>
+        <View style={styles.dayHeader}>
           <Text style={styles.dayLabel}>Día</Text>
           <Text style={styles.hourLabel}>Hora</Text>
-          {Object.keys(days).map((day) => (
-            <View style={styles.dayRow} key={day}>
-              <Switch
-                value={days[day]}
-                onValueChange={() => toggleDay(day)}
-              />
-              <Text style={styles.dayText}>{day}</Text>
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Inicio"
-                value={hours[day].start}
-                onChangeText={(value) => handleTimeChange(day, 'start', value)}
-                editable={days[day]}
-              />
-              <Text style={styles.toText}>a</Text>
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Fin"
-                value={hours[day].end}
-                onChangeText={(value) => handleTimeChange(day, 'end', value)}
-                editable={days[day]}
-              />
-            </View>
-          ))}
         </View>
 
+        {Object.keys(days).map((day) => (
+          <View style={styles.dayRow} key={day}>
+            <Switch
+              value={days[day]}
+              onValueChange={() => toggleDay(day)}
+            />
+            <Text style={styles.dayText}>{day}</Text>
+            <TextInput
+              style={styles.timeInput}
+              placeholder="Inicio"
+              value={hours[day].start}
+              onChangeText={(value) => handleTimeChange(day, 'start', value)}
+              editable={days[day]}
+            />
+            <Text style={styles.toText}>a</Text>
+            <TextInput
+              style={styles.timeInput}
+              placeholder="Fin"
+              value={hours[day].end}
+              onChangeText={(value) => handleTimeChange(day, 'end', value)}
+              editable={days[day]}
+            />
+          </View>
+        ))}
+
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('AgregarServicio3')}>
-            <Text style={styles.nextButtonText}>Siguiente</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.prevButton} onPress={() => navigation.goBack()}>
             <Text style={styles.prevButtonText}>Atrás</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('AgregarServicio3')}>
+            <Text style={styles.nextButtonText}>Siguiente</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Barra de navegación inferior */}
+      <View style={styles.barraNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+          <Ionicons name="home-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Inicio</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+          <Ionicons name="search-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Buscar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+          <Ionicons name="grid-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Historial</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={styles.iconoNavegacion}>
+          <Ionicons name="person-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Perfil</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -106,6 +127,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
+    paddingBottom: 80,
   },
   label: {
     fontSize: 16,
@@ -121,21 +143,20 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginBottom: 20,
   },
-  dayContainer: {
-    marginTop: 20,
+  dayHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   dayLabel: {
     fontSize: 14,
     color: 'gray',
     fontWeight: '600',
-    marginBottom: 10,
   },
   hourLabel: {
     fontSize: 14,
     color: 'gray',
     fontWeight: '600',
-    position: 'absolute',
-    right: 20,
   },
   dayRow: {
     flexDirection: 'row',
@@ -163,7 +184,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     paddingVertical: 20,
   },
   prevButton: {
@@ -188,6 +209,25 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  barraNavegacion: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  iconoNavegacion: {
+    alignItems: 'center',
+  },
+  textoNavegacion: {
+    fontSize: 12,
+    color: 'gray',
   },
 });
 

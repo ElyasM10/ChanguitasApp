@@ -86,15 +86,15 @@ const AgregarServicio1 = () => {
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio2')} style={styles.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={styles.iconoNavegacion}>
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={styles.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={styles.iconoNavegacion}>
           <Ionicons name="person-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Perfil</Text>
         </TouchableOpacity>

@@ -81,12 +81,13 @@ const AgregarServicio2 = () => {
           </View>
         ))}
 
+        {/* Botones de acción */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.prevButton} onPress={() => navigation.goBack()}>
-            <Text style={styles.prevButtonText}>Atrás</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('AgregarServicio3')}>
             <Text style={styles.nextButtonText}>Siguiente</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.prevButton} onPress={() => navigation.navigate('AgregarServicio1')}>
+            <Text style={styles.prevButtonText}>Atrás</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -97,15 +98,15 @@ const AgregarServicio2 = () => {
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={styles.iconoNavegacion}>
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={styles.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={styles.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={styles.iconoNavegacion}>
           <Ionicons name="person-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Perfil</Text>
         </TouchableOpacity>
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     paddingVertical: 20,
   },
   prevButton: {

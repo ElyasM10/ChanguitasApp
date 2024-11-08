@@ -79,11 +79,23 @@ const BuscarServicio1 = () => {
       </ScrollView>
 
       {/* Barra de navegación inferior */}
-      <View style={styles.bottomNav}>
-        {renderNavItem("home-outline", "Inicio", "PantallaHome", navigation)}
-        {renderNavItem("search-outline", "Buscar", "PantallaBuscar", navigation)}
-        {renderNavItem("grid-outline", "Historial", "PantallaServicios", navigation)}
-        {renderNavItem("person-outline", "Perfil", "PantallaPerfiEditarUsuario", navigation)}
+      <View style={styles.barraNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+          <Ionicons name="home-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Inicio</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={styles.iconoNavegacion}>
+          <Ionicons name="search-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Buscar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+          <Ionicons name="grid-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Historial</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={styles.iconoNavegacion}>
+          <Ionicons name="person-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Perfil</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -103,14 +115,6 @@ const renderCategory = (title, options, selectedServices, toggleService) => (
       </View>
     ))}
   </View>
-);
-
-// Funcion para renderizar los items de la barra de navegación inferior
-const renderNavItem = (iconName, label, route, navigation) => (
-  <TouchableOpacity onPress={() => navigation.navigate(route)} style={styles.navItem}>
-    <Ionicons name={iconName} size={24} color="gray" />
-    <Text style={styles.navText}>{label}</Text>
-  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
@@ -148,6 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 20,
+    marginBottom: 70,
   },
   nextButton: {
     backgroundColor: '#197278',
@@ -184,6 +189,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navText: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  barraNavegacion: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  iconoNavegacion: {
+    alignItems: 'center',
+  },
+  textoNavegacion: {
     fontSize: 12,
     color: 'gray',
   },

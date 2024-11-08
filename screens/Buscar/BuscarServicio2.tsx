@@ -81,6 +81,26 @@ const BuscarServicio2 = () => {
             <Text style={styles.prevButtonText}>Atrás</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Barra de navegación inferior */}
+      <View style={styles.barraNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+          <Ionicons name="home-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Inicio</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={styles.iconoNavegacion}>
+          <Ionicons name="search-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Buscar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+          <Ionicons name="grid-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Historial</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={styles.iconoNavegacion}>
+          <Ionicons name="person-outline" size={24} color="gray" />
+          <Text style={styles.textoNavegacion}>Perfil</Text>
+        </TouchableOpacity>
+      </View>
       </ScrollView>
     </View>
   );
@@ -158,6 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 20,
+    marginBottom: 70,
   },
   prevButton: {
     borderWidth: 1,
@@ -181,6 +202,25 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  barraNavegacion: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  iconoNavegacion: {
+    alignItems: 'center',
+  },
+  textoNavegacion: {
+    fontSize: 12,
+    color: 'gray',
   },
 });
 

@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const PantallaPerfiEditarUsuario = () => {
+const PantallaPerfilDeOtro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const userData = {
@@ -20,22 +20,12 @@ const PantallaPerfiEditarUsuario = () => {
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Perfil</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('ResultadosBusqueda')}>
+            <Ionicons name="arrow-back" size={24} color="#333" />
+        </TouchableOpacity>
+        <Text style={estilos.textoEncabezado}>Perfil de {userData.nombre}</Text>
         <TouchableOpacity>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-         {/* Barra de pestañas */}
-         <View style={estilos.barraPestanas}>
-        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('PantallaBienvenida')}>
-          <Text style={estilos.textoPestanaActiva}>Perfil</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
-          <Text style={estilos.textoPestanaInactiva}>Editar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
-          <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
         </TouchableOpacity>
       </View>
 
@@ -206,5 +196,5 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default PantallaPerfiEditarUsuario;
+export default PantallaPerfilDeOtro;
 

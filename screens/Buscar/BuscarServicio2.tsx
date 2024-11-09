@@ -74,7 +74,7 @@ const BuscarServicio2 = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('PantallaHome')}>
+          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('ResultadosBusqueda')}>
             <Text style={styles.nextButtonText}>Buscar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.prevButton} onPress={() => navigation.navigate('BuscarServicio1')}>
@@ -92,7 +92,7 @@ const BuscarServicio2 = () => {
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={styles.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Historial</Text>
         </TouchableOpacity>

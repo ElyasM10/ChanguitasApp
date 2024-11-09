@@ -65,7 +65,7 @@ const EditarDatosPersonales = () => {
           <Ionicons name="grid-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={estilos.iconoNavegacion}>
           <Ionicons name="person-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Perfil</Text>
         </TouchableOpacity>

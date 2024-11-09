@@ -1,50 +1,34 @@
 import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import { RootStackParamList } from '../../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../AppNavigator';
 
-const PantallaHome = () => {
-  const caracteristicas = [
-    '+30 servicios',
-    'Chat integrado',
-    'Ushuaia'
-  ];
-
-  // Aca se configura a donde van los botones de la barra de navegacion de abajo
+const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const handlePress = (screen) => {
-    if (screen === 'Buscar') {
-      navigation.navigate('PantallaRegistro');
-    } else {
-      console.log(`Navegar a ${screen}`);
-    }
-  };
 
   return (
     <SafeAreaView style={estilos.contenedor}>
-      {/* Encabezado */}
+      {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoInicio}>Inicio</Text>
+        <Text style={estilos.textoEncabezado}>Historial</Text>
         <TouchableOpacity>
-          <Text style={estilos.menuPuntos}>...</Text>
+          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
-      {/* Contenido Principal */}
-      <View style={estilos.contenidoPrincipal}>
-        <Text style={estilos.tituloApp}>Changuitas{'\n'}App</Text>
-        
-        <View style={estilos.contenedorCaracteristicas}>
-          {caracteristicas.map((item, indice) => (
-            <TouchableOpacity key={indice} style={estilos.cajaCaracteristica}>
-              <Text style={estilos.textoCaracteristica}>• {item}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+         {/* Barra de pestañas */}
+         <View style={estilos.barraPestanas}>
+        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('Historial1')}>
+          <Text style={estilos.textoPestanaInactiva}>Servicios contratados</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('Historial2')}>
+          <Text style={estilos.textoPestanaActiva}>Trabajos realizados</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Barra de navegacion de abajo */}
+
+      {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
         <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
@@ -77,45 +61,86 @@ const estilos = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
+    paddingVertical: 15,
     backgroundColor: 'white',
     marginTop: 50,
   },
-  textoInicio: {
+  textoEncabezado: {
     fontSize: 24,
     fontWeight: '600',
   },
-  menuPuntos: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  contenidoPrincipal: {
-    flex: 1,
-    backgroundColor: '#4EAAA5',
-    paddingHorizontal: 20,
-    paddingTop: 30,
-  },
-  tituloApp: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  barraPestanas: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
     marginBottom: 20,
-    lineHeight: 40,
   },
-  contenedorCaracteristicas: {
-    gap: 10,
+  pestanaActiva: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#197278',
   },
-  cajaCaracteristica: {
-    backgroundColor: '#2A3A35',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    borderRadius: 8,
+  pestanaInactiva: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
-  textoCaracteristica: {
-    color: '#FFFFFF',
+  textoPestanaActiva: {
+    fontSize: 16,
+    color: '#197278',
+  },
+  textoPestanaInactiva: {
+    fontSize: 16,
+    color: '#666',
+  },
+  seccionUsuario: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  imagenUsuario: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#f0f0f0',
+    marginBottom: 10,
+  },
+  nombreCompleto: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  rolUsuario: {
+    fontSize: 16,
+    color: '#666',
+  },
+  datosExtras: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+  },
+  datoItem: {
+    alignItems: 'center',
+  },
+  datoNumero: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: 'bold',
+  },
+  datoLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  tituloDatosPersonales: {
+    fontSize: 18,
+    color: '#197278',
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  datosPersonales: {
+    paddingHorizontal: 20,
+  },
+  infoUsuario: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 5,
   },
   barraNavegacion: {
     flexDirection: 'row',
@@ -125,6 +150,7 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
+    marginTop: 155
   },
   iconoNavegacion: {
     alignItems: 'center',
@@ -135,4 +161,4 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default PantallaHome;
+export default Historial2;

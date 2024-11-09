@@ -4,38 +4,26 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const PantallaPerfiEditarUsuario = () => {
+const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const userData = {
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    fechaNacimiento: '01/01/1990',
-    correo: 'juan@perez.com',
-    telefono: '02901-12345678',
-    direccion: 'Calle Las Changas 456'
+  const serviceData = {
+    servicio: 'Cortar el pasto',
+    fecha: '--/--/---',
+    puntaje: '--',
+    estado: 'En proceso',
   };
 
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Perfil</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Historial1')}>
+            <Ionicons name="arrow-back" size={24} color="#333" />
+        </TouchableOpacity>
+        <Text style={estilos.textoEncabezado}>Detalle de la tarea</Text>
         <TouchableOpacity>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-         {/* Barra de pestañas */}
-         <View style={estilos.barraPestanas}>
-        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('PantallaBienvenida')}>
-          <Text style={estilos.textoPestanaActiva}>Perfil</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
-          <Text style={estilos.textoPestanaInactiva}>Editar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
-          <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
         </TouchableOpacity>
       </View>
 
@@ -46,32 +34,24 @@ const PantallaPerfiEditarUsuario = () => {
         <Text style={estilos.rolUsuario}>User role</Text>
       </View>
 
-      {/* Datos adicionales */}
-      <View style={estilos.datosExtras}>
-        <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>1986</Text>
-          <Text style={estilos.datoLabel}>Contrató</Text>
-        </View>
-        <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>2728</Text>
-          <Text style={estilos.datoLabel}>Trabajó</Text>
-        </View>
-        <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>4.2</Text>
-          <Text style={estilos.datoLabel}>Puntaje</Text>
-        </View>
+      {/* Datos Personales */}
+      <Text style={estilos.tituloDatosPersonales}>DATOS DE LA TAREA</Text>
+      <View style={estilos.datosPersonales}>
+        <Text style={estilos.infoUsuario}>Servicio: {serviceData.servicio}</Text>
+        <Text style={estilos.infoUsuario}>Fecha: {serviceData.fecha}</Text>
+        <Text style={estilos.infoUsuario}>Puntaje: {serviceData.puntaje}</Text>
+        <Text style={estilos.infoUsuario}>Estado: {serviceData.estado}</Text>
       </View>
 
-      {/* Datos Personales */}
-      <Text style={estilos.tituloDatosPersonales}>DATOS PERSONALES</Text>
-      <View style={estilos.datosPersonales}>
-        <Text style={estilos.infoUsuario}>Nombre: {userData.nombre}</Text>
-        <Text style={estilos.infoUsuario}>Apellido: {userData.apellido}</Text>
-        <Text style={estilos.infoUsuario}>Fecha de Nacimiento: {userData.fechaNacimiento}</Text>
-        <Text style={estilos.infoUsuario}>Correo Electronico: {userData.correo}</Text>
-        <Text style={estilos.infoUsuario}>Telefono: {userData.telefono}</Text>
-        <Text style={estilos.infoUsuario}>Direccion: {userData.direccion}</Text>
-      </View>
+      {/* Botones */}
+      <View style={estilos.buttonContainer}>
+            <TouchableOpacity style={estilos.nextButton} onPress={() => navigation.navigate('CalificarTarea')}>
+            <Text style={estilos.nextButtonText}>Finalizar changuita</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.prevButton} onPress={() => navigation.navigate('Historial1')}>
+            <Text style={estilos.prevButtonText}>Cancelar changuita</Text>
+          </TouchableOpacity>
+        </View>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -187,6 +167,34 @@ const estilos = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 20,
+  },
+  prevButton: {
+    borderWidth: 1,
+    borderColor: '#197278',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+  },
+  prevButtonText: {
+    color: '#197278',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  nextButton: {
+    backgroundColor: '#197278',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+  },
+  nextButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   barraNavegacion: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -206,5 +214,4 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default PantallaPerfiEditarUsuario;
-
+export default DetalleTarea;

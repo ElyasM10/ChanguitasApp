@@ -61,7 +61,7 @@ const EditarDatosPersonales = () => {
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Historial</Text>
         </TouchableOpacity>

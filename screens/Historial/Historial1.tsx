@@ -4,23 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const PantallaPerfiEditarUsuario = () => {
+const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  const userData = {
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    fechaNacimiento: '01/01/1990',
-    correo: 'juan@perez.com',
-    telefono: '02901-12345678',
-    direccion: 'Calle Las Changas 456'
-  };
 
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Perfil</Text>
+        <Text style={estilos.textoEncabezado}>Historial</Text>
         <TouchableOpacity>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
         </TouchableOpacity>
@@ -28,50 +19,25 @@ const PantallaPerfiEditarUsuario = () => {
 
          {/* Barra de pestañas */}
          <View style={estilos.barraPestanas}>
-        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('PantallaBienvenida')}>
-          <Text style={estilos.textoPestanaActiva}>Perfil</Text>
+        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('Historial1')}>
+          <Text style={estilos.textoPestanaActiva}>Servicios contratados</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
-          <Text style={estilos.textoPestanaInactiva}>Editar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
-          <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
+        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('Historial2')}>
+          <Text style={estilos.textoPestanaInactiva}>Trabajos realizados</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Información del Usuario */}
-      <View style={estilos.seccionUsuario}>
-        <Image source={{ uri: 'https://via.placeholder.com/80' }} style={estilos.imagenUsuario} />
-        <Text style={estilos.nombreCompleto}>Full name</Text>
-        <Text style={estilos.rolUsuario}>User role</Text>
-      </View>
-
-      {/* Datos adicionales */}
-      <View style={estilos.datosExtras}>
-        <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>1986</Text>
-          <Text style={estilos.datoLabel}>Contrató</Text>
+      {/* Elemento de resultado */}
+      <View style={estilos.resultItem}>
+          <Image style={estilos.image} source={{ uri: "https://via.placeholder.com/100" }} />
+          <View style={estilos.resultDetails}>
+            <Text style={estilos.name}>Nombre</Text>
+            <Text style={estilos.category}>Categoría</Text>
+          </View>
+          <TouchableOpacity onPress={() => navigation.navigate('DetalleTarea')} style={estilos.arrowButton}>
+            <Ionicons name="chevron-forward" size={20} color="#333" />
+          </TouchableOpacity>
         </View>
-        <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>2728</Text>
-          <Text style={estilos.datoLabel}>Trabajó</Text>
-        </View>
-        <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>4.2</Text>
-          <Text style={estilos.datoLabel}>Puntaje</Text>
-        </View>
-      </View>
-
-      {/* Datos Personales */}
-      <Text style={estilos.tituloDatosPersonales}>DATOS PERSONALES</Text>
-      <View style={estilos.datosPersonales}>
-        <Text style={estilos.infoUsuario}>Nombre: {userData.nombre}</Text>
-        <Text style={estilos.infoUsuario}>Apellido: {userData.apellido}</Text>
-        <Text style={estilos.infoUsuario}>Fecha de Nacimiento: {userData.fechaNacimiento}</Text>
-        <Text style={estilos.infoUsuario}>Correo Electronico: {userData.correo}</Text>
-        <Text style={estilos.infoUsuario}>Telefono: {userData.telefono}</Text>
-        <Text style={estilos.infoUsuario}>Direccion: {userData.direccion}</Text>
-      </View>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -137,6 +103,40 @@ const estilos = StyleSheet.create({
   textoPestanaInactiva: {
     fontSize: 16,
     color: '#666',
+  },
+  resultItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: '#E0E0E0',
+  },
+  resultDetails: {
+    flex: 1,
+    marginLeft: 15,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+  },
+  category: {
+    fontSize: 14,
+    color: '#666',
+  },
+  rating: {
+    flexDirection: 'row',
+    marginTop: 5,
+  },
+  arrowButton: {
+    paddingLeft: 10,
   },
   seccionUsuario: {
     alignItems: 'center',
@@ -206,5 +206,4 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default PantallaPerfiEditarUsuario;
-
+export default Historial1;

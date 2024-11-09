@@ -24,6 +24,10 @@ import BuscarServicio1 from './screens/Buscar/BuscarServicio1';
 import BuscarServicio2 from './screens/Buscar/BuscarServicio2';
 import ResultadosBusqueda from './screens/Buscar/ResultadosBusqueda';
 import PantallaPerfilDeOtro from './screens/Buscar/PantallaPerfilDeOtro';
+import Historial1 from './screens/Historial/Historial1';
+import Historial2 from './screens/Historial/Historial2';
+import DetalleTarea from './screens/Historial/DetalleTarea';
+import CalificarTarea from './screens/Historial/CalificarTarea';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -53,6 +57,10 @@ export type RootStackParamList = {
   BuscarServicio2: undefined;
   ResultadosBusqueda: undefined;
   PantallaPerfilDeOtro: undefined;
+  Historial1: undefined;
+  Historial2: undefined;
+  DetalleTarea: undefined;
+  CalificarTarea: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
@@ -182,7 +190,27 @@ export default function AppNavigator() {
         component={PantallaPerfilDeOtro} 
         options={{ headerShown: false }}  
       /> 
- 
+      <Stack.Screen 
+        name="Historial1" 
+        component={Historial1} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="Historial2" 
+        component={Historial2} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="DetalleTarea" 
+        component={DetalleTarea} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="CalificarTarea" 
+        component={CalificarTarea} 
+        options={{ headerShown: false }}  
+      /> 
+      
  
 
  

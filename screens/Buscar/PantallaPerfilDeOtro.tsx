@@ -36,6 +36,19 @@ const PantallaPerfilDeOtro = () => {
         <Text style={estilos.rolUsuario}>User role</Text>
       </View>
 
+      {/* Botones */}
+      <View style={estilos.buttonContainer}>
+            <TouchableOpacity style={estilos.nextButton} onPress={() => navigation.navigate('DetalleTarea')}>
+            <Text style={estilos.nextButtonText}>Iniciar changuita</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.prevButton} >
+            <Text style={estilos.prevButtonText}>Chatear</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.prevButton} onPress={() => navigation.navigate('ResultadosBusqueda')}>
+            <Text style={estilos.prevButtonText}>Bloquear</Text>
+          </TouchableOpacity>
+        </View>
+
       {/* Datos adicionales */}
       <View style={estilos.datosExtras}>
         <View style={estilos.datoItem}>
@@ -73,7 +86,7 @@ const PantallaPerfilDeOtro = () => {
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
@@ -146,6 +159,34 @@ const estilos = StyleSheet.create({
   rolUsuario: {
     fontSize: 16,
     color: '#666',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 20,
+  },
+  prevButton: {
+    borderWidth: 1,
+    borderColor: '#197278',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+  },
+  prevButtonText: {
+    color: '#197278',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  nextButton: {
+    backgroundColor: '#197278',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+  },
+  nextButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   datosExtras: {
     flexDirection: 'row',

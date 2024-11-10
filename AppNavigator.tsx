@@ -29,6 +29,9 @@ import Historial2 from './screens/Historial/Historial2';
 import DetalleTarea from './screens/Historial/DetalleTarea';
 import CalificarTarea from './screens/Historial/CalificarTarea';
 import PantallaAyuda from './screens/PantallaAyuda';
+import CrearCategoria from './screens/Admin/CrearCategoria';
+import EditarCategoria from './screens/Admin/EditarCategoria';
+import EditarDatosCategoria from './screens/Admin/EditarDatosCategoria';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -63,6 +66,9 @@ export type RootStackParamList = {
   DetalleTarea: undefined;
   CalificarTarea: undefined;
   PantallaAyuda: undefined;
+  CrearCategoria: undefined;
+  EditarCategoria: undefined;
+  EditarDatosCategoria: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
@@ -215,6 +221,21 @@ export default function AppNavigator() {
       <Stack.Screen 
         name="PantallaAyuda" 
         component={PantallaAyuda} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="CrearCategoria" 
+        component={CrearCategoria} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="EditarCategoria" 
+        component={EditarCategoria} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="EditarDatosCategoria" 
+        component={EditarDatosCategoria} 
         options={{ headerShown: false }}  
       /> 
       

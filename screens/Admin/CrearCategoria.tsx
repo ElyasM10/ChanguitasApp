@@ -1,53 +1,46 @@
-import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, Image, TextInput } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const PantallaEditarUsuario = () => {
+const CrearCategoria = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  // Datos de ejemplo para la lista de usuarios
-  const usuarios = [
-    { id: '1', nombre: 'Rodrigo Rodriguez' },
-    { id: '2', nombre: 'Domingo Dominguez' },
-    { id: '3', nombre: 'Gonzalo Gonzalez' },
-    { id: '4', nombre: 'Martina Martinez' },
-    { id: '5', nombre: 'Alvaro Alvarez' },
-    { id: '6', nombre: 'Juan Juarez' },
-  ];
-
-  const handleUserPress = (userId) => {
-    console.log(`Editar usuario con ID: ${userId}`);
-  };
-
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={estilos.usuarioFila} onPress={() => navigation.navigate('PantallaEditarDatosUsuario')}>
-      <View style={estilos.usuarioInfo}>
-        <Image source={{ uri: 'https://via.placeholder.com/40' }} style={estilos.imagenUsuario} />
-        <Text style={estilos.nombreUsuario}>{item.nombre}</Text>
-      </View>
-      <Ionicons name="chevron-forward-outline" size={20} color="gray" />
-    </TouchableOpacity>
-  );
-
+  const [nombre, setNombre] = useState('');
+  const [categoriaPadre, setCategoriaPadre] = useState('');
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Editar usuario</Text>
+        <Text style={estilos.textoEncabezado}>Crear categoría</Text>
         <TouchableOpacity>
           <Text style={estilos.menuPuntos}>...</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Lista de Usuarios */}
-      <FlatList
-        data={usuarios}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={estilos.listaUsuarios}
-      />
+      {/* Formulario */}
+      <View style={estilos.formulario}>
+          <Text style={estilos.label}>Nombre</Text>
+          <TextInput
+            style={estilos.input}
+            placeholder="Nombre"
+            value={nombre}
+            onChangeText={setNombre}
+          />
+
+          <Text style={estilos.label}>Categoría padre</Text>
+          <TextInput
+            style={estilos.input}
+            placeholder="Categoría padre"
+            value={categoriaPadre}
+            onChangeText={setCategoriaPadre}
+          />
+        </View>
+
+        {/* Botón Guardar Cambios */}
+        <TouchableOpacity style={estilos.botonGuardar} onPress={() => navigation.navigate('PantallaHomeAdmin')}>
+          <Text style={estilos.textoBotonGuardar}>Crear categoría</Text>
+        </TouchableOpacity>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -95,6 +88,35 @@ const estilos = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
   },
+  formulario: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 5,
+  },
+  input: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+  },
+  botonGuardar: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  textoBotonGuardar: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
   listaUsuarios: {
     paddingHorizontal: 20,
   },
@@ -139,4 +161,4 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default PantallaEditarUsuario;
+export default CrearCategoria;

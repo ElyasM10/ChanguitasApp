@@ -7,14 +7,6 @@ import { RootStackParamList } from '../../AppNavigator';
 const PantallaHomeAdmin = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const opcionesAdmin = [
-    'Editar Usuarios',
-    'Administrar Reportes',
-    'Crear Categoría',
-    'Modificar Categoría',
-    '', '', '', '' // Espacios vacíos para los botones faltantes
-  ];
-
   const handlePress = (screen) => {
     if (screen === 'Buscar') {
       navigation.navigate('PantallaEditarUsuario');
@@ -39,29 +31,36 @@ const PantallaHomeAdmin = () => {
 
         {/* Opciones Administrativas */}
         <View style={estilos.contenedorOpcionesAdmin}>
-          {opcionesAdmin.map((opcion, indice) => (
-            <TouchableOpacity key={indice} style={estilos.cajaOpcion}>
-              <Text style={estilos.textoOpcion}>{opcion}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('PantallaEditarUsuario')} style={estilos.cajaOpcion}>
+              <Text style={estilos.textoOpcion}>Editar usuarios</Text>
             </TouchableOpacity>
-          ))}
+            <TouchableOpacity style={estilos.cajaOpcion}>
+              <Text style={estilos.textoOpcion}>Administrar reportes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('CrearCategoria')} style={estilos.cajaOpcion}>
+              <Text style={estilos.textoOpcion}>Crear categoría</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('EditarCategoria')} style={estilos.cajaOpcion}>
+              <Text style={estilos.textoOpcion}>Editar categoría</Text>
+            </TouchableOpacity>
         </View>
       </View>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
-        <TouchableOpacity onPress={() => handlePress('Inicio')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHomeAdmin')} style={estilos.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress('Buscar')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress('Servicios')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
-          <Text style={estilos.textoNavegacion}>Servicios</Text>
+          <Text style={estilos.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress('Perfil')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={estilos.iconoNavegacion}>
           <Ionicons name="person-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Perfil</Text>
         </TouchableOpacity>

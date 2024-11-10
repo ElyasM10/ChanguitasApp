@@ -54,6 +54,13 @@ const PantallaBienvenida = () => {
               <Text style={styles.buttonText}>Iniciar sesión</Text>
             </LinearGradient>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.helpButton}
+            onPress={() => navigation.navigate('PantallaHomeAdmin')}
+          >
+            <Text style={styles.helpButtonText}>Ingresar como Administrador (temporal)</Text>
+          </TouchableOpacity>
           
           <TouchableOpacity
             style={styles.helpButton}

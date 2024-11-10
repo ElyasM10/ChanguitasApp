@@ -4,17 +4,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const PantallaEditarUsuario = () => {
+const EditarCategoria = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  // Datos de ejemplo para la lista de usuarios
-  const usuarios = [
-    { id: '1', nombre: 'Rodrigo Rodriguez' },
-    { id: '2', nombre: 'Domingo Dominguez' },
-    { id: '3', nombre: 'Gonzalo Gonzalez' },
-    { id: '4', nombre: 'Martina Martinez' },
-    { id: '5', nombre: 'Alvaro Alvarez' },
-    { id: '6', nombre: 'Juan Juarez' },
+  // Datos de ejemplo para la lista de categorias
+  const categorias = [
+    { id: '1', nombre: 'Gasista' },
+    { id: '2', nombre: 'Plomero' },
+    { id: '3', nombre: 'Corte de pasto' },
+    { id: '4', nombre: 'Limpieza de hogar' },
+    { id: '5', nombre: 'Peluquería' },
+    { id: '6', nombre: 'Paseo de animales' },
+    { id: '7', nombre: 'Carpintero' },
   ];
 
   const handleUserPress = (userId) => {
@@ -22,9 +23,8 @@ const PantallaEditarUsuario = () => {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={estilos.usuarioFila} onPress={() => navigation.navigate('PantallaEditarDatosUsuario')}>
+    <TouchableOpacity style={estilos.usuarioFila} onPress={() => navigation.navigate('EditarDatosCategoria')}>
       <View style={estilos.usuarioInfo}>
-        <Image source={{ uri: 'https://via.placeholder.com/40' }} style={estilos.imagenUsuario} />
         <Text style={estilos.nombreUsuario}>{item.nombre}</Text>
       </View>
       <Ionicons name="chevron-forward-outline" size={20} color="gray" />
@@ -35,15 +35,15 @@ const PantallaEditarUsuario = () => {
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Editar usuario</Text>
+        <Text style={estilos.textoEncabezado}>Editar categoría</Text>
         <TouchableOpacity>
           <Text style={estilos.menuPuntos}>...</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Lista de Usuarios */}
+      {/* Lista de categorias */}
       <FlatList
-        data={usuarios}
+        data={categorias}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={estilos.listaUsuarios}
@@ -139,4 +139,4 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default PantallaEditarUsuario;
+export default EditarCategoria;

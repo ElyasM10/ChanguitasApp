@@ -57,7 +57,7 @@ const PantallaBienvenida = () => {
           
           <TouchableOpacity
             style={styles.helpButton}
-            onPress={() => navigation.navigate('PantallaChat')}
+            onPress={() => navigation.navigate('PantallaAyuda')}
           >
             <Text style={styles.helpButtonText}>Ayuda</Text>
           </TouchableOpacity>

@@ -1,24 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from '../../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 const PantallaHome = () => {
+  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const caracteristicas = [
     '+30 servicios',
-    'Chat integrado',
-    'Ushuaia'
+    'Ushuaia',
+    'Chat integrado'
   ];
 
-  // Aca se configura a donde van los botones de la barra de navegacion de abajo
+  // Configuración para la barra de navegación de abajo
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const handlePress = (screen) => {
-    if (screen === 'Buscar') {
-      navigation.navigate('PantallaRegistro');
-    } else {
-      console.log(`Navegar a ${screen}`);
-    }
+
+  const toggleDesplegable = () => {
+    setMostrarDesplegable(!mostrarDesplegable);
   };
 
   return (
@@ -26,10 +24,22 @@ const PantallaHome = () => {
       {/* Encabezado */}
       <View style={estilos.encabezado}>
         <Text style={estilos.textoInicio}>Inicio</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toggleDesplegable}>
           <Text style={estilos.menuPuntos}>...</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Menú Desplegable */}
+      {mostrarDesplegable && (
+        <View style={estilos.desplegable}>
+          <TouchableOpacity style={estilos.opcionDesplegable}>
+            <Text onPress={() => navigation.navigate('PantallaAyuda')} style={estilos.textoDesplegable}>Ayuda</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.opcionDesplegable}>
+            <Text onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.textoDesplegable}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Contenido Principal */}
       <View style={estilos.contenidoPrincipal}>
@@ -44,7 +54,7 @@ const PantallaHome = () => {
         </View>
       </View>
 
-      {/* Barra de navegacion de abajo */}
+      {/* Barra de navegación de abajo */}
       <View style={estilos.barraNavegacion}>
         <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
@@ -89,6 +99,29 @@ const estilos = StyleSheet.create({
   menuPuntos: {
     fontSize: 24,
     fontWeight: '600',
+  },
+  desplegable: {
+    position: 'absolute',
+    top: 90,
+    right: 20,
+    width: 150,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    zIndex: 10,
+  },
+  opcionDesplegable: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  textoDesplegable: {
+    fontSize: 16,
+    color: '#333333',
   },
   contenidoPrincipal: {
     flex: 1,
@@ -136,3 +169,4 @@ const estilos = StyleSheet.create({
 });
 
 export default PantallaHome;
+

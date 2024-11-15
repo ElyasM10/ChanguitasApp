@@ -66,7 +66,7 @@ const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop:35,
+    marginTop:43,
   },
   header: {
     alignItems: 'center',
@@ -158,7 +158,7 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    marginTop: 95,
+    marginTop: 600,
   },
   iconoNavegacion: {
     alignItems: 'center',

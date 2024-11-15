@@ -150,7 +150,7 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    marginTop: 155
+    marginTop: 675
   },
   iconoNavegacion: {
     alignItems: 'center',

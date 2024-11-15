@@ -195,7 +195,7 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    marginTop: 155
+    marginTop: 225
   },
   iconoNavegacion: {
     alignItems: 'center',

@@ -42,7 +42,7 @@ const EditarDatosPersonales = () => {
         <TextInput style={estilos.input} placeholder="Apellido" />
 
         <Text style={estilos.label}>Fecha de nacimiento</Text>
-        <TextInput style={estilos.input} placeholder="dd/mm/aaaa" />
+        <TextInput style={estilos.input} placeholder="aaaa-dd-mm" />
 
         <Text style={estilos.label}>Correo electrónico</Text>
         <TextInput style={estilos.input} placeholder="changuitas@app.com" />
@@ -84,7 +84,7 @@ const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop:35,
+    marginTop:43,
   },
   header: {
     alignItems: 'center',
@@ -176,7 +176,7 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    marginTop: 95,
+    marginTop: 150,
   },
   iconoNavegacion: {
     alignItems: 'center',
@@ -192,7 +192,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     width: '80%',  
     alignSelf: 'center',
-    marginTop:-130, 
+    marginTop:-150, 
   },
   textoBotonGuardar: {
     color: 'white',

@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
+    paddingBottom: 100,
   },
   label: {
     fontSize: 16,
@@ -186,6 +187,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 50,
+    marginTop: 40,
   },
   prevButtonText: {
     color: '#197278',
@@ -197,6 +199,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 50,
+    marginTop: 40,
   },
   nextButtonText: {
     color: 'white',
@@ -212,8 +215,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     position: 'absolute',
-    bottom: 0,
-    width: '100%',
+    bottom: -10,
+    width: '110%',
   },
   iconoNavegacion: {
     alignItems: 'center',

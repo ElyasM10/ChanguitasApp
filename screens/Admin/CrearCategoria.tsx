@@ -151,6 +151,7 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
+    marginTop: 480,
   },
   iconoNavegacion: {
     alignItems: 'center',

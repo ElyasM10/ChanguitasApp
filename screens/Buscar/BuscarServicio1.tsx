@@ -53,7 +53,6 @@ const BuscarServicio1 = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Buscar un servicio (1/2)</Text>
-
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Sección de servicios */}
         {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura","Peluqueria","Podologia"], selectedServices, toggleService)}

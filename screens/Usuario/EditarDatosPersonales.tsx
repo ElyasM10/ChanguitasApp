@@ -50,6 +50,11 @@ const EditarDatosPersonales = () => {
         <Text style={estilos.label}>Teléfono</Text>
         <TextInput style={estilos.input} placeholder="Número de teléfono" />
       </View>
+      
+      {/* Botón de Guardar Cambios */}
+      <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.botonGuardarCambios}>
+        <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
+      </TouchableOpacity>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -71,11 +76,8 @@ const EditarDatosPersonales = () => {
         </TouchableOpacity>
       </View>
 
-        {/* Botón Guardar Cambios */}
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.botonGuardarCambios}>
-        <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
-      </TouchableOpacity>
     </SafeAreaView>
+    
 
   );
 };
@@ -176,7 +178,9 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    marginTop: 150,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
   iconoNavegacion: {
     alignItems: 'center',
@@ -192,7 +196,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     width: '80%',  
     alignSelf: 'center',
-    marginTop:-150, 
+    marginTop: 32, 
   },
   textoBotonGuardar: {
     color: 'white',

@@ -40,7 +40,6 @@ const BuscarServicio2 = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Buscar un servicio (2/2)</Text>
-
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.label}>Descripción del Servicio:</Text>
 
@@ -81,6 +80,7 @@ const BuscarServicio2 = () => {
             <Text style={styles.prevButtonText}>Atrás</Text>
           </TouchableOpacity>
         </View>
+        </ScrollView>
 
         {/* Barra de navegación inferior */}
       <View style={styles.barraNavegacion}>
@@ -101,7 +101,7 @@ const BuscarServicio2 = () => {
           <Text style={styles.textoNavegacion}>Perfil</Text>
         </TouchableOpacity>
       </View>
-      </ScrollView>
+      
     </View>
   );
 };
@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     position: 'absolute',
-    bottom: -10,
-    width: '110%',
+    bottom: 0,
+    width: '100%',
   },
   iconoNavegacion: {
     alignItems: 'center',

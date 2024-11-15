@@ -158,7 +158,9 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    marginTop: 600,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
   iconoNavegacion: {
     alignItems: 'center',

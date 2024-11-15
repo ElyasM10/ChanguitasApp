@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
 });
 
 export default PruebaUsuario;
-*/
+
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, Button, Alert, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 
@@ -212,7 +212,6 @@ const PruebaUsuario: React.FC = () => {
       <Button title={loading ? 'Creando...' : 'Crear Usuario'} onPress={createUser} disabled={loading} />
 
       {loading && <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />}
-
       {usuarios.length === 0 ? (
         <Text style={styles.noDireccionesText}>No hay usuarios creados aún.</Text>
       ) : (
@@ -277,3 +276,4 @@ const styles = StyleSheet.create({
 });
 
 export default PruebaUsuario;
+*/

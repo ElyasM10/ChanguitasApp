@@ -15,7 +15,7 @@ import PantallaEditarUsuario from './screens/Admin/PantallaEditarUsuario';
 import PantallaEditarDatosUsuario from './screens/Admin/PantallaEditarDatosUsuario'
 import PantallaPerfilEditarUsuario from './screens/Usuario/PantallaPerfilEditarUsuario';
 import EditarDatosPersonales from './screens/Usuario/EditarDatosPersonales';
-import pruebaUsuario from './screens/pruebaUsuario';
+//import pruebaUsuario from './screens/pruebaUsuario';
 import AgregarServicio1 from './screens/Servicios/AgregarServicio1';
 import AgregarServicio2 from './screens/Servicios/AgregarServicio2';
 import AgregarServicio3 from './screens/Servicios/AgregarServicio3';
@@ -52,7 +52,7 @@ export type RootStackParamList = {
   PantallaEditarDatosUsuario:undefined;
   PantallaPerfilEditarUsuario: undefined;
   EditarDatosPersonales: undefined;
-  pruebaUsuario: undefined;
+  //pruebaUsuario: undefined;
   AgregarServicio1: undefined;
   AgregarServicio2: undefined;
   AgregarServicio3: undefined;
@@ -151,11 +151,6 @@ export default function AppNavigator() {
         <Stack.Screen 
         name="EditarDatosPersonales" 
         component={EditarDatosPersonales} 
-        options={{ headerShown: false }}  
-      /> 
-        <Stack.Screen 
-        name="pruebaUsuario" 
-        component={pruebaUsuario} 
         options={{ headerShown: false }}  
       /> 
         <Stack.Screen 

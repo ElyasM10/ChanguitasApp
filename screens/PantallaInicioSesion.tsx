@@ -162,6 +162,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../AppNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
+import API_URL from './API_URL';
 
 const PantallaInicioSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -169,8 +170,7 @@ const PantallaInicioSesion = () => {
   const [username, setusername] = useState('');       // Estado para almacenar el username
   const [password, setPassword] = useState(''); // Estado para almacenar la contraseña
   
-  const API_URL = 'http://127.0.0.1:8000'; // URL de la API
-
+ // const API_URL = 'http://127.0.0.1:8000'; // URL de la API
   const handleLogin = async () => {
     console.log("Nombre de usuario:", username); // Muestra el valor del nombre de usuario
     console.log("Contraseña:", password); // Muestra el valor de la contraseña

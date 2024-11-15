@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from '../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import API_URL from './API_URL';
 /*
 const PantallaRegistro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -194,7 +194,7 @@ const PantallaRegistro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarContraseña, setMostrarContraseña] = useState(false);
   const [mostrarConfirmarContraseña, setMostrarConfirmarContraseña] = useState(false);
-  const API_URL = 'http://127.0.0.1:8000'; 
+//  const API_URL = 'http://127.0.0.1:8000'; 
 
   // Estados para cada campo
   const [username, setUsername] = useState("");

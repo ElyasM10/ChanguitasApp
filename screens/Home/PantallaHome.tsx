@@ -3,6 +3,8 @@ import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-na
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from '../../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API_URL from '../API_URL';
 
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
@@ -17,6 +19,34 @@ const PantallaHome = () => {
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
+  };
+
+  // Función para cerrar sesión
+  const cerrarSesion = async () => {
+    try {
+      // Hacer la solicitud a la URL de logout del backend
+      const response = await fetch(`${API_URL}/logout/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Aquí puedes enviar datos si es necesario, como el token de autenticación.
+        // body: JSON.stringify({ token: 'tu_token_aqui' })
+      });
+
+      if (response.ok) {
+        console.log('Sesión cerrada correctamente');
+        // Eliminar los tokens del almacenamiento local
+        await AsyncStorage.removeItem('accessToken');
+        await AsyncStorage.removeItem('refreshToken');
+        // Redirigir a la pantalla de inicio de sesión
+        navigation.navigate('PantallaBienvenida');
+      } else {
+        console.error('Error al cerrar sesión', response.status);
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud de logout', error);
+    }
   };
 
   return (
@@ -36,7 +66,7 @@ const PantallaHome = () => {
             <Text onPress={() => navigation.navigate('PantallaAyuda')} style={estilos.textoDesplegable}>Ayuda</Text>
           </TouchableOpacity>
           <TouchableOpacity style={estilos.opcionDesplegable}>
-            <Text onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.textoDesplegable}>Cerrar sesión</Text>
+            <Text onPress={cerrarSesion} style={estilos.textoDesplegable}>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -169,4 +199,3 @@ const estilos = StyleSheet.create({
 });
 
 export default PantallaHome;
-

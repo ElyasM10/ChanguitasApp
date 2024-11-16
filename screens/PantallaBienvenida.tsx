@@ -43,7 +43,7 @@ const PantallaBienvenida = () => {
           
           <TouchableOpacity
             style={styles.buttonContainer}
-            onPress={() => navigation.navigate('PantallaHome')}
+            onPress={() => navigation.navigate('PantallaInicioSesion')}
           >
             <LinearGradient
               colors={['#197278', '#9BCDC8']}

@@ -7,7 +7,7 @@ import { RootStackParamList } from '../../AppNavigator';
 const EditarCategoria = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  // Datos de ejemplo para la lista de categorias
+  
   const categorias = [
     { id: '1', nombre: 'Gasista' },
     { id: '2', nombre: 'Plomero' },

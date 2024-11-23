@@ -4,13 +4,13 @@ import axios from 'axios';
 
 const PruebaSolicitud = () => {
   const [direcciones, setDirecciones] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado para manejar la carga
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchDirecciones = async () => {
       try {
-        const response = await axios.get('http://10.0.2.2:8000/'); // Asegúrate de que la URL sea correcta
-        console.log(response.data); // Verifica la estructura de los datos
+        const response = await axios.get('http://10.0.2.2:8000/'); 
+        console.log(response.data); 
         setDirecciones(response.data);
       } catch (error) {
         console.error('Error al obtener direcciones:', error);

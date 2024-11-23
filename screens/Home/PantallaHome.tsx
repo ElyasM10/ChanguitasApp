@@ -14,7 +14,7 @@ const PantallaHome = () => {
     'Chat integrado'
   ];
 
-  // Configuración para la barra de navegación de abajo
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const toggleDesplegable = () => {
@@ -30,8 +30,8 @@ const PantallaHome = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // Aquí puedes enviar datos si es necesario, como el token de autenticación.
-        // body: JSON.stringify({ token: 'tu_token_aqui' })
+     
+      
       });
 
       if (response.ok) {

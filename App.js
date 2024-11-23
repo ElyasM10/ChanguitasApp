@@ -8,7 +8,7 @@ import axios from 'axios'
 
 import 'firebase/auth';
 
-//esto seria como el "Main" que llama a los demas componentes
+
 // Este sería el "Main" que llama a los demás componentes
 class App extends React.Component {
   state = { details: [] };

@@ -163,6 +163,8 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../AppNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
 import API_URL from './API_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 const PantallaInicioSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -185,17 +187,29 @@ const PantallaInicioSesion = () => {
       });
 
       if (response.ok) {
-        // Si la autenticación es exitosa, navega a PantallaHome
-        navigation.navigate('PantallaHome');
-      } else {
         const data = await response.json();
-        console.log(data);
-        
-      }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+        console.log("Tokens recibidos:", data);
+
+        // Guarda los tokens
+        await AsyncStorage.setItem('accessToken', data.access);
+        await AsyncStorage.setItem('refreshToken', data.refresh);
+
+        // Navega a PantallaHome
+        navigation.navigate('PantallaHome');
+    } else {
+        const data = await response.json();
+        console.error("Error al iniciar sesión:", data);
+        if (data.detail) {
+            Alert.alert("Error", data.detail);
+        } else {
+            Alert.alert("Error", "Credenciales incorrectas.");
+        }
     }
-  };
+} catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    Alert.alert("Error", "No se pudo conectar con el servidor.");
+}
+};
 
   return (
     <SafeAreaView style={estilos.areaSegura}>

@@ -21,34 +21,60 @@ const PantallaHome = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
+const renovarToken = async () => {
+  try {
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
+    if (!refreshToken) throw new Error('No se encontró el token de actualización');
+
+    const response = await fetch(`${API_URL}/token/refresh/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh: refreshToken }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      await AsyncStorage.setItem('accessToken', data.access); // Almacena el nuevo token
+      return data.access;
+    } else {
+      const errorData = await response.json();
+      console.error('Error al renovar el token:', errorData);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error al intentar renovar el token:', error);
+    return null;
+  }
+};
+
   // Función para cerrar sesión
   const cerrarSesion = async () => {
     try {
-      // Hacer la solicitud a la URL de logout del backend
+      const refreshToken = await AsyncStorage.getItem('refreshToken');
+      if (!refreshToken) throw new Error('No se encontró el refresh token');
+  
       const response = await fetch(`${API_URL}/logout/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-     
-      
+        body: JSON.stringify({ refresh_token: refreshToken }),
       });
-
+  
       if (response.ok) {
         console.log('Sesión cerrada correctamente');
-        // Eliminar los tokens del almacenamiento local
         await AsyncStorage.removeItem('accessToken');
         await AsyncStorage.removeItem('refreshToken');
-        // Redirigir a la pantalla de inicio de sesión
         navigation.navigate('PantallaBienvenida');
       } else {
-        console.error('Error al cerrar sesión', response.status);
+        const errorData = await response.json();
+        console.error('Error al cerrar sesión:', errorData);
       }
     } catch (error) {
-      console.error('Error al realizar la solicitud de logout', error);
+      console.error('Error al realizar la solicitud de logout:', error);
     }
   };
-
+  
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}

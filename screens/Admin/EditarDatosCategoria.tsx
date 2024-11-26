@@ -8,39 +8,42 @@ const EditarDatosCategoria = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [nombre, setNombre] = useState('');
   const [categoriaPadre, setCategoriaPadre] = useState('');
+
   return (
     <SafeAreaView style={estilos.contenedor}>
-      {/* Encabezado */}
+      {/* Encabezado con recuadro azul */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Editar categoría</Text>
-        <TouchableOpacity>
-          <Text style={estilos.menuPuntos}>...</Text>
-        </TouchableOpacity>
+        <View style={estilos.recuadroAzul}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={estilos.botonAtras}>
+            <Ionicons name="arrow-back-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={estilos.textoEncabezado}>Editar categoría</Text>
+        </View>
       </View>
 
       {/* Formulario */}
       <View style={estilos.formulario}>
-          <Text style={estilos.label}>Nombre</Text>
-          <TextInput
-            style={estilos.input}
-            placeholder="Nombre"
-            value={nombre}
-            onChangeText={setNombre}
-          />
+        <Text style={estilos.label}>Nombre</Text>
+        <TextInput
+          style={estilos.input}
+          placeholder="Nombre"
+          value={nombre}
+          onChangeText={setNombre}
+        />
 
-          <Text style={estilos.label}>Categoría padre</Text>
-          <TextInput
-            style={estilos.input}
-            placeholder="Categoría padre"
-            value={categoriaPadre}
-            onChangeText={setCategoriaPadre}
-          />
-        </View>
+        <Text style={estilos.label}>Categoría padre</Text>
+        <TextInput
+          style={estilos.input}
+          placeholder="Categoría padre"
+          value={categoriaPadre}
+          onChangeText={setCategoriaPadre}
+        />
+      </View>
 
-        {/* Botón Guardar Cambios */}
-        <TouchableOpacity style={estilos.botonGuardar} onPress={() => navigation.navigate('EditarCategoria')}>
-          <Text style={estilos.textoBotonGuardar}>Guardar cambios</Text>
-        </TouchableOpacity>
+      {/* Botón Guardar Cambios */}
+      <TouchableOpacity style={estilos.botonGuardar} onPress={() => navigation.navigate('EditarCategoria')}>
+        <Text style={estilos.textoBotonGuardar}>Guardar cambios</Text>
+      </TouchableOpacity>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -71,25 +74,28 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
   },
   encabezado: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
+    backgroundColor: '#197278',
+    width: '100%',
+    paddingTop: 15, // Espacio para la barra de estado
     paddingBottom: 15,
-    backgroundColor: 'white',
-    marginTop: 50,
+  },
+  recuadroAzul: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  botonAtras: {
+    marginRight: 10,
   },
   textoEncabezado: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: '600',
-  },
-  menuPuntos: {
-    fontSize: 24,
-    fontWeight: '600',
+    color: 'white',
   },
   formulario: {
     marginBottom: 20,
+    paddingHorizontal: 20,
+    marginTop: 20,
   },
   label: {
     fontSize: 14,
@@ -106,42 +112,17 @@ const estilos = StyleSheet.create({
     marginBottom: 15,
   },
   botonGuardar: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#197278',
     paddingVertical: 15,
     borderRadius: 25,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 0,
+    marginHorizontal: 20,
   },
   textoBotonGuardar: {
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
-  },
-  listaUsuarios: {
-    paddingHorizontal: 20,
-  },
-  usuarioFila: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  usuarioInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  imagenUsuario: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-    marginRight: 15,
-  },
-  nombreUsuario: {
-    fontSize: 16,
-    color: '#333',
   },
   barraNavegacion: {
     flexDirection: 'row',

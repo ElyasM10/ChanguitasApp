@@ -21,13 +21,17 @@ const PantallaEditarDatosUsuario = () => {
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}
       <View style={estilos.encabezado}>
-        <TouchableOpacity>
-          <Text style={estilos.textoAccion}>Crear</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={estilos.textoAccion}>Eliminar</Text>
-        </TouchableOpacity>
-      </View>
+  <View style={estilos.recuadroEncabezado}>
+    <TouchableOpacity onPress={() => navigation.goBack()} style={estilos.botonAtras}>
+      <Ionicons name="arrow-back-outline" size={24} color="white" />
+    </TouchableOpacity>
+    <Text style={estilos.textoEncabezado}>Editar Perfil</Text>
+    <TouchableOpacity onPress={() => console.log('Eliminar usuario')}>
+      <Text style={estilos.textoAccion}>Eliminar usuario</Text>
+    </TouchableOpacity>
+  </View>
+</View>
+
 
       <ScrollView contentContainerStyle={estilos.scrollViewContent}>
         {/* Imagen del usuario */}
@@ -116,16 +120,32 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
   },
   encabezado: {
+    backgroundColor: '#197278',
+    width: '100%',
+    paddingTop: 15, // Espacio para la barra de estado
+    paddingBottom: 15,
+  },
+  recuadroEncabezado: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: 'white',
+    justifyContent: 'space-between', // Distribuye los elementos
+    alignItems: 'center', // Alineación vertical
+    paddingHorizontal: 15,
+  },
+  botonAtras: {
+    marginRight: 10,
+  },
+  textoEncabezado: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'white',
+    flex: 1, // Permite que el texto ocupe el espacio restante
+
   },
   textoAccion: {
     fontSize: 16,
-    color: '#007AFF',
+    color: 'white',
   },
+  
   scrollViewContent: {
     paddingHorizontal: 20,
     paddingBottom: 20,
@@ -162,7 +182,7 @@ const estilos = StyleSheet.create({
     marginBottom: 15,
   },
   botonGuardar: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#197278',
     paddingVertical: 15,
     borderRadius: 25,
     alignItems: 'center',

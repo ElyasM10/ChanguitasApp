@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -7,7 +7,6 @@ import { RootStackParamList } from '../../AppNavigator';
 const EditarCategoria = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  
   const categorias = [
     { id: '1', nombre: 'Gasista' },
     { id: '2', nombre: 'Plomero' },
@@ -17,10 +16,6 @@ const EditarCategoria = () => {
     { id: '6', nombre: 'Paseo de animales' },
     { id: '7', nombre: 'Carpintero' },
   ];
-
-  const handleUserPress = (userId) => {
-    console.log(`Editar usuario con ID: ${userId}`);
-  };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={estilos.usuarioFila} onPress={() => navigation.navigate('EditarDatosCategoria')}>
@@ -35,13 +30,15 @@ const EditarCategoria = () => {
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Editar categoría</Text>
-        <TouchableOpacity>
-          <Text style={estilos.menuPuntos}>...</Text>
-        </TouchableOpacity>
+        <View style={estilos.recuadroAzul}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={estilos.botonAtras}>
+            <Ionicons name="arrow-back-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={estilos.textoEncabezado}>Editar categoría</Text>
+        </View>
       </View>
 
-      {/* Lista de categorias */}
+      {/* Lista de categorías */}
       <FlatList
         data={categorias}
         keyExtractor={(item) => item.id}
@@ -78,22 +75,23 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
   },
   encabezado: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
+    backgroundColor: '#197278',
+    width: '100%',
+    paddingTop: 15, // Espacio para la barra de estado
     paddingBottom: 15,
-    backgroundColor: 'white',
-    marginTop: 50,
+  },
+  recuadroAzul: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  botonAtras: {
+    marginRight: 10,
   },
   textoEncabezado: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: '600',
-  },
-  menuPuntos: {
-    fontSize: 24,
-    fontWeight: '600',
+    color: 'white',
   },
   listaUsuarios: {
     paddingHorizontal: 20,
@@ -109,13 +107,6 @@ const estilos = StyleSheet.create({
   usuarioInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  imagenUsuario: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-    marginRight: 15,
   },
   nombreUsuario: {
     fontSize: 16,

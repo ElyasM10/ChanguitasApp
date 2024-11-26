@@ -229,7 +229,7 @@ const PantallaInicioSesion = () => {
         <View style={estilos.contenedorEntrada}>
           <Text style={estilos.etiqueta}>Nombre de usuario</Text>
           <TextInput
-            placeholder="changuitas1"
+            placeholder="Nombre Usuario"
             placeholderTextColor="#666"
             style={estilos.entrada}
             value={username}              // Asigna el valor del estado username

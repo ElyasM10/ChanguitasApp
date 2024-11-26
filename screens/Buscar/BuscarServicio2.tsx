@@ -112,14 +112,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    fontSize: 24,
-    fontWeight: '600',
-    padding: 20,
-    marginTop: 40,
+    backgroundColor: '#197278', // Color de fondo
+    color: 'white', // Color del texto
+    fontSize: 18, // Tamaño del texto
+    fontWeight: '600', // Negrita
+    paddingVertical: 10, // Espaciado vertical interno
+    paddingHorizontal: 15, // Espaciado horizontal interno
+    textAlign: 'left', // Alineación a la izquierda
+    marginBottom: 15, // Margen inferior
   },
+  
+  
   scrollContainer: {
     paddingHorizontal: 20,
     paddingBottom: 100,
+    marginTop: 20,
   },
   label: {
     fontSize: 16,

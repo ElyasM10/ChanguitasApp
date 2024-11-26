@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Checkbox } from 'react-native-paper';  // Importar Checkbox de react-native-paper
-
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -52,7 +51,13 @@ const BuscarServicio1 = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Buscar un servicio (1/2)</Text>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity>
+        <Text style={styles.header}>Agregar un servicio (1/3)</Text>
+      </View>
+      
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Sección de servicios */}
         {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura","Peluqueria","Podologia"], selectedServices, toggleService)}
@@ -121,12 +126,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    marginTop: 0,
+    backgroundColor: '#197278', // Color de fondo azul
+  },
+  backButton: {
+    marginRight: 10,
+  },
   header: {
     fontSize: 24,
     fontWeight: '600',
-    padding: 20,
-    marginTop:40,
-
+    color: 'white', // Color blanco para el texto
   },
   scrollContainer: {
     paddingHorizontal: 20,
@@ -163,33 +176,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  cancelButton: {
-    borderWidth: 1,
-    borderColor: '#197278',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 50,
-  },
-  cancelButtonText: {
-    color: '#197278',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 60,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  navText: {
-    fontSize: 12,
-    color: 'gray',
   },
   barraNavegacion: {
     flexDirection: 'row',

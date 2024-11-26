@@ -32,15 +32,17 @@ const PantallaEditarUsuario = () => {
   );
 
   return (
-    <SafeAreaView style={estilos.contenedor}>
+      <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Editar usuario</Text>
-        <TouchableOpacity>
-          <Text style={estilos.menuPuntos}>...</Text>
-        </TouchableOpacity>
+        <View style={estilos.recuadroAzul}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={estilos.botonAtras}>
+            <Ionicons name="arrow-back-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={estilos.textoEncabezado}>Editar usuario</Text>
+        </View>
       </View>
-
+      
       {/* Lista de Usuarios */}
       <FlatList
         data={usuarios}
@@ -78,22 +80,24 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
   },
   encabezado: {
+    backgroundColor: '#197278', // Cambiar el fondo aquí si necesario
+    width: '100%',
+    paddingTop: 15, // Para dar espacio en la parte superior (SafeArea)
+    paddingBottom: 15, // Espaciado debajo
+  },
+  recuadroAzul: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
-    backgroundColor: 'white',
-    marginTop: 50,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  botonAtras: {
+    marginRight: 10,
   },
   textoEncabezado: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: '600',
-  },
-  menuPuntos: {
-    fontSize: 24,
-    fontWeight: '600',
+    color: 'white',
   },
   listaUsuarios: {
     paddingHorizontal: 20,
@@ -138,5 +142,4 @@ const estilos = StyleSheet.create({
     color: 'gray',
   },
 });
-
 export default PantallaEditarUsuario;

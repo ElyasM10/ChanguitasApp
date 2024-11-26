@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { Checkbox } from 'react-native-paper';  // Asegúrate de que esté instalado
+import { Checkbox } from 'react-native-paper'; // Asegúrate de que esté instalado
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -51,7 +51,13 @@ const AgregarServicio1 = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Agregar un servicio (1/3)</Text>
+      {/* Encabezado con el botón de volver */}
+      <View style={styles.headerContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Agregar un servicio (1/3)</Text>
+      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Sección de servicios */}
@@ -103,7 +109,7 @@ const AgregarServicio1 = () => {
   );
 };
 
-// Funcion para renderizar cada categoría de servicios
+// Función para renderizar cada categoría de servicios
 const renderCategory = (title, options, selectedServices, toggleService) => (
   <View key={title}>
     <Text style={styles.categoryTitle}>{title}</Text>
@@ -124,11 +130,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  header: {
-    fontSize: 24,
-    fontWeight: '600',
-    padding: 20,
-    marginTop: 40,
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#197278',
+    padding: 15,
+  },
+  backButton: {
+    marginRight: 10,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
   },
   scrollContainer: {
     paddingHorizontal: 20,
@@ -200,6 +214,3 @@ const styles = StyleSheet.create({
 });
 
 export default AgregarServicio1;
-
-
-// npm install react-native-paper

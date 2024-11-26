@@ -12,10 +12,12 @@ const CrearCategoria = () => {
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}
       <View style={estilos.encabezado}>
-        <Text style={estilos.textoEncabezado}>Crear categoría</Text>
-        <TouchableOpacity>
-          <Text style={estilos.menuPuntos}>...</Text>
-        </TouchableOpacity>
+      <View style={estilos.recuadroAzul}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={estilos.botonAtras}>
+            <Ionicons name="arrow-back-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={estilos.textoEncabezado}>Crear categoría</Text>
+        </View>
       </View>
 
       {/* Formulario */}
@@ -71,18 +73,23 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
   },
   encabezado: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
+    backgroundColor: '#197278',
+    width: '100%',
+    paddingTop: 15, // Espacio para la barra de estado
     paddingBottom: 15,
-    backgroundColor: 'white',
-    marginTop: 50,
+  },
+  recuadroAzul: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  botonAtras: {
+    marginRight: 10,
   },
   textoEncabezado: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: '600',
+    color: 'white',
   },
   menuPuntos: {
     fontSize: 24,
@@ -90,6 +97,8 @@ const estilos = StyleSheet.create({
   },
   formulario: {
     marginBottom: 20,
+    paddingHorizontal: 20,
+    marginTop: 20,
   },
   label: {
     fontSize: 14,
@@ -106,11 +115,12 @@ const estilos = StyleSheet.create({
     marginBottom: 15,
   },
   botonGuardar: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#197278',
     paddingVertical: 15,
     borderRadius: 25,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 0,
+    marginHorizontal: 20,
   },
   textoBotonGuardar: {
     color: 'white',

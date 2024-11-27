@@ -54,8 +54,9 @@ export type RootStackParamList = {
   EditarDatosPersonales: undefined;
   //pruebaUsuario: undefined;
   AgregarServicio1: undefined;
-  AgregarServicio2: undefined;
-  AgregarServicio3: undefined;
+  //AgregarServicio2: undefined;
+  AgregarServicio2: { selectedServices: string[] }; // Define que AgregarServicio2 espera un parametro
+  AgregarServicio3: { datosSeleccionados: any };
   MisServicios: undefined;
   BuscarServicio1: undefined;
   BuscarServicio2: undefined;

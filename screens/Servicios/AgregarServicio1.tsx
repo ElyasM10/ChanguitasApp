@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { Checkbox } from 'react-native-paper'; // Asegúrate de que esté instalado
+import { Checkbox } from 'react-native-paper'; 
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -42,16 +42,21 @@ const AgregarServicio1 = () => {
     "Control de roedores": false,
   });
 
-  const toggleService = (service) => {
+  const toggleService = (service: string) => {
     setSelectedServices((prevSelected) => ({
       ...prevSelected,
       [service]: !prevSelected[service],
     }));
   };
 
+  const handleNext = () => {
+    const selected = Object.keys(selectedServices).filter(service => selectedServices[service]);
+    navigation.navigate('AgregarServicio2', { selectedServices: selected });
+  };
+
   return (
     <View style={styles.container}>
-      {/* Encabezado con el botón de volver */}
+      {/* Encabezado */}
       <View style={styles.headerContainer}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
@@ -59,8 +64,8 @@ const AgregarServicio1 = () => {
         <Text style={styles.headerText}>Agregar un servicio (1/3)</Text>
       </View>
 
+      {/* Servicios */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Sección de servicios */}
         {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura", "Peluqueria", "Podologia"], selectedServices, toggleService)}
         {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedServices, toggleService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedServices, toggleService)}
@@ -75,9 +80,9 @@ const AgregarServicio1 = () => {
         {renderCategory("INVIERNO", ["Limpieza de nieve", "Sal en veredas"], selectedServices, toggleService)}
         {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de roedores"], selectedServices, toggleService)}
 
-        {/* Botones de acción */}
+        {/* Botones */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('AgregarServicio2')}>
+          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
             <Text style={styles.nextButtonText}>Siguiente</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate('MisServicios')}>
@@ -85,9 +90,9 @@ const AgregarServicio1 = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* Barra de navegación inferior */}
-      <View style={styles.barraNavegacion}>
+   
+        {/* Barra de navegación inferior */}
+        <View style={styles.barraNavegacion}>
         <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={styles.textoNavegacion}>Inicio</Text>
@@ -109,8 +114,8 @@ const AgregarServicio1 = () => {
   );
 };
 
-// Función para renderizar cada categoría de servicios
-const renderCategory = (title, options, selectedServices, toggleService) => (
+// Función para renderizar categorías
+const renderCategory = (title: string, options: string[], selectedServices: Record<string, boolean>, toggleService: (service: string) => void) => (
   <View key={title}>
     <Text style={styles.categoryTitle}>{title}</Text>
     {options.map(option => (
@@ -129,6 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop: 40,
   },
   headerContainer: {
     flexDirection: 'row',

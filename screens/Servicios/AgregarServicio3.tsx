@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation,useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
 const AgregarServicio3 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'AgregarServicio3'>>();
   const [description, setDescription] = useState('');
+
+
+    // Mostrar los datos pasados desde la pantalla anterior (AgregarServicio1)
+  useEffect(() => {
+    console.log('Componente AgregarServicio3 montado');
+    if (route.params?. datosSeleccionados) {
+      console.log('Servicios seleccionados:', route.params. datosSeleccionados);
+    } else {
+      console.log('No se encontraron servicios seleccionados.');
+    }
+  }, [route.params]);
+
+
 
   return (
     <View style={styles.container}>
@@ -66,6 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop: 40,
   },
   headerContainer: {
     backgroundColor: '#197278',

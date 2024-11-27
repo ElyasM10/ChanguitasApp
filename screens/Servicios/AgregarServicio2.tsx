@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Switch } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Switch,Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation,useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [description, setDescription] = useState('');
-  const [days, setDays] = useState({
+  const route = useRoute<RouteProp<RootStackParamList, 'AgregarServicio2'>>();
+  const [descripcion, setDescripcion] = useState('');
+  const [diasSeleccionados, setDiasSeleccionados] = useState({
     Lunes: false,
     Martes: false,
     Miércoles: false,
@@ -16,27 +17,61 @@ const AgregarServicio2 = () => {
     Sábado: false,
     Domingo: false,
   });
-  const [hours, setHours] = useState({
-    Lunes: { start: '', end: '' },
-    Martes: { start: '', end: '' },
-    Miércoles: { start: '', end: '' },
-    Jueves: { start: '', end: '' },
-    Viernes: { start: '', end: '' },
-    Sábado: { start: '', end: '' },
-    Domingo: { start: '', end: '' },
+  const [horasSeleccionadas, setHorasSeleccionadas] = useState({
+    Lunes: { inicio: '', fin: '' },
+    Martes: { inicio: '', fin: '' },
+    Miércoles: { inicio: '', fin: '' },
+    Jueves: { inicio: '', fin: '' },
+    Viernes: { inicio: '', fin: '' },
+    Sábado: { inicio: '', fin: '' },
+    Domingo: { inicio: '', fin: '' },
   });
 
-  const toggleDay = (day: string) => {
-    setDays(prev => ({ ...prev, [day]: !prev[day] }));
+  // Mostrar los datos pasados desde la pantalla anterior (AgregarServicio1)
+  useEffect(() => {
+    console.log('Componente AgregarServicio2 montado');
+    if (route.params?.selectedServices) {
+      console.log('Servicios seleccionados:', route.params.selectedServices);
+    } else {
+      console.log('No se encontraron servicios seleccionados.');
+    }
+  }, [route.params]);
+
+  // Cambiar el estado de un día
+  const cambiarDia = (dia: string) => {
+    setDiasSeleccionados(prev => ({ ...prev, [dia]: !prev[dia] }));
   };
 
-  const handleTimeChange = (day: string, timeType: 'start' | 'end', value: string) => {
-    setHours(prev => ({
+  // Cambiar la hora de inicio o fin de un día
+  const manejarCambioHora = (dia: string, tipoHora: 'inicio' | 'fin', valor: string) => {
+    setHorasSeleccionadas(prev => ({
       ...prev,
-      [day]: { ...prev[day], [timeType]: value },
+      [dia]: { ...prev[dia], [tipoHora]: valor },
     }));
   };
 
+  //"Guardo" los datos obtenidos y se los paso a AgregarServicio3
+   const manejarGuardar = () => {
+    // Filtra los días seleccionados
+    const diasSeleccionadosFiltrados = Object.keys(diasSeleccionados)
+      .filter(dia => diasSeleccionados[dia]) // Filtra solo los días con valor true
+      .reduce((acc, dia) => {
+        acc[dia] = horasSeleccionadas[dia]; // Incluye solo las horas para los días seleccionados
+        return acc;
+      }, {});
+  
+    const datosSeleccionados = {
+      descripcion,
+      dias: diasSeleccionadosFiltrados, // Solo los días seleccionados
+      horas: diasSeleccionadosFiltrados,  // Solo las horas de los días seleccionados
+    };
+  
+    console.log('Datos a guardar:', datosSeleccionados);
+  
+    // Navegar a AgregarServicio3 y pasar los datos filtrados
+    navigation.navigate('AgregarServicio3', { datosSeleccionados });
+  };
+  
   return (
     <View style={estilos.contenedorPrincipal}>
       <View style={estilos.contenedorEncabezado}>
@@ -47,8 +82,8 @@ const AgregarServicio2 = () => {
         <TextInput
           style={estilos.campoDescripcion}
           placeholder="Descripción"
-          value={description}
-          onChangeText={setDescription}
+          value={descripcion}
+          onChangeText={setDescripcion}
           multiline
         />
 
@@ -57,33 +92,33 @@ const AgregarServicio2 = () => {
           <Text style={estilos.etiquetaHora}>Hora</Text>
         </View>
 
-        {Object.keys(days).map((day) => (
-          <View style={estilos.filaDia} key={day}>
+        {Object.keys(diasSeleccionados).map((dia) => (
+          <View style={estilos.filaDia} key={dia}>
             <Switch
-              value={days[day]}
-              onValueChange={() => toggleDay(day)}
+              value={diasSeleccionados[dia]}
+              onValueChange={() => cambiarDia(dia)}
             />
-            <Text style={estilos.textoDia}>{day}</Text>
+            <Text style={estilos.textoDia}>{dia}</Text>
             <TextInput
               style={estilos.campoHora}
               placeholder="Inicio"
-              value={hours[day].start}
-              onChangeText={(value) => handleTimeChange(day, 'start', value)}
-              editable={days[day]}
+              value={horasSeleccionadas[dia].inicio}
+              onChangeText={(valor) => manejarCambioHora(dia, 'inicio', valor)}
+              editable={diasSeleccionados[dia]}
             />
             <Text style={estilos.textoSeparador}>a</Text>
             <TextInput
               style={estilos.campoHora}
               placeholder="Fin"
-              value={hours[day].end}
-              onChangeText={(value) => handleTimeChange(day, 'end', value)}
-              editable={days[day]}
+              value={horasSeleccionadas[dia].fin}
+              onChangeText={(valor) => manejarCambioHora(dia, 'fin', valor)}
+              editable={diasSeleccionados[dia]}
             />
           </View>
         ))}
 
         <View style={estilos.contenedorBotones}>
-          <TouchableOpacity style={estilos.botonSiguiente} onPress={() => navigation.navigate('AgregarServicio3')}>
+          <TouchableOpacity style={estilos.botonSiguiente} onPress={manejarGuardar}>
             <Text style={estilos.textoBotonSiguiente}>Siguiente</Text>
           </TouchableOpacity>
           <TouchableOpacity style={estilos.botonAtras} onPress={() => navigation.navigate('AgregarServicio1')}>
@@ -113,11 +148,11 @@ const AgregarServicio2 = () => {
     </View>
   );
 };
-
 const estilos = StyleSheet.create({
   contenedorPrincipal: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop: 40,
   },
   contenedorEncabezado: {
     flexDirection: 'row',

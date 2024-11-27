@@ -163,19 +163,16 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../AppNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
 import API_URL from './API_URL';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
 
 const PantallaInicioSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
-  const [username, setusername] = useState('');       // Estado para almacenar el username
-  const [password, setPassword] = useState(''); // Estado para almacenar la contraseña
-  
- // const API_URL = 'http://127.0.0.1:8000'; // URL de la API
+  const [username, setusername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
+
   const handleLogin = async () => {
-    console.log("Nombre de usuario:", username); // Muestra el valor del nombre de usuario
-    console.log("Contraseña:", password); // Muestra el valor de la contraseña
+    setErrorMessage(null); // Resetea el mensaje de error antes de intentar iniciar sesión
     try {
       const response = await fetch(`${API_URL}/login/`, {
         method: 'POST',
@@ -185,31 +182,19 @@ const PantallaInicioSesion = () => {
           password: password,
         }),
       });
+    
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Tokens recibidos:", data);
-
-        // Guarda los tokens
-        await AsyncStorage.setItem('accessToken', data.access);
-        await AsyncStorage.setItem('refreshToken', data.refresh);
-
-        // Navega a PantallaHome
         navigation.navigate('PantallaHome');
-    } else {
+      } else {
         const data = await response.json();
-        console.error("Error al iniciar sesión:", data);
-        if (data.detail) {
-            Alert.alert("Error", data.detail);
-        } else {
-            Alert.alert("Error", "Credenciales incorrectas.");
-        }
+        setErrorMessage(data.detail || 'Nombre de usuario o contraseña incorrectos');
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      setErrorMessage('Hubo un error al conectar con el servidor. Inténtalo nuevamente.');
     }
-} catch (error) {
-    console.error('Error al iniciar sesión:', error);
-    Alert.alert("Error", "No se pudo conectar con el servidor.");
-}
-};
+  };
 
   return (
     <SafeAreaView style={estilos.areaSegura}>
@@ -225,15 +210,22 @@ const PantallaInicioSesion = () => {
           <Text style={estilos.titulo}>Iniciar sesión</Text>
         </View>
 
+        {/* Mensaje de error */}
+        {errorMessage && (
+          <View style={estilos.errorContainer}>
+            <Text style={estilos.errorText}>Error: {errorMessage}</Text>
+          </View>
+        )}
+
         {/* Campos de entrada */}
         <View style={estilos.contenedorEntrada}>
           <Text style={estilos.etiqueta}>Nombre de usuario</Text>
           <TextInput
-            placeholder="Nombre Usuario"
+            placeholder="changuitas1"
             placeholderTextColor="#666"
             style={estilos.entrada}
-            value={username}              // Asigna el valor del estado username
-            onChangeText={setusername}     // Actualiza el estado username
+            value={username}
+            onChangeText={setusername}
           />
 
           <Text style={estilos.etiqueta}>Contraseña</Text>
@@ -243,8 +235,8 @@ const PantallaInicioSesion = () => {
               placeholderTextColor="#666"
               secureTextEntry={!mostrarContrasena}
               style={estilos.entradaContrasena}
-              value={password}          // Asigna el valor del estado password
-              onChangeText={setPassword} // Actualiza el estado password
+              value={password}
+              onChangeText={setPassword}
             />
             <TouchableOpacity 
               style={estilos.iconoOjo}
@@ -306,6 +298,16 @@ const estilos = StyleSheet.create({
   botonAtras: {
     marginRight: 10,
     marginTop: -75,
+  },
+  errorContainer: {
+    backgroundColor: '#F8D7DA',
+    borderRadius: 10,
+    padding: 10,
+  },
+  errorText: {
+    color: '#A94442',
+    fontSize: 14,
+    textAlign: 'center',
   },
   contenedorEntrada: {
     marginBottom: 20,

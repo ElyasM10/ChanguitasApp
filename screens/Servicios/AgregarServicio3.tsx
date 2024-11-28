@@ -1,26 +1,71 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView,Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation,useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+import API_URL from '../API_URL';
 
 const AgregarServicio3 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'AgregarServicio3'>>();
   const [description, setDescription] = useState('');
 
+  // Datos pasados desde AgregarServicio2
+  const { datosSeleccionados } = route.params || {};
 
-    // Mostrar los datos pasados desde la pantalla anterior (AgregarServicio1)
   useEffect(() => {
     console.log('Componente AgregarServicio3 montado');
-    if (route.params?. datosSeleccionados) {
-      console.log('Servicios seleccionados:', route.params. datosSeleccionados);
+    if (datosSeleccionados) {
+      console.log('Datos recibidos:', datosSeleccionados);
     } else {
-      console.log('No se encontraron servicios seleccionados.');
+      console.log('No se recibieron datos.');
     }
-  }, [route.params]);
+  }, [datosSeleccionados]);
 
+  const manejarGuardarServicio = async () => {
+    if (!datosSeleccionados) {
+      Alert.alert('Error', 'No hay datos para guardar.');
+      return;
+    }
 
+    const datosServicio = {
+      nombreServicio: datosSeleccionados.nombreServicio, 
+      descripcion: datosSeleccionados.descripcion,
+      estado: "Iniciado", // Estado hardcodeado
+    };
+
+    console.log('Datos preparados para enviar:', datosServicio);
+
+    try {
+      // Verifica que los datos estén bien formateados
+      console.log('Preparando el POST...');
+      const response = await fetch(`${API_URL}/servicios/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(datosServicio),
+      });
+
+      console.log('Respuesta de la API:', response);
+
+      if (!response.ok) {
+        console.log('Respuesta no OK:', response.status, response.statusText);
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('Datos recibidos de la API:', data);
+
+      Alert.alert('Éxito', 'Servicio creado exitosamente');
+      navigation.navigate('PantallaHome');  // Navegar a PantallaHome
+    } catch (error: any) {
+      console.error('Error al guardar el servicio:', error);
+      const errorMessage = error.message || 'Error desconocido';
+      Alert.alert('Error', `No se pudo crear el servicio: ${errorMessage}`);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -44,8 +89,9 @@ const AgregarServicio3 = () => {
 
         {/* Botones */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('MisServicios')}>
-            <Text style={styles.nextButtonText}>Publicar</Text>
+          <TouchableOpacity style={styles.nextButton} onPress={manejarGuardarServicio}>
+        {/* Esto es solo texto que debe ir dentro de un componente Text */}
+        <Text style={styles.nextButtonText}>Publicar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.prevButton} onPress={() => navigation.navigate('AgregarServicio2')}>
             <Text style={styles.prevButtonText}>Atrás</Text>

@@ -61,6 +61,7 @@ const AgregarServicio2 = () => {
       }, {});
   
     const datosSeleccionados = {
+      nombreServicio: route.params.selectedServices[0], // Incluye el nombre del servicio
       descripcion,
       dias: diasSeleccionadosFiltrados, // Solo los días seleccionados
       horas: diasSeleccionadosFiltrados,  // Solo las horas de los días seleccionados

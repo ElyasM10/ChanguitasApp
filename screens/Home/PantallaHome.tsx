@@ -116,7 +116,7 @@ const renovarToken = async () => {
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('AgregarServicio1')} style={estilos.iconoNavegacion}>
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>

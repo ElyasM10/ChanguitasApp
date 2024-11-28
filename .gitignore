@@ -33,3 +33,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+/backend/backend/__pycache__/
+/backend/ChanguitasApi/__pycache__/

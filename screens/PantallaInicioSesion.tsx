@@ -163,6 +163,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../AppNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
 import API_URL from './API_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PantallaInicioSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -185,6 +186,12 @@ const PantallaInicioSesion = () => {
     
 
       if (response.ok) {
+        const data = await response.json();
+        await AsyncStorage.setItem('accessToken', data.access); // `data.access` es el token de acceso
+        await AsyncStorage.setItem('refreshToken', data.refresh); // `data.refresh` es el token de refresco
+        //Lo guardamos para despues utilizarlo para mostrar el perfil por ejemplo
+        console.log('Tokens almacenados correctamente'); // Almacena el token recibido
+
         navigation.navigate('PantallaHome');
       } else {
         const data = await response.json();
@@ -195,6 +202,7 @@ const PantallaInicioSesion = () => {
       setErrorMessage('Hubo un error al conectar con el servidor. Inténtalo nuevamente.');
     }
   };
+
 
   return (
     <SafeAreaView style={estilos.areaSegura}>

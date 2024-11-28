@@ -218,9 +218,28 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import API_URL from '../API_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const PantallaPerfiEditarUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  //Extraemos los datos del token para obtener el id 
+ /*
+    El token  es una cadena codificada en base64url de tres partes:
+    <Encabezado>.<Cuerpo>.<Firma>
+  Encabezado: Describe el algoritmo y el tipo de token.
+  Cuerpo (Payload): Contiene los datos del usuario y otras informaciones (como user_id, role, iat, exp).
+  Firma: Garantiza que el token no ha sido alterado.
+  */
+  const decodeJWT = (token: string) => {
+    const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Reemplaza caracteres no válidos para Base64
+    const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
+    return decoded;
+  };
+  
 
   // Interfaz para el tipo de datos del usuario
   interface Direccion {
@@ -251,21 +270,46 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
 
   const fetchUsuario = async () => {
     try {
-      const response = await fetch(`${API_URL}/usuario/1/`, {
+      // Obtén el token de acceso desde AsyncStorage
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log('Token obtenido de AsyncStorage:', accessToken); // Debug: Verifica el token obtenido
+  
+      if (!accessToken) {
+        throw new Error('No se encontró el token de acceso');
+      }
+  
+      // Decodifica el token para extraer el ID del usuario
+     // Luego en el código
+     const decoded = decodeJWT(accessToken);
+     console.log('Payload decodificado:', decoded);
+ 
+     const userId = decoded.user_id;
+     console.log('ID del usuario extraído:', userId);
+
+    
+  
+
+      // Se realiza la solicitud utilizando el ID del usuario
+      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, // Incluimos el token en el encabezado
         },
       });
-
+  
+      console.log('Response status:', response.status); // Verificamos el estado de la respuesta
+  
       if (!response.ok) {
         throw new Error(`Error al obtener el usuario: ${response.status}`);
       }
-
+  
+      // Procesa los datos recibidos
       const data: Usuario = await response.json();
+      console.log('Datos del usuario recibidos:', data); // Verifica los datos del usuario
       setUsuario(data);
     } catch (error: any) {
-      console.error('Error al cargar datos del usuario:', error);
+      console.error('Error al cargar datos del usuario:', error); //  Detalles del error
       setError('No se pudo cargar el perfil del usuario');
     } finally {
       setLoading(false);

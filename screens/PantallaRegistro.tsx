@@ -211,17 +211,20 @@ const PantallaRegistro = () => {
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [password, setPassword] = useState("");
   const [confirmarPassword, setConfirmarPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
+
 
   // Función para manejar el registro del usuario
   const handleRegistro = async () => {
     if (password !== confirmarPassword) {
       Alert.alert('Error', 'Las contraseñas no coinciden');
+      setErrorMessage('Las contraseñas no coinciden'); // Actualiza el estado para almacenar el mensaje
       return;
     }
-
+  
     // Reformatea fecha de nacimiento a 'YYYY-MM-DD'
     const fechaNacimientoFormatoCorrecto = fechaNacimiento.split('/').reverse().join('-');
-
+  
     const usuario = {
       username,
       first_name: firstName,
@@ -241,7 +244,7 @@ const PantallaRegistro = () => {
         barrio,
       },
     };
-
+  
     try {
       const response = await fetch(`${API_URL}/usuarios/`, {
         method: 'POST',
@@ -251,19 +254,50 @@ const PantallaRegistro = () => {
         },
         body: JSON.stringify(usuario),
       });
-
+  
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
+        const errorData = await response.json();
+        let errorMessage = '';
+  
+        // Diccionario para traducir claves y mensajes
+        const translations: Record<string, string> = {
+          username: 'Nombre de usuario',
+          fechaNacimiento: 'Fecha de nacimiento',
+          email: 'Correo electrónico',
+          documento: 'Documento',
+          telefono: 'Teléfono',
+          direccion: 'Dirección',
+          password: 'Contraseña',
+        };
+  
+        const translatedErrors: Record<string, string> = {
+          "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.": 
+            "La fecha tiene un formato incorrecto. Usa el formato YYYY-MM-DD.",
+          "A user with that username already exists.": 
+            "Ya existe un usuario con ese nombre.",
+        };
+  
+        // Traduce y construye el mensaje
+        for (const [key, value] of Object.entries(errorData)) {
+          const field = translations[key] || key; // Traduce la clave si está en el diccionario
+          const messages = Array.isArray(value) 
+            ? value.map((msg: string) => translatedErrors[msg] || msg)
+            : [value]; // Si no es un array, lo tratamos como un mensaje único
+          errorMessage += `${field}: ${messages.join(', ')}\n`;
+        }
+  
+        throw new Error(errorMessage.trim());
       }
-
+  
       const data = await response.json();
       console.log(data);
       Alert.alert('Éxito', 'Usuario creado exitosamente');
       navigation.goBack();
     } catch (error: any) {
-      const errorMessage = error.message || 'Error desconocido';
+      const errorMessage = error.message || 'No se pudo crear el usuario.';
       console.error('Error detallado:', error);
-      Alert.alert('Error', `No se pudo crear el usuario: ${errorMessage}`);
+      Alert.alert('Error', errorMessage);
+      setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
     }
   };
 
@@ -278,6 +312,14 @@ const PantallaRegistro = () => {
               </TouchableOpacity>
               <Text style={estilos.titulo}>Crear perfil</Text>
             </View>
+
+              {/* Mensaje de error */}
+          {errorMessage && (
+            <View style={estilos.errorContainer}>
+              <Text style={estilos.errorText}>Error: {errorMessage}</Text>
+            </View>
+          )}
+
             <View style={estilos.formulario}>
               <View style={estilos.campo}>
                 <Text style={estilos.etiqueta}>Nombre de usuario</Text>
@@ -526,6 +568,16 @@ const estilos = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  errorContainer: {
+    backgroundColor: '#F8D7DA',
+    borderRadius: 10,
+    padding: 10,
+  },
+  errorText: {
+    color: '#A94442',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
 

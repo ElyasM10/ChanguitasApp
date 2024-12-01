@@ -10,8 +10,9 @@ const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const caracteristicas = [
     '+30 servicios',
-    'Ushuaia',
-    'Chat integrado'
+     'Confiable',
+     'Ushuaia'
+      
   ];
 
 

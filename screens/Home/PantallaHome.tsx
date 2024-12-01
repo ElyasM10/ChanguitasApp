@@ -52,6 +52,7 @@ const renovarToken = async () => {
     try {
       const refreshToken = await AsyncStorage.getItem('refreshToken');
       if (!refreshToken) throw new Error('No se encontró el refresh token');
+      
   
       const response = await fetch(`${API_URL}/logout/`, {
         method: 'POST',
@@ -63,6 +64,7 @@ const renovarToken = async () => {
   
       if (response.ok) {
         console.log('Sesión cerrada correctamente');
+        console.log('Refresh Token:', refreshToken);
         await AsyncStorage.removeItem('accessToken');
         await AsyncStorage.removeItem('refreshToken');
         navigation.navigate('PantallaBienvenida');

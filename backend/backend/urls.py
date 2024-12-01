@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from ChanguitasApi.views import *
+from ChanguitasApi.views import RefreshView
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from ChanguitasApi.views.usuarioViewSet import LoginView, LogoutView
@@ -20,6 +21,7 @@ router.register(r'proveedores', ProveedorViewSet)
 router.register(r'servicios', ServicioViewSet)
 router.register(r'solicitudes', SolicitudViewSet)
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     #  path('', ReactView.as_view(), name="xxx"),
@@ -29,6 +31,7 @@ urlpatterns = [
     path('', include(router.urls), name='api'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/refresh/', RefreshView.as_view(), name='refresh'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

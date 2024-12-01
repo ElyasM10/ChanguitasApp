@@ -75,20 +75,35 @@ export type RootStackParamList = {
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
 const Stack = createStackNavigator<RootStackParamList>();
 
-//Componente AppNavigator que configura la navegación de la aplicación <Stack.Screen name="PantallaChat" component={PantallaChat} />
-export default function AppNavigator() {
+const AppNavigator = ({ isAuthenticated }) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name="PantallaBienvenida" 
-        component={PantallaBienvenida} 
-        options={{ headerShown: false }}  
-      />
-      <Stack.Screen 
-        name="PantallaInicioSesion" 
-        component={PantallaInicioSesion} 
-        options={{ headerShown: false }}  
-      />
+      {/* Si el usuario está autenticado, mostrar la pantalla principal */}
+      {isAuthenticated ? (
+        <>
+          <Stack.Screen 
+            name="PantallaHome" 
+            component={PantallaHome} 
+            options={{ headerShown: false }}  
+          />
+          <Stack.Screen
+            name="PantallaBienvenida"
+            component={PantallaBienvenida}
+             options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+            name="PantallaHomeAdmin" 
+            component={PantallaHomeAdmin} 
+            options={{ headerShown: false }}  
+          />
+          {/* Agrega las pantallas adicionales solo si el usuario está autenticado */}
+          <Stack.Screen 
+            name="PantallaPerfilEditarUsuario" 
+            component={PantallaPerfilEditarUsuario} 
+            options={{ headerShown: false }}  
+          />
+          {/* Resto de pantallas que se deben mostrar solo al estar autenticado */}
+        
       <Stack.Screen 
         name="PantallaRegistro" 
         component={PantallaRegistro} 
@@ -124,29 +139,9 @@ export default function AppNavigator() {
         component={PantallaVerificacion5} 
         options={{ headerShown: false }}  
       /> 
-      <Stack.Screen 
-        name="PantallaHome" 
-        component={PantallaHome} 
-        options={{ headerShown: false }}  
-      /> 
-      <Stack.Screen 
-        name="PantallaHomeAdmin" 
-        component={PantallaHomeAdmin} 
-        options={{ headerShown: false }}  
-      /> 
         <Stack.Screen 
         name="PantallaEditarUsuario" 
         component={PantallaEditarUsuario} 
-        options={{ headerShown: false }}  
-      /> 
-       <Stack.Screen 
-        name="PantallaEditarDatosUsuario" 
-        component={PantallaEditarDatosUsuario} 
-        options={{ headerShown: false }}  
-      /> 
-      <Stack.Screen 
-        name="PantallaPerfilEditarUsuario" 
-        component={PantallaPerfilEditarUsuario} 
         options={{ headerShown: false }}  
       /> 
         <Stack.Screen 
@@ -234,16 +229,29 @@ export default function AppNavigator() {
         component={EditarDatosCategoria} 
         options={{ headerShown: false }}  
       /> 
-      
- 
-
- 
-
-
-
-
-
-
+        </>
+      ) : (
+        <>
+          {/* Si no está autenticado, mostrar las pantallas de login/registro */}
+          <Stack.Screen 
+            name="PantallaInicioSesion" 
+            component={PantallaInicioSesion} 
+            options={{ headerShown: false }}  
+          />
+          <Stack.Screen 
+            name="PantallaHome" 
+            component={PantallaHome} 
+            options={{ headerShown: false }}  
+          />
+          <Stack.Screen
+            name="PantallaBienvenida"
+            component={PantallaBienvenida}
+             options={{ headerShown: false }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
-}
+};
+
+export default AppNavigator;

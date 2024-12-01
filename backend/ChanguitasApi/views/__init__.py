@@ -12,3 +12,4 @@ from .proveedorServicioViewSet import ProveedorServicioViewSet
 from .proveedorViewSet import ProveedorViewSet
 from .servicioViewSet import ServicioViewSet
 from .solicitudViewSet import SolicitudViewSet
+from .refreshView import RefreshView

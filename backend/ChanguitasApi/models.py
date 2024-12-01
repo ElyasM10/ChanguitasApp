@@ -37,16 +37,23 @@ class Notificacion(models.Model):
     tipoSistema = models.BooleanField()
     Usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='notificaciones')
 
-class EstadoServicio(models.TextChoices):
-    INICIADO = 'Iniciado', 'I'
-    FINALIZADO = 'Finalizado', 'F'
-    CANCELADO = 'Cancelado', 'C'
-
-class Servicio (models.Model):
+class DiasSemana(models.TextChoices):
+    LUNES = "Lunes", "Lun"
+    MARTES = "Martes", "Mar"
+    MIERCOLES = "Miércoles", "Mie"
+    JUEVES = "Jueves", "Jue"
+    VIERNES = "Viernes", "Vie"
+    SABADO = "Sábado", "Sab"
+    DOMINGO = "Domingo", "Dom"
+    
+class Servicio(models.Model):
     nombreServicio = models.CharField(max_length=100, null=False)
     descripcion = models.TextField(null=False)
-    estado = models.CharField(max_length=15, choices=EstadoServicio.choices, default=EstadoServicio.INICIADO)
+    dia = models.CharField(max_length=10, choices=DiasSemana.choices,null=False, default="Lunes")
+    desdeHora = models.TimeField(null=False, default="00:00")
+    hastaHora = models.TimeField(null=False, default="00:00")
 
+    
 class ProveedorServicio(models.Model):
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='proveedores_servicio')
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='servicios_ofrecidos')
@@ -58,6 +65,11 @@ class Categoria (models.Model):
     categoria_padre = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subcategorias')
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='categoria')    
 
+class EstadoServicio(models.TextChoices):
+    INICIADO = 'Iniciado', 'I'
+    FINALIZADO = 'Finalizado', 'F'
+    CANCELADO = 'Cancelado', 'C'
+
 class Solicitud (models.Model):
     comentario = models.TextField(null=True)
     fechaSolicitud = models.DateField(blank=True, null=True)
@@ -67,3 +79,4 @@ class Solicitud (models.Model):
     proveedorServicio = models.ForeignKey(ProveedorServicio, on_delete=models.CASCADE, related_name='solicitudes')
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='solicitudes_cliente')
     notificacion = models.ForeignKey(Notificacion, on_delete=models.CASCADE, related_name='solicitudes_notificacion')
+    estado = models.CharField(max_length=15, choices=EstadoServicio.choices, default=EstadoServicio.INICIADO)

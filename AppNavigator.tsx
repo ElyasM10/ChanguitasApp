@@ -79,15 +79,15 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator>
       {/* Pantallas principales */}
-      <Stack.Screen 
-        name="PantallaHome" 
-        component={PantallaHome} 
-        options={{ headerShown: false }}  
-      />
       <Stack.Screen
         name="PantallaBienvenida"
         component={PantallaBienvenida}
         options={{ headerShown: false }}
+      />
+        <Stack.Screen 
+        name="PantallaHome" 
+        component={PantallaHome} 
+        options={{ headerShown: false }}  
       />
       <Stack.Screen 
         name="PantallaHomeAdmin" 
@@ -217,6 +217,11 @@ const AppNavigator = () => {
       <Stack.Screen 
         name="EditarDatosCategoria" 
         component={EditarDatosCategoria} 
+        options={{ headerShown: false }}  
+      /> 
+       <Stack.Screen 
+        name="PantallaInicioSesion" 
+        component={PantallaInicioSesion} 
         options={{ headerShown: false }}  
       /> 
     </Stack.Navigator>

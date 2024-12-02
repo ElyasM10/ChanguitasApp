@@ -7,6 +7,7 @@ import LoadingScreen from './components/LoadingScreen'; // Importa el componente
 
 import 'firebase/auth';
 
+/*
 class App extends React.Component {
   state = { 
     details: [], 
@@ -87,6 +88,40 @@ class App extends React.Component {
 }
 
 export default App;
+*/
+
+// Este sería el "Main" que llama a los demás componentes
+class App extends React.Component {
+  state = { details: [] };
+
+  componentDidMount() {
+    axios.get('http://localhost:8000')
+      .then(res => {
+        const data = res.data; 
+        this.setState({
+          details: data
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+  render() {
+    return (
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    );
+  }
+}
+
+export default App;
+
+
+
+
+
 /*r
 este el por defecto 
 

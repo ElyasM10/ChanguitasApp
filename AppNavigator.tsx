@@ -75,10 +75,161 @@ export type RootStackParamList = {
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
 const Stack = createStackNavigator<RootStackParamList>();
 
+const AppNavigator = () => {
+  return (
+    <Stack.Navigator>
+      {/* Pantallas principales */}
+      <Stack.Screen 
+        name="PantallaHome" 
+        component={PantallaHome} 
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen
+        name="PantallaBienvenida"
+        component={PantallaBienvenida}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="PantallaHomeAdmin" 
+        component={PantallaHomeAdmin} 
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen 
+        name="PantallaPerfilEditarUsuario" 
+        component={PantallaPerfilEditarUsuario} 
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen 
+        name="PantallaRegistro" 
+        component={PantallaRegistro} 
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen 
+        name="PruebaSolicitud" 
+        component={PruebaSolicitud} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="PantallaVerificacion1" 
+        component={PantallaVerificacion1} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="PantallaVerificacion2" 
+        component={PantallaVerificacion2} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="PantallaVerificacion3" 
+        component={PantallaVerificacion3} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="PantallaVerificacion4" 
+        component={PantallaVerificacion4} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="PantallaVerificacion5" 
+        component={PantallaVerificacion5} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="EditarDatosPersonales" 
+        component={EditarDatosPersonales} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="AgregarServicio1" 
+        component={AgregarServicio1} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="AgregarServicio2" 
+        component={AgregarServicio2} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="AgregarServicio3" 
+        component={AgregarServicio3} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="MisServicios" 
+        component={MisServicios} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="BuscarServicio1" 
+        component={BuscarServicio1} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="BuscarServicio2" 
+        component={BuscarServicio2} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="ResultadosBusqueda" 
+        component={ResultadosBusqueda} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="PantallaPerfilDeOtro" 
+        component={PantallaPerfilDeOtro} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="Historial1" 
+        component={Historial1} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="Historial2" 
+        component={Historial2} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="DetalleTarea" 
+        component={DetalleTarea} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="CalificarTarea" 
+        component={CalificarTarea} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="PantallaAyuda" 
+        component={PantallaAyuda} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="CrearCategoria" 
+        component={CrearCategoria} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="EditarCategoria" 
+        component={EditarCategoria} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="EditarDatosCategoria" 
+        component={EditarDatosCategoria} 
+        options={{ headerShown: false }}  
+      /> 
+    </Stack.Navigator>
+  );
+};
+
+export default AppNavigator;
+
+/*
 const AppNavigator = ({ isAuthenticated }) => {
   return (
     <Stack.Navigator>
-      {/* Si el usuario está autenticado, mostrar la pantalla principal */}
+
       {isAuthenticated ? (
         <>
           <Stack.Screen 
@@ -96,13 +247,13 @@ const AppNavigator = ({ isAuthenticated }) => {
             component={PantallaHomeAdmin} 
             options={{ headerShown: false }}  
           />
-          {/* Agrega las pantallas adicionales solo si el usuario está autenticado */}
+      
           <Stack.Screen 
             name="PantallaPerfilEditarUsuario" 
             component={PantallaPerfilEditarUsuario} 
             options={{ headerShown: false }}  
           />
-          {/* Resto de pantallas que se deben mostrar solo al estar autenticado */}
+       
         
       <Stack.Screen 
         name="PantallaRegistro" 
@@ -232,7 +383,7 @@ const AppNavigator = ({ isAuthenticated }) => {
         </>
       ) : (
         <>
-          {/* Si no está autenticado, mostrar las pantallas de login/registro */}
+        
           <Stack.Screen 
             name="PantallaInicioSesion" 
             component={PantallaInicioSesion} 
@@ -255,3 +406,4 @@ const AppNavigator = ({ isAuthenticated }) => {
 };
 
 export default AppNavigator;
+*/

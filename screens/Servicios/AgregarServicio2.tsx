@@ -54,20 +54,31 @@ const AgregarServicio2 = () => {
    const manejarGuardar = () => {
     // Filtra los días seleccionados
     const diasSeleccionadosFiltrados = Object.keys(diasSeleccionados)
-      .filter(dia => diasSeleccionados[dia]) // Filtra solo los días con valor true
-      .reduce((acc, dia) => {
-        acc[dia] = horasSeleccionadas[dia]; // Incluye solo las horas para los días seleccionados
-        return acc;
-      }, {});
+    .filter(dia => diasSeleccionados[dia]) // Filtra solo los días con valor true
+    .map(dia => {
+      // Extrae las horas de inicio y fin para cada día seleccionado
+      const desdeHora = horasSeleccionadas[dia]?.inicio || '00:00:00';
+      const hastaHora = horasSeleccionadas[dia]?.fin || '00:00:00';
   
+      // Devuelve un objeto con la estructura que necesita el backend
+      return {
+        nombreServicio: route.params.selectedServices[0], // Nombre del servicio
+        descripcion, // Descripción del servicio
+        dia, // Día de la semana
+        desdeHora, // Hora de inicio
+        hastaHora, // Hora de fin
+      };
+    });
+  
+ 
+    console.log('Datos seleccionados:', diasSeleccionadosFiltrados);
+  
+    // Aquí ya no necesitas duplicar el campo 'horas'
     const datosSeleccionados = {
       nombreServicio: route.params.selectedServices[0], // Incluye el nombre del servicio
       descripcion,
       dias: diasSeleccionadosFiltrados, // Solo los días seleccionados
-      horas: diasSeleccionadosFiltrados,  // Solo las horas de los días seleccionados
     };
-  
-    console.log('Datos a guardar:', datosSeleccionados);
   
     // Navegar a AgregarServicio3 y pasar los datos filtrados
     navigation.navigate('AgregarServicio3', { datosSeleccionados });

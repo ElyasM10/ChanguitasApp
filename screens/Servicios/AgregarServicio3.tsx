@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation,useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import API_URL from '../API_URL';
+import { Dialog } from 'react-native-paper';
 
 const AgregarServicio3 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -28,13 +29,27 @@ const AgregarServicio3 = () => {
       return;
     }
 
-    const datosServicio = {
-      nombreServicio: datosSeleccionados.nombreServicio, 
-      descripcion: datosSeleccionados.descripcion,
-      estado: "Iniciado", // Estado hardcodeado
-    };
+    const primerDia = datosSeleccionados.dias[0];
 
-    console.log('Datos preparados para enviar:', datosServicio);
+    const datosServicio = {
+      nombreServicio: datosSeleccionados.nombreServicio,
+      descripcion: datosSeleccionados.descripcion,
+      dia: primerDia.dia, // El nombre del primer día
+      desdeHora: primerDia.desdeHora || '00:00:00', // Hora de inicio (o '00:00:00' si no está definida)
+      hastaHora: primerDia.hastaHora || '00:00:00', // Hora de fin (o '00:00:00' si no está definida)
+    };
+    
+    console.log('Datos del primer día:', datosServicio);
+ 
+   // Extraer los datos de cada día y sus respectivas horas
+  datosSeleccionados.dias.map(dia => {
+    console.log('Nombre del Servicio:', datosSeleccionados.nombreServicio);
+    console.log('Descripción:', datosSeleccionados.descripcion);
+    console.log('Día:', dia.dia);           // El nombre del día
+    console.log('Hora de Inicio:', dia.desdeHora); // Hora de inicio
+    console.log('Hora de Fin:', dia.hastaHora);   // Hora de fin
+    console.log('---'); // Separador para cada día
+  });
 
     try {
       // Verifica que los datos estén bien formateados

@@ -29,16 +29,27 @@ const AgregarServicio3 = () => {
       return;
     }
 
-    const primerDia = datosSeleccionados.dias[0];
-
-    const datosServicio = {
-      nombreServicio: datosSeleccionados.nombreServicio,
-      descripcion: datosSeleccionados.descripcion,
-      dia: primerDia.dia, // El nombre del primer día
-      desdeHora: primerDia.desdeHora || '00:00:00', // Hora de inicio (o '00:00:00' si no está definida)
-      hastaHora: primerDia.hastaHora || '00:00:00', // Hora de fin (o '00:00:00' si no está definida)
-    };
+   //Este era solo para enviar uno a la vez 
+//    const primerDia = datosSeleccionados.dias[0];
+//   const datosServicio = {
+  //    nombreServicio: datosSeleccionados.nombreServicio,
+    //  descripcion: datosSeleccionados.descripcion,
+    //  dia: primerDia.dia, // El nombre del primer día
+    //  desdeHora: primerDia.desdeHora || '00:00:00', // Hora de inicio (o '00:00:00' si no está definida)
+    //  hastaHora: primerDia.hastaHora || '00:00:00', // Hora de fin (o '00:00:00' si no está definida)
+   // };
     
+   // Armo la lista de datos para enviar
+  const datosServicio = datosSeleccionados.dias.map((dia) => ({
+    nombreServicio: datosSeleccionados.nombreServicio,
+    descripcion: datosSeleccionados.descripcion,
+    dia: dia.dia, 
+    desdeHora: dia.desdeHora || '00:00:00', 
+    hastaHora: dia.hastaHora || '00:00:00', 
+  }));
+ 
+
+
     console.log('Datos del primer día:', datosServicio);
  
    // Extraer los datos de cada día y sus respectivas horas

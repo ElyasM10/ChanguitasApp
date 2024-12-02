@@ -364,7 +364,7 @@ const PantallaRegistro = () => {
               <View style={estilos.campo}>
                 <Text style={estilos.etiqueta}>DNI</Text>
                 <TextInput
-                  placeholder="12345678"
+                  placeholder="12.345.678"
                   placeholderTextColor="#666"
                   style={estilos.entradaTexto}
                   value={documento}

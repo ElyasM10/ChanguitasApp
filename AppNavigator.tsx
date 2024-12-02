@@ -77,7 +77,12 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+    screenOptions={{
+      cardStyle: { flex: 1 }, // Para que el scroll funcione en web
+    }}
+  >
+
       {/* Pantallas principales */}
       <Stack.Screen
         name="PantallaBienvenida"

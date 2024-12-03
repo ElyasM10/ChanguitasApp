@@ -1,14 +1,106 @@
-import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API_URL from '../API_URL';
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  // Estados para los datos personales
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  
 
+
+  // Nuevos estados para dirección
+  const [calle, setCalle] = useState('');
+  const [altura, setAltura] = useState('');
+  const [nroDepto, setNroDepto] = useState('');
+  const [piso, setPiso] = useState('');
+  const [barrio, setBarrio] = useState('');
+
+  const decodeJWT = (token: string) => {
+    const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Reemplaza caracteres no válidos para Base64
+    const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
+    return decoded;
+  };
+  
+   
+  // Función para guardar cambios
+  const guardarCambios = async () => {
+    try {
+
+      // Obtén el token de acceso desde AsyncStorage
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log('Token obtenido de AsyncStorage:', accessToken); // Debug: Verifica el token obtenido
+  
+      if (!accessToken) {
+        throw new Error('No se encontró el token de acceso');
+      }
+  
+      // Decodifica el token para extraer el ID del usuario
+      // Luego en el código
+      const decoded = decodeJWT(accessToken);
+      console.log('Payload decodificado:', decoded);
+
+      const userId = decoded.user_id;
+      console.log('ID del usuario extraído:', userId);
+
+
+      const payload = {
+        first_name: nombre.trim(),
+        last_name: apellido.trim(),
+        fechaNacimiento: fechaNacimiento || null,
+        email: correo.trim(),
+        telefono: telefono.trim(),
+        direccion: {
+            calle: calle.trim(),
+            altura: altura && !isNaN(Number(altura)) ? parseInt(altura, 10) : null,
+            nroDepto: nroDepto && !isNaN(Number(nroDepto)) ? parseInt(nroDepto, 10) : null,
+            piso: piso && !isNaN(Number(piso)) ? parseInt(piso, 10) : null,
+            barrio: barrio.trim(),
+        }
+    };
+    
+  
+            // Hacer la solicitud al backend
+      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
+        method: 'PATCH', // Se especifica el método PATCH
+        headers: {
+          'Content-Type': 'application/json', // Tipo de contenido JSON
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(payload), // Convertir el objeto payload a JSON
+      });
+
+      console.log('Response Status:', response.status);
+      const responseData = await response.json();
+      console.log('Response Data:', responseData);
+  
+      if (response.ok) {
+        Alert.alert('Éxito', 'Datos actualizados correctamente.');
+        navigation.navigate('PantallaBienvenida');
+      } else {
+        const errorData = await response.json().catch(() => ({})); // Manejo de JSON malformado.
+        console.error('Error en la API:', errorData);
+        Alert.alert('Error', errorData.detail || 'No se pudieron guardar los cambios. Inténtalo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error al actualizar perfil:', error);
+      Alert.alert('Error', 'Ocurrió un problema con la conexión.');
+    }
+  };
+  
   return (
     <SafeAreaView style={estilos.contenedor}>
+    <ScrollView contentContainerStyle={estilos.scrollContainer}>
       {/* Header con Perfil*/}
       <View style={estilos.header}>
         <Text style={estilos.textoEncabezado}>Perfil</Text>
@@ -27,38 +119,63 @@ const EditarDatosPersonales = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Sección para cambiar la foto */}
+
+    {/* Sección para cambiar la foto 
       <View style={estilos.seccionFoto}>
         <Image source={{ uri: 'https://via.placeholder.com/80' }} style={estilos.imagenUsuario} />
         <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
       </View>
+      */}
 
       {/* Formulario de datos personales */}
       <View style={estilos.formulario}>
         <Text style={estilos.label}>Nombre</Text>
-        <TextInput style={estilos.input} placeholder="Nombre" />
+        <TextInput style={estilos.input} placeholder="Nombre" value={nombre} onChangeText={setNombre}/>
 
         <Text style={estilos.label}>Apellido</Text>
-        <TextInput style={estilos.input} placeholder="Apellido" />
+        <TextInput style={estilos.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
 
         <Text style={estilos.label}>Fecha de nacimiento</Text>
-        <TextInput style={estilos.input} placeholder="aaaa-dd-mm" />
+        <TextInput style={estilos.input} placeholder="aaaa-dd-mm" value={fechaNacimiento} onChangeText={setFechaNacimiento}/>
 
         <Text style={estilos.label}>Correo electrónico</Text>
-        <TextInput style={estilos.input} placeholder="changuitas@app.com" />
+        <TextInput style={estilos.input} placeholder="changuitas@app.com" value={correo} onChangeText={setCorreo} />
 
         <Text style={estilos.label}>Teléfono</Text>
-        <TextInput style={estilos.input} placeholder="Número de teléfono" />
-      </View>
+        <TextInput style={estilos.input} placeholder="Número de teléfono" value={telefono} onChangeText={setTelefono} />
+
+        <Text style={estilos.label}>Calle</Text>
+        <TextInput style={estilos.input} placeholder="Nombre de la calle" value={calle} onChangeText={setCalle}/>
+
+        <Text style={estilos.label}>Altura</Text>
+        <TextInput style={estilos.input} placeholder="Número de altura" value={altura} onChangeText={setAltura} inputMode="numeric"/>
+
       
-      {/* Botón de Guardar Cambios */}
-      <TouchableOpacity onPress={() => navigation.navigate('PantallaBienvenida')} style={estilos.botonGuardarCambios}>
+        <Text style={estilos.label}>Barrio</Text>
+        <TextInput style={estilos.input} placeholder="Nombre del barrio" value={barrio} onChangeText={setBarrio}/>
+
+  
+
+
+     </View>
+      
+      {/* Botón de Guardar Cambios 
+        <Text style={estilos.label}>Número de Departamento</Text>
+        <TextInput style={estilos.input} placeholder="Número de departamento" value={nroDepto} onChangeText={setNroDepto} inputMode="numeric"/>
+
+        <Text style={estilos.label}>Piso</Text>
+        <TextInput style={estilos.input} placeholder="Número de piso" value={piso} onChangeText={setPiso} inputMode="numeric"/>
+
+
+      */}
+      <TouchableOpacity onPress={guardarCambios} style={estilos.botonGuardarCambios}>
         <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
       </TouchableOpacity>
+      </ScrollView>
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() =>navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
@@ -203,6 +320,10 @@ const estilos = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20, 
+  }
 });
 
 export default EditarDatosPersonales;

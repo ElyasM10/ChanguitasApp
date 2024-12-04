@@ -22,6 +22,3 @@ pip install djangorestframework-simplejwt
 
 #CheckBox en Servicios
 npm install react-native-paper
-
-#Para tomar y seleccionar imagenes de telefono
-npm install react-native-image-picker

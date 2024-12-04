@@ -12,15 +12,13 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.ChanguitasApp.ChanguitasAndroid"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.ChanguitasApp.ChanguitasAndroid"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

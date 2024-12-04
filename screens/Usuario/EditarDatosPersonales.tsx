@@ -86,7 +86,7 @@ const EditarDatosPersonales = () => {
   
       if (response.ok) {
         Alert.alert('Éxito', 'Datos actualizados correctamente.');
-        navigation.navigate('PantallaBienvenida');
+        navigation.navigate('PantallaHome');
       } else {
         const errorData = await response.json().catch(() => ({})); // Manejo de JSON malformado.
         console.error('Error en la API:', errorData);
@@ -120,12 +120,12 @@ const EditarDatosPersonales = () => {
       </View>
 
 
-    {/* Sección para cambiar la foto 
+    {/* Sección para cambiar la foto */}
       <View style={estilos.seccionFoto}>
         <Image source={{ uri: 'https://via.placeholder.com/80' }} style={estilos.imagenUsuario} />
         <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
       </View>
-      */}
+      
 
       {/* Formulario de datos personales */}
       <View style={estilos.formulario}>
@@ -150,7 +150,12 @@ const EditarDatosPersonales = () => {
         <Text style={estilos.label}>Altura</Text>
         <TextInput style={estilos.input} placeholder="Número de altura" value={altura} onChangeText={setAltura} inputMode="numeric"/>
 
-      
+        <Text style={estilos.label}>Número de Departamento</Text>
+        <TextInput style={estilos.input} placeholder="Número de departamento" value={nroDepto} onChangeText={setNroDepto} inputMode="numeric"/>
+
+        <Text style={estilos.label}>Piso</Text>
+        <TextInput style={estilos.input} placeholder="Número de piso" value={piso} onChangeText={setPiso} inputMode="numeric"/>
+
         <Text style={estilos.label}>Barrio</Text>
         <TextInput style={estilos.input} placeholder="Nombre del barrio" value={barrio} onChangeText={setBarrio}/>
 
@@ -159,15 +164,7 @@ const EditarDatosPersonales = () => {
 
      </View>
       
-      {/* Botón de Guardar Cambios 
-        <Text style={estilos.label}>Número de Departamento</Text>
-        <TextInput style={estilos.input} placeholder="Número de departamento" value={nroDepto} onChangeText={setNroDepto} inputMode="numeric"/>
-
-        <Text style={estilos.label}>Piso</Text>
-        <TextInput style={estilos.input} placeholder="Número de piso" value={piso} onChangeText={setPiso} inputMode="numeric"/>
-
-
-      */}
+      {/* Botón de Guardar Cambios*/}
       <TouchableOpacity onPress={guardarCambios} style={estilos.botonGuardarCambios}>
         <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
       </TouchableOpacity>
@@ -322,7 +319,7 @@ const estilos = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 20, 
+    paddingBottom: 80, 
   }
 });
 

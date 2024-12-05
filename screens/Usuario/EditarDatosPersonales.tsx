@@ -5,6 +5,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../API_URL';
+import * as ImagePicker from 'expo-image-picker';
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -16,7 +17,8 @@ const EditarDatosPersonales = () => {
   const [telefono, setTelefono] = useState('');
   const [contrasena, setContrasena] = useState('');
   
-
+  // Estado para la foto de perfil
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
   // Nuevos estados para dirección
   const [calle, setCalle] = useState('');
@@ -66,7 +68,8 @@ const EditarDatosPersonales = () => {
             nroDepto: nroDepto && !isNaN(Number(nroDepto)) ? parseInt(nroDepto, 10) : null,
             piso: piso && !isNaN(Number(piso)) ? parseInt(piso, 10) : null,
             barrio: barrio.trim(),
-        }
+        },
+        fotoPerfil: imageUri || null,
     };
     
   
@@ -97,6 +100,62 @@ const EditarDatosPersonales = () => {
       Alert.alert('Error', 'Ocurrió un problema con la conexión.');
     }
   };
+
+  
+  // Funciones para manejar la selección de imagen
+  const manejarRespuestaSelectorImagen = (resultado: ImagePicker.ImagePickerResult) => {
+    if (!resultado.canceled && resultado.assets && resultado.assets.length > 0) {
+      setImageUri(resultado.assets[0].uri);
+    }
+  };
+
+  const mostrarOpcionesSelectorImagen = () => {
+
+    console.log("Seleccionar nueva imagen");
+
+    Alert.alert("Seleccionar una imagen", "Elige la opción para seleccionar una imagen", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Tomar una foto",
+        onPress: () => abrirCamara(),
+      },
+      {
+        text: "Elegir desde la galería",
+        onPress: () => abrirSelectorImagen(),
+      },
+    ]);
+  };
+
+  const abrirSelectorImagen = async () => {
+    const resultadoPermiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (resultadoPermiso.granted === false) {
+      alert("Has rechazado el acceso a la galería de imágenes.");
+      return;
+    }
+
+    const resultado = await ImagePicker.launchImageLibraryAsync();
+
+    manejarRespuestaSelectorImagen(resultado);
+  };
+
+  const abrirCamara = async () => {
+    const resultadoPermiso = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (resultadoPermiso.granted === false) {
+      alert("Has rechazado el acceso a la cámara.");
+      return;
+    }
+
+    const resultado = await ImagePicker.launchCameraAsync();
+
+    manejarRespuestaSelectorImagen(resultado);
+  };
+
+
   
   return (
     <SafeAreaView style={estilos.contenedor}>
@@ -120,12 +179,17 @@ const EditarDatosPersonales = () => {
       </View>
 
 
-    {/* Sección para cambiar la foto */}
-      <View style={estilos.seccionFoto}>
-        <Image source={{ uri: 'https://via.placeholder.com/80' }} style={estilos.imagenUsuario} />
-        <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
-      </View>
-      
+   
+        {/* Sección para cambiar la foto */}
+        <View style={estilos.seccionFoto}>
+          <Image 
+            source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+            style={estilos.imagenUsuario} 
+          />
+          <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
+            <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
+          </TouchableOpacity>
+        </View>
 
       {/* Formulario de datos personales */}
       <View style={estilos.formulario}>

@@ -6,6 +6,7 @@ import { RootStackParamList } from '../../AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../API_URL';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -33,13 +34,51 @@ const EditarDatosPersonales = () => {
    // const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
    // return decoded;
  // };
-  
+ const enviarFoto = async () => {
+  try {
+    if (!imageUri) {
+      alert("Por favor, selecciona una imagen antes de enviarla.");
+      return;
+    }
+
+    const formData = new FormData();
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+    
+    const uriParts = imageUri.split('.');
+    const fileType = uriParts[uriParts.length - 1];
+    
+    
+    formData.append('fotoPerfil', blob, `photo.${fileType}`);
+
+    
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    const userId = await AsyncStorage.getItem('userId');
+
+    if (!accessToken || !userId) {
+      throw new Error('No se encontraron credenciales de usuario');
+    }
+
    
+    const respuesta = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+
+    console.log('Response Data:', respuesta.data);
+    Alert.alert('Éxito', 'Foto de perfil actualizada correctamente.');
+  } catch (error) {
+    console.error('Error al enviar la foto:', error);
+    Alert.alert('Error', 'Ocurrió un problema con la conexión.');
+  }
+};
   // Función para guardar cambios
   const guardarCambios = async () => {
     try {
 
-      // Obtén el token de acceso desde AsyncStorage
+     
       const accessToken = await AsyncStorage.getItem('accessToken');
     //  console.log('Token obtenido de AsyncStorage:', accessToken); // Debug: Verifica el token obtenido
   
@@ -181,14 +220,19 @@ const EditarDatosPersonales = () => {
 
 
    
-        {/* Sección para cambiar la foto */}
-        <View style={estilos.seccionFoto}>
+       {/* Sección para cambiar la foto */}
+       <View style={estilos.seccionFoto}>
           <Image 
             source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
             style={estilos.imagenUsuario} 
           />
           <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
             <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
+          </TouchableOpacity>
+
+          {/* Botón para enviar la foto */}
+          <TouchableOpacity onPress={enviarFoto}>
+            <Text style={estilos.cambiarFotoTexto}>Enviar Foto</Text>
           </TouchableOpacity>
         </View>
 

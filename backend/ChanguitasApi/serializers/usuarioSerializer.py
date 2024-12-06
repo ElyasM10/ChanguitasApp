@@ -11,7 +11,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model=Usuario
         fields = [
             'id', 'username', 'first_name', 'last_name', 'email', 'password','password2', 'documento', 'telefono', 
-            'fotoPerfil', 'fechaNacimiento', 'direccion'
+            'fotoPerfil', 'fechaNacimiento', 'direccion', 'fechaDisponible', 'horarioDisponible'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': True},  # Para que la contraseña solo sea de escritura y no se envíe en las respuestas
@@ -40,7 +40,9 @@ class UsuarioSerializer(serializers.ModelSerializer):
             documento=validated_data['documento'],
             telefono=validated_data['telefono'],
             fechaNacimiento=validated_data['fechaNacimiento'],
-            direccion=direccion
+            direccion=direccion,
+            fechaDisponible=validated_data['fechaDisponible'],
+            horarioDisponible=validated_data['horarioDisponible'],
         )
         return usuario
     

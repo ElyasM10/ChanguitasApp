@@ -12,12 +12,10 @@ from ChanguitasApi.views.usuarioViewSet import LoginView, LogoutView
 router = routers.DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet)
 router.register(r'categorias', CategoriaViewSet)
-router.register(r'clientes', ClienteViewSet)
 router.register(r'direcciones', DireccionViewSet)
 router.register(r'fotos', FotosViewSet)
 router.register(r'notificaciones', NotificacionViewSet)
 router.register(r'proveedores-servicios', ProveedorServicioViewSet)
-router.register(r'proveedores', ProveedorViewSet)
 router.register(r'servicios', ServicioViewSet)
 router.register(r'solicitudes', SolicitudViewSet)
 

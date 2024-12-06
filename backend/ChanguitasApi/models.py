@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Direccion(models.Model):
@@ -9,27 +9,91 @@ class Direccion(models.Model):
     piso = models.IntegerField(blank=True, null=True)
     barrio = models.CharField(max_length=100, blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.calle}, {self.altura}"
+
+# Manager personalizado
+class UsuarioManager(BaseUserManager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('El email es obligatorio')
+        if not username:
+            raise ValueError('El nombre de usuario es obligatorio')
+
+        # Validar campos obligatorios solo para usuarios normales (no superusuarios)
+        if not extra_fields.get('is_superuser', False):
+            if 'documento' not in extra_fields or not extra_fields['documento']:
+                raise ValueError("El campo 'documento' es obligatorio.")
+            if 'direccion' not in extra_fields or not extra_fields['direccion']:
+                raise ValueError("El campo 'direccion' es obligatorio.")
+
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        # Crear el superusuario y omitir la validación de campos obligatorios.
+        return self.create_user(username, email, password, **extra_fields)
+    
 class Usuario(AbstractUser):
     #nombre, apellido, contraseña y email lo trae por defecto el usuario de django
     documento = models.IntegerField(unique=True, blank=False, null=False)
     telefono = models.IntegerField(blank=True, null=True)
     # fotoPerfil - blank=True se debe sacar una vez terminado el proyecto
-    fotoPerfil = models.ImageField(blank=True, upload_to='imagenesUsuario',null=True)
-    fechaNacimiento = models.DateField(blank=False, null=True)
+    fotoPerfil = models.ImageField(upload_to='imagenesUsuario', null=True, blank=True, default='imagenesUsuario/empty.jpg')
+    fechaNacimiento = models.DateField(blank=False, null=True, verbose_name="fecha nacimiento")
     direccion = models.OneToOneField(Direccion, on_delete=models.CASCADE, null=False)
+    # explote las clases hijas Cliente y Proveedor en Usuario ya que un usuario va a poder contratar y ser contratado
+    # por lo tanto y al final de cuentas, hace lo mismo sin importar la diferenciación de tipo de usuario.
+    fechaDisponible = models.DateField(blank=True, null=True)
+    horarioDisponible = models.TimeField(blank=True, null=True)
+    #atributos a mostrar en perfil
+    cantServiciosContratados = models.IntegerField(blank=True, null=True)
+    cantServiciosTrabajados = models.IntegerField(blank=True, null=True)
+    puntaje = models.IntegerField(blank=True, null=True)
 
-class Cliente(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='cliente')
+    objects = UsuarioManager()
 
-class Proveedor(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='proveedor')
-    fechaDisponible = models.DateField()
-    horarioDisponible = models.TimeField()
+    def calcularCantServiciosContratados(self):
+        # Accedo a Solicitudes desde Usuario mediante la conexión de "cliente" (es un Usuario) gracias al related_name "solicitudes_cliente"
+        servicios_contratados = self.solicitudes_cliente.exclude(estado=EstadoServicio.CANCELADO)
+        self.cantServiciosContratados = servicios_contratados.count()
+        self.save()  # Este save() es importante para que los cambios persistan
+
+    def calcularCantServiciosTrabajados(self):
+        # Obtiene todas las solicitudes relacionadas con los servicios ofrecidos por el proveedor
+        servicios_ofrecidos = self.servicios_ofrecidos.all()  # Relación del proveedor con ProveedorServicio
+        solicitudes = Solicitud.objects.filter(proveedorServicio__in=servicios_ofrecidos)
+        # Filtra las solicitudes finalizadas
+        solicitudes_finalizadas = solicitudes.filter(estado=EstadoServicio.FINALIZADO)
+        self.cantServiciosTrabajados = solicitudes_finalizadas.count()
+        # Guarda el resultado en la base de datos
+        self.save()
+
+    def calcularPuntaje(self):
+        # Obtiene todas las solicitudes relacionadas con los servicios ofrecidos por el proveedor
+        servicios_ofrecidos = self.servicios_ofrecidos.all()
+        solicitudes = Solicitud.objects.filter(proveedorServicio__in=servicios_ofrecidos)
+        # Filtra las solicitudes finalizadas
+        solicitudes_finalizadas = solicitudes.filter(estado=EstadoServicio.FINALIZADO)
+        # Calcula el puntaje promedio
+        total_valoraciones = solicitudes_finalizadas.aggregate(total=models.Sum('valoracion'))['total'] or 0
+        cantidad_finalizadas = solicitudes_finalizadas.count()
+        # Evita la división por cero
+        self.puntaje = total_valoraciones / cantidad_finalizadas if cantidad_finalizadas > 0 else 0
+        # Guarda el resultado en la base de datos
+        self.save()
+
 
 class Fotos(models.Model):
     fotos = models.ImageField(upload_to='imagenesProveedor')
     fechaHora = models.DateTimeField(blank=True, null=False)
-    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='fotos')
+    proveedor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='fotos')
 
 class Notificacion(models.Model):
     fechaHora = models.DateTimeField(null=True)
@@ -48,22 +112,31 @@ class DiasSemana(models.TextChoices):
     
 class Servicio(models.Model):
     nombreServicio = models.CharField(max_length=100, null=False)
+    categorias = models.ManyToManyField('Categoria', related_name='servicios') #actualizar cardinalidad diagrama entidad relación
     descripcion = models.TextField(null=False)
     dia = models.CharField(max_length=10, choices=DiasSemana.choices,null=False, default="Lunes")
     desdeHora = models.TimeField(null=False, default="00:00")
     hastaHora = models.TimeField(null=False, default="00:00")
 
+    def __str__(self) -> str:
+        return self.nombreServicio
     
 class ProveedorServicio(models.Model):
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='proveedores_servicio')
-    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='servicios_ofrecidos')
+    proveedor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='servicios_ofrecidos')
     fechaDesde = models.DateField()
-    fechaHasta = models.DateField()
+    fechaHasta = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Servicio: {self.servicio.nombreServicio}, Proveedor: {self.proveedor.get_username()}"
+    
 
 class Categoria (models.Model):
     nombre = models.CharField(max_length=100, null=True)
     categoria_padre = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subcategorias')
-    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='categoria')    
+
+    def __str__(self) -> str:
+        return self.nombre
 
 class EstadoServicio(models.TextChoices):
     INICIADO = 'Iniciado', 'I'
@@ -77,6 +150,23 @@ class Solicitud (models.Model):
     fechaValoracion = models.DateField(blank=True, null=True)
     valoracion = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=1)
     proveedorServicio = models.ForeignKey(ProveedorServicio, on_delete=models.CASCADE, related_name='solicitudes')
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='solicitudes_cliente')
-    notificacion = models.ForeignKey(Notificacion, on_delete=models.CASCADE, related_name='solicitudes_notificacion')
+    cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='solicitudes_cliente')
+    notificacion = models.ForeignKey(Notificacion, on_delete=models.CASCADE, null=True, blank=True, related_name='solicitudes_notificacion')
     estado = models.CharField(max_length=15, choices=EstadoServicio.choices, default=EstadoServicio.INICIADO)
+
+    def __str__(self) -> str:
+        return f"Cliente: {self.cliente.get_username()},  Proveedor: {self.proveedorServicio.proveedor.get_username()}"
+
+    def save(self) :
+        a= super().save()
+        self.cliente.calcularCantServiciosContratados()
+        self.proveedorServicio.proveedor.calcularCantServiciosTrabajados()
+        self.proveedorServicio.proveedor.calcularPuntaje()
+        return a
+    
+    def delete(self, *args, **kwargs):
+        # Elimino y después actualizo valores
+        super().delete(*args, **kwargs)
+        self.cliente.calcularCantServiciosContratados()
+        self.proveedorServicio.proveedor.calcularCantServiciosTrabajados()
+        self.proveedorServicio.proveedor.calcularPuntaje()

@@ -232,13 +232,14 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
   Encabezado: Describe el algoritmo y el tipo de token.
   Cuerpo (Payload): Contiene los datos del usuario y otras informaciones (como user_id, role, iat, exp).
   Firma: Garantiza que el token no ha sido alterado.
-  */
+  
   const decodeJWT = (token: string) => {
     const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Reemplaza caracteres no válidos para Base64
     const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
     return decoded;
   };
+  */
   
 
   // Interfaz para el tipo de datos del usuario
@@ -280,10 +281,10 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
   
       // Decodifica el token para extraer el ID del usuario
      // Luego en el código
-     const decoded = decodeJWT(accessToken);
-     console.log('Payload decodificado:', decoded);
- 
-     const userId = decoded.user_id;
+   //  const decoded = decodeJWT(accessToken);
+      //console.log('Payload decodificado:', decoded);
+      const userId = await AsyncStorage.getItem('userId');  
+    // const userId = decoded.user_id;
      console.log('ID del usuario extraído:', userId);
 
     

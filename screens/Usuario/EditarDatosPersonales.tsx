@@ -27,12 +27,12 @@ const EditarDatosPersonales = () => {
   const [piso, setPiso] = useState('');
   const [barrio, setBarrio] = useState('');
 
-  const decodeJWT = (token: string) => {
-    const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Reemplaza caracteres no válidos para Base64
-    const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
-    return decoded;
-  };
+  //const decodeJWT = (token: string) => {
+  //  const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
+  //  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Reemplaza caracteres no válidos para Base64
+   // const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
+   // return decoded;
+ // };
   
    
   // Función para guardar cambios
@@ -41,7 +41,7 @@ const EditarDatosPersonales = () => {
 
       // Obtén el token de acceso desde AsyncStorage
       const accessToken = await AsyncStorage.getItem('accessToken');
-      console.log('Token obtenido de AsyncStorage:', accessToken); // Debug: Verifica el token obtenido
+    //  console.log('Token obtenido de AsyncStorage:', accessToken); // Debug: Verifica el token obtenido
   
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
@@ -49,11 +49,12 @@ const EditarDatosPersonales = () => {
   
       // Decodifica el token para extraer el ID del usuario
       // Luego en el código
-      const decoded = decodeJWT(accessToken);
-      console.log('Payload decodificado:', decoded);
+    //  const decoded = decodeJWT(accessToken);
+     // console.log('Payload decodificado:', decoded);
 
-      const userId = decoded.user_id;
-      console.log('ID del usuario extraído:', userId);
+     // const userId = decoded.user_id;
+     const userId = await AsyncStorage.getItem('userId');  
+     console.log('ID del usuario extraído:', userId);
 
 
       const payload = {

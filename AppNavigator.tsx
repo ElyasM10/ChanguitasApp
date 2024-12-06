@@ -32,6 +32,7 @@ import PantallaAyuda from './screens/PantallaAyuda';
 import CrearCategoria from './screens/Admin/CrearCategoria';
 import EditarCategoria from './screens/Admin/EditarCategoria';
 import EditarDatosCategoria from './screens/Admin/EditarDatosCategoria';
+import SeleccionImagenes from './screens/SeleccionImagenes';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -70,6 +71,7 @@ export type RootStackParamList = {
   CrearCategoria: undefined;
   EditarCategoria: undefined;
   EditarDatosCategoria: undefined;
+  SeleccionImagenes: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
@@ -227,6 +229,11 @@ const AppNavigator = () => {
        <Stack.Screen 
         name="PantallaInicioSesion" 
         component={PantallaInicioSesion} 
+        options={{ headerShown: false }}  
+      /> 
+      <Stack.Screen 
+        name="SeleccionImagenes" 
+        component={SeleccionImagenes} 
         options={{ headerShown: false }}  
       /> 
     </Stack.Navigator>

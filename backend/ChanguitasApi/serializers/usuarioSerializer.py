@@ -5,22 +5,25 @@ from .direccionSerializer import DireccionSerializer
 
 class UsuarioSerializer(serializers.ModelSerializer):
     direccion = DireccionSerializer()
-    password2 = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(write_only=True, required=False)  # password2 solo se necesita en la creación
+    password = serializers.CharField(write_only=True, required=False)   # password es opcional en la actualización
 
     class Meta:
-        model=Usuario
+        model = Usuario
         fields = [
             'id', 'username', 'first_name', 'last_name', 'email', 'password','password2', 'documento', 'telefono', 
             'fotoPerfil', 'fechaNacimiento', 'direccion', 'fechaDisponible', 'horarioDisponible'
         ]
         extra_kwargs = {
-            'password': {'write_only': True, 'required': True},  # Para que la contraseña solo sea de escritura y no se envíe en las respuestas
-            'password2': {'write_only': True, 'required': True} #el required sirve para que cuando se crea un usuario sea obligatorio crearlo con contraseña
+            'password': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
+            'password2': {'write_only': True, 'required': False}  # No es obligatorio en la actualización
         }
 
     def validate(self, data):
-        if data['password'] != data['password2']: #agregue para la confimacion de contraseñas que seria como un validar
-            raise serializers.ValidationError("Las contraseñas no coinciden.")
+        # Solo validamos si estamos creando un usuario (no en la actualización)
+        if 'password' in data and 'password2' in data:
+            if data['password'] != data['password2']:
+                raise serializers.ValidationError("Las contraseñas no coinciden.")
         return data
     
     def create(self, validated_data):
@@ -46,6 +49,25 @@ class UsuarioSerializer(serializers.ModelSerializer):
         )
         return usuario
     
+    def update(self, instance, validated_data):
+        # Si se pasa una nueva contraseña, actualízala
+        password = validated_data.pop('password', None)  # No lanzará error si no se pasa 'password'
+        if password:
+            instance.set_password(password)  # Solo actualiza la contraseña si se pasa
+
+        # Actualiza la dirección si está presente
+        direccion_data = validated_data.pop('direccion', None)
+        if direccion_data:
+            Direccion.objects.filter(id=instance.direccion.id).update(**direccion_data)
+
+        # Actualiza los demás campos
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()

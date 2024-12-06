@@ -22,3 +22,12 @@ pip install djangorestframework-simplejwt
 
 #CheckBox en Servicios
 npm install react-native-paper
+
+#Para tomar y seleccionar imagenes de telefono
+npm install react-native-image-picker
+ npm install expo-image-picker
+
+ #Para Swagger-UI
+ pip install -U drf-yasg
+ Ver pasos que se siguieron: https://drf-yasg.readthedocs.io/en/stable/readme.html#usage 
+

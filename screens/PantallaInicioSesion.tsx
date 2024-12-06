@@ -190,7 +190,8 @@ const PantallaInicioSesion = () => {
         await AsyncStorage.setItem('accessToken', data.access); // `data.access` es el token de acceso
         await AsyncStorage.setItem('refreshToken', data.refresh); // `data.refresh` es el token de refresco
         //Lo guardamos para despues utilizarlo para mostrar el perfil por ejemplo
-        console.log('Tokens almacenados correctamente'); // Almacena el token recibido
+        await AsyncStorage.setItem('userId', data.id.toString());
+        console.log('Tokens y id almacenados correctamente'); // Almacena el token recibido
 
         navigation.navigate('PantallaHome');
       } else {

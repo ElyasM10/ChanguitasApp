@@ -46,11 +46,13 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
     email: string;
     telefono: string;
     direccion: Direccion;
+    fotoPerfil: string | null;
   }
 
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUsuario();
@@ -96,6 +98,9 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
       const data: Usuario = await response.json();
       console.log('Datos del usuario recibidos:', data); // Verifica los datos del usuario
       setUsuario(data);
+      setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
+
+
     } catch (error: any) {
       console.error('Error al cargar datos del usuario:', error); //  Detalles del error
       setError('No se pudo cargar el perfil del usuario');
@@ -146,7 +151,10 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
 
       {/* Información del Usuario */}
       <View style={estilos.seccionUsuario}>
-        <Image source={{ uri: 'https://via.placeholder.com/80' }} style={estilos.imagenUsuario} />
+        <Image 
+          source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+          style={estilos.imagenUsuario} 
+        />
         <Text style={estilos.nombreCompleto}>{usuario?.username}</Text>
       </View>
 

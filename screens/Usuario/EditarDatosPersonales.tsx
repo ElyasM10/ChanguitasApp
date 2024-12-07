@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView} from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -27,6 +27,7 @@ const EditarDatosPersonales = () => {
   const [nroDepto, setNroDepto] = useState('');
   const [piso, setPiso] = useState('');
   const [barrio, setBarrio] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   //const decodeJWT = (token: string) => {
   //  const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
@@ -34,6 +35,39 @@ const EditarDatosPersonales = () => {
    // const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
    // return decoded;
  // };
+
+  // Función para obtener la foto de perfil desde el backend
+  const obtenerFotoPerfil = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const userId = await AsyncStorage.getItem('userId');
+
+      if (!accessToken || !userId) {
+        throw new Error('No se encontraron credenciales de usuario');
+      }
+
+      const respuesta = await axios.get(`${API_URL}/usuarios/${userId}/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Actualiza el estado con la URL de la imagen
+      setImageUri(respuesta.data.fotoPerfil || 'https://via.placeholder.com/80');
+    } catch (error) {
+      console.error('Error al obtener la foto de perfil:', error);
+      Alert.alert('Error', 'No se pudo cargar la imagen de perfil.');
+    }
+  };
+
+  
+  // Llama a obtenerFotoPerfil al montar el componente
+  useEffect(() => {
+    obtenerFotoPerfil();
+  }, []);
+
+
+
  const enviarFoto = async () => {
   try {
     if (!imageUri) {
@@ -45,10 +79,7 @@ const EditarDatosPersonales = () => {
     const response = await fetch(imageUri);
     const blob = await response.blob();
     
-    const uriParts = imageUri.split('.');
-    const fileType = uriParts[uriParts.length - 1];
-    
-    
+    const fileType = blob.type.split('/')[1] || 'jpg'; // Define un tipo por defecto si no se encuentra
     formData.append('fotoPerfil', blob, `photo.${fileType}`);
 
     
@@ -73,7 +104,7 @@ const EditarDatosPersonales = () => {
     console.error('Error al enviar la foto:', error);
     Alert.alert('Error', 'Ocurrió un problema con la conexión.');
   }
-};
+}
   // Función para guardar cambios
   const guardarCambios = async () => {
     try {
@@ -149,24 +180,33 @@ const EditarDatosPersonales = () => {
     }
   };
 
+ 
+  const manejarCambioArchivoWeb = (event: Event) => {
+    const target = event.target as HTMLInputElement; // Asegúrate de que el target sea un input de archivo
+    const file = target.files ? target.files[0] : null;
+  
+    if (file) {
+      console.log("Imagen seleccionada:", file);
+      setImageFile(file); // Actualiza el estado con el archivo seleccionado
+      const imageUrl = URL.createObjectURL(file); // Genera una URL para mostrar la imagen seleccionada
+      setImageUri(imageUrl);
+    }
+  };
+
   const mostrarOpcionesSelectorImagen = () => {
-
-    console.log("Seleccionar nueva imagen");
-
-    Alert.alert("Seleccionar una imagen", "Elige la opción para seleccionar una imagen", [
-      {
-        text: "Cancelar",
-        style: "cancel",
-      },
-      {
-        text: "Tomar una foto",
-        onPress: () => abrirCamara(),
-      },
-      {
-        text: "Elegir desde la galería",
-        onPress: () => abrirSelectorImagen(),
-      },
-    ]);
+    if (Platform.OS === 'web') {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.onchange = manejarCambioArchivoWeb;
+      fileInput.click();
+    } else {
+      Alert.alert("Seleccionar una imagen", "Elige la opción para seleccionar una imagen", [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Tomar una foto", onPress: abrirCamara },
+        { text: "Elegir desde la galería", onPress: abrirSelectorImagen },
+      ]);
+    }
   };
 
   const abrirSelectorImagen = async () => {

@@ -59,28 +59,31 @@ class Usuario(AbstractUser):
 
     objects = UsuarioManager()
 
+    def getServiciosContratados(self):
+        return self.solicitudes_cliente.all()
+    
+    def getServiciosTrabajados(self):
+        # Obtiene todas las solicitudes relacionadas con los servicios ofrecidos por el proveedor
+        servicios_ofrecidos = self.servicios_ofrecidos.all()  # Relación del proveedor con ProveedorServicio
+        solicitudes = Solicitud.objects.filter(proveedorServicio__in=servicios_ofrecidos)
+        return solicitudes
+
     def calcularCantServiciosContratados(self):
         # Accedo a Solicitudes desde Usuario mediante la conexión de "cliente" (es un Usuario) gracias al related_name "solicitudes_cliente"
-        servicios_contratados = self.solicitudes_cliente.exclude(estado=EstadoServicio.CANCELADO)
+        servicios_contratados = self.getServiciosContratados.exclude(estado=EstadoServicio.CANCELADO)
         self.cantServiciosContratados = servicios_contratados.count()
         self.save()  # Este save() es importante para que los cambios persistan
 
     def calcularCantServiciosTrabajados(self):
-        # Obtiene todas las solicitudes relacionadas con los servicios ofrecidos por el proveedor
-        servicios_ofrecidos = self.servicios_ofrecidos.all()  # Relación del proveedor con ProveedorServicio
-        solicitudes = Solicitud.objects.filter(proveedorServicio__in=servicios_ofrecidos)
         # Filtra las solicitudes finalizadas
-        solicitudes_finalizadas = solicitudes.filter(estado=EstadoServicio.FINALIZADO)
+        solicitudes_finalizadas = self.getServiciosTrabajados.filter(estado=EstadoServicio.FINALIZADO)
         self.cantServiciosTrabajados = solicitudes_finalizadas.count()
         # Guarda el resultado en la base de datos
         self.save()
 
     def calcularPuntaje(self):
-        # Obtiene todas las solicitudes relacionadas con los servicios ofrecidos por el proveedor
-        servicios_ofrecidos = self.servicios_ofrecidos.all()
-        solicitudes = Solicitud.objects.filter(proveedorServicio__in=servicios_ofrecidos)
         # Filtra las solicitudes finalizadas
-        solicitudes_finalizadas = solicitudes.filter(estado=EstadoServicio.FINALIZADO)
+        solicitudes_finalizadas = self.getServiciosTrabajados.filter(estado=EstadoServicio.FINALIZADO)
         # Calcula el puntaje promedio
         total_valoraciones = solicitudes_finalizadas.aggregate(total=models.Sum('valoracion'))['total'] or 0
         cantidad_finalizadas = solicitudes_finalizadas.count()
@@ -88,7 +91,6 @@ class Usuario(AbstractUser):
         self.puntaje = total_valoraciones / cantidad_finalizadas if cantidad_finalizadas > 0 else 0
         # Guarda el resultado en la base de datos
         self.save()
-
 
 class Fotos(models.Model):
     fotos = models.ImageField(upload_to='imagenesProveedor')
@@ -118,6 +120,12 @@ class Servicio(models.Model):
     desdeHora = models.TimeField(null=False, default="00:00")
     hastaHora = models.TimeField(null=False, default="00:00")
 
+    def obtener_proveedores(self):
+       # Retorna los usuarios que ofrecen este servicio.
+        proveedores_servicio = self.proveedores_servicio.all()  # conexión con ProveedorServicio mediante related_name
+        proveedores = [proveedor_servicio.proveedor for proveedor_servicio in proveedores_servicio]
+        return proveedores
+
     def __str__(self) -> str:
         return self.nombreServicio
     
@@ -130,7 +138,6 @@ class ProveedorServicio(models.Model):
     def __str__(self):
         return f"Servicio: {self.servicio.nombreServicio}, Proveedor: {self.proveedor.get_username()}"
     
-
 class Categoria (models.Model):
     nombre = models.CharField(max_length=100, null=True)
     categoria_padre = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subcategorias')

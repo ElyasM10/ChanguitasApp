@@ -10,3 +10,4 @@ from .proveedorServicioViewSet import ProveedorServicioViewSet
 from .servicioViewSet import ServicioViewSet
 from .solicitudViewSet import SolicitudViewSet
 from .refreshView import RefreshView
+from .buscarProveedores import BuscarProveedoresAPIView

@@ -22,10 +22,6 @@ router.register(r'notificaciones', NotificacionViewSet)
 router.register(r'proveedores-servicios', ProveedorServicioViewSet)
 router.register(r'servicios', ServicioViewSet)
 router.register(r'solicitudes', SolicitudViewSet)
-router.register(r'buscar-proveedores', BuscarProveedoresAPIView)
-router.register(r'token', TokenObtainPairView.as_view(), name='token_obtain_pair')
-router.register(r'token/refresh', TokenRefreshView.as_view(), name='token_refresh')
-router.register(r'refresh', RefreshView.as_view(), name='refresh')
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -49,8 +45,12 @@ urlpatterns = [
    #  path('clientes/', ClienteView.as_view(), name='clientes'),
     path('admin/', admin.site.urls),
     path('', include(router.urls), name='api'),
+    path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/refresh', RefreshView.as_view(), name='refresh'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redocs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('buscar-proveedores/', BuscarProveedoresAPIView.as_view(), name='buscar_proveedores'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

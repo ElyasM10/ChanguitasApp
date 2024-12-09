@@ -36,8 +36,6 @@ schema_view = get_schema_view(
    permission_classes=(permissions.AllowAny,),
 )
 
-
-
 urlpatterns = [
    #  path('', ReactView.as_view(), name="xxx"),
    #  path('', DireccionView.as_view(), name='direccion_view'),

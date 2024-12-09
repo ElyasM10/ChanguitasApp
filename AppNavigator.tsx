@@ -33,6 +33,7 @@ import CrearCategoria from './screens/Admin/CrearCategoria';
 import EditarCategoria from './screens/Admin/EditarCategoria';
 import EditarDatosCategoria from './screens/Admin/EditarDatosCategoria';
 import SeleccionImagenes from './screens/SeleccionImagenes';
+import pruebaBusqueda from './screens/Buscar/pruebaBusqueda';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -58,6 +59,7 @@ export type RootStackParamList = {
   //AgregarServicio2: undefined;
   AgregarServicio2: { selectedServices: string[] }; // Define que AgregarServicio2 espera un parametro
   AgregarServicio3: { datosSeleccionados: any };
+  pruebaBusqueda: { selectedService: string[] }; 
   MisServicios: undefined;
   BuscarServicio1: undefined;
   BuscarServicio2: undefined;
@@ -234,6 +236,11 @@ const AppNavigator = () => {
       <Stack.Screen 
         name="SeleccionImagenes" 
         component={SeleccionImagenes} 
+        options={{ headerShown: false }}  
+      /> 
+        <Stack.Screen 
+        name="pruebaBusqueda" 
+        component={pruebaBusqueda} 
         options={{ headerShown: false }}  
       /> 
     </Stack.Navigator>

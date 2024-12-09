@@ -7,47 +7,22 @@ import { RootStackParamList } from '../../AppNavigator';
 
 const BuscarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [selectedService, setSelectedService] = useState<string | null>(null);
 
-  const [selectedServices, setSelectedServices] = useState({
-    "Depilacion":false,
-    "Maquillaje":false,
-    "Manicura": false,
-    "Peluqueria":false,
-    "Podologia":false,
-    "Corte de pasto": false,
-    "Arreglo jardín": false,
-    "Limpieza jardín": false,
-    "Limpieza de hogar": false,
-    "Limpieza vehículo": false,
-    "Gasista": false,
-    "Electricista": false,
-    "Plomero": false,
-    "Carpintero": false,
-    "Pintor": false,
-    "Albañil": false,
-    "Ziguería": false,
-    "Gomería": false,
-    "Electrodomésticos": false,
-    "Calderista": false,
-    "Niñero/a": false,
-    "Cuidado de adultos mayores": false,
-    "Clases particulares": false,
-    "Clases de música": false,
-    "Clases de idiomas": false,
-    "Fletes": false,
-    "Movimiento de muebles": false,
-    "Limpieza de nieve": false,
-    "Sal en veredas": false,
-    "Fumigación": false,
-    "Control de roedores": false,
-  });
 
-  const toggleService = (service) => {
-    setSelectedServices((prevSelected) => ({
-      ...prevSelected,
-      [service]: !prevSelected[service],
-    }));
+  const handleSelectService = (service: string) => {
+    // Seleccionar un solo servicio, desmarcando el anterior
+    setSelectedService(service === selectedService ? null : service);
   };
+
+  const handleNext = () => {
+    if (!selectedService) {
+      alert("Por favor selecciona un servicio.");
+      return;
+    }
+    navigation.navigate('pruebaBusqueda', { selectedService: [selectedService] });
+  };
+
 
   return (
     <View style={styles.container}>
@@ -60,23 +35,24 @@ const BuscarServicio1 = () => {
       
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Sección de servicios */}
-        {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura","Peluqueria","Podologia"], selectedServices, toggleService)}
-        {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedServices, toggleService)}
-        {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedServices, toggleService)}
+         {/* Sección de servicios */}
+         {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura", "Peluqueria", "Podologia"], selectedService, handleSelectService)}
+        {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
+        {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
         {renderCategory("HOGAR", [
           "Gasista", "Electricista", "Plomero", "Carpintero", 
           "Pintor", "Albañil", "Ziguería", "Gomería", 
           "Electrodomésticos", "Calderista"
-        ], selectedServices, toggleService)}
-        {renderCategory("CUIDADO DE PERSONAS", ["Niñero/a", "Cuidado de adultos mayores"], selectedServices, toggleService)}
-        {renderCategory("EDUCACIÓN", ["Clases particulares", "Clases de música", "Clases de idiomas"], selectedServices, toggleService)}
-        {renderCategory("MUDANZA", ["Fletes", "Movimiento de muebles"], selectedServices, toggleService)}
-        {renderCategory("INVIERNO", ["Limpieza de nieve", "Sal en veredas"], selectedServices, toggleService)}
-        {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de roedores"], selectedServices, toggleService)}
+        ], selectedService, handleSelectService)}
+        {renderCategory("CUIDADO DE PERSONAS", ["Niñero/a", "Cuidado de adultos mayores"], selectedService, handleSelectService)}
+        {renderCategory("EDUCACIÓN", ["Clases particulares", "Clases de música", "Clases de idiomas"], selectedService, handleSelectService)}
+        {renderCategory("MUDANZA", ["Fletes", "Movimiento de muebles"], selectedService, handleSelectService)}
+        {renderCategory("INVIERNO", ["Limpieza de nieve", "Sal en veredas"], selectedService, handleSelectService)}
+        {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de roedores"], selectedService, handleSelectService)}
 
         {/* Botones de acción */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('BuscarServicio2')}>
+          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
             <Text style={styles.nextButtonText}>Siguiente</Text>
           </TouchableOpacity>
         </View>
@@ -105,22 +81,22 @@ const BuscarServicio1 = () => {
   );
 };
 
-// Funcion para renderizar cada categoría de servicios
-const renderCategory = (title, options, selectedServices, toggleService) => (
+
+// Función para renderizar cada categoría de servicios
+const renderCategory = (title, options, selectedService, handleSelectService) => (
   <View key={title}>
     <Text style={styles.categoryTitle}>{title}</Text>
     {options.map(option => (
       <View style={styles.optionContainer} key={option}>
         <Checkbox
-          status={selectedServices[option] ? 'checked' : 'unchecked'}
-          onPress={() => toggleService(option)}
+          status={selectedService === option ? 'checked' : 'unchecked'}
+          onPress={() => handleSelectService(option)}
         />
         <Text style={styles.optionText}>{option}</Text>
       </View>
     ))}
   </View>
 );
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -61,7 +61,8 @@ const ResultadosBusqueda = () => {
                 </View>
               </View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('PantallaPerfilDeOtro')}
+                onPress={() => navigation.navigate('PantallaPerfilDeOtro', { id: item.id })}
+                
                 style={styles.arrowButton}
               >
                 <Ionicons name="chevron-forward" size={20} color="#333" />

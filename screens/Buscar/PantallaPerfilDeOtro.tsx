@@ -1,29 +1,118 @@
-import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API_URL from '../API_URL';
 
 const PantallaPerfilDeOtro = () => {
+
+  const route = useRoute<RouteProp<RootStackParamList, 'PantallaPerfilDeOtro'>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const userData = {
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    fechaNacimiento: '01/01/1990',
-    correo: 'juan@perez.com',
-    telefono: '02901-12345678',
-    direccion: 'Calle Las Changas 456'
+  interface Direccion {
+    calle: string;
+    altura: number;
+    piso: number | null;
+    nroDepto: number | null;
+    barrio: string;
+  }
+
+  interface Usuario {
+    username: string;
+    first_name: string;
+    last_name: string;
+    fechaNacimiento: string;
+    email: string;
+    telefono: string;
+    direccion: Direccion;
+    fotoPerfil: string | null;
+  }
+
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
+
+  
+  // Mostrar los datos pasados desde la pantalla anterior
+  useEffect(() => {
+    console.log('Componente de id montado');
+    if (route.params?.id) {
+      console.log('ID obtenido:', route.params.id);
+    } else {
+      console.log('No se encontraron id.');
+    }
+    fetchUsuario();
+  }, [route.params]);
+
+  const fetchUsuario = async () => {
+    try {
+      // Obtén el token de acceso desde AsyncStorage
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log('Token obtenido de AsyncStorage:', accessToken); // Debug: Verifica el token obtenido
+
+      if (!accessToken) {
+        throw new Error('No se encontró el token de acceso');
+      }
+
+      const userId = route.params.id;
+      console.log('ID del usuario extraído:', userId);
+
+      // Se realiza la solicitud utilizando el ID del usuario
+      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log('Response status:', response.status); // Verificamos el estado de la respuesta
+
+      if (!response.ok) {
+        throw new Error(`Error al obtener el usuario: ${response.status}`);
+      }
+
+      // Procesa los datos recibidos
+      const data: Usuario = await response.json();
+      console.log('Datos del usuario recibidos:', data); // Verifica los datos del usuario
+      setUsuario(data);
+      setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
+    } catch (error: any) {
+      console.error('Error al cargar datos del usuario:', error); // Detalles del error
+      setError('No se pudo cargar el perfil del usuario');
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Mostrar la vista de carga o error
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>{error}</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
-        <TouchableOpacity onPress={() => navigation.navigate('ResultadosBusqueda')}>
-            <Ionicons name="arrow-back" size={24} color="#333" />
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')}>
+          <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
-        <Text style={estilos.textoEncabezado}>Perfil de {userData.nombre}</Text>
+        <Text style={estilos.textoEncabezado}>Perfil de {usuario?.first_name}</Text>
         <TouchableOpacity>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
         </TouchableOpacity>
@@ -31,23 +120,23 @@ const PantallaPerfilDeOtro = () => {
 
       {/* Información del Usuario */}
       <View style={estilos.seccionUsuario}>
-        <Image source={{ uri: 'https://via.placeholder.com/80' }} style={estilos.imagenUsuario} />
-        <Text style={estilos.nombreCompleto}>Full name</Text>
+        <Image source={{ uri: imageUri }} style={estilos.imagenUsuario} />
+        <Text style={estilos.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
         <Text style={estilos.rolUsuario}>User role</Text>
       </View>
 
       {/* Botones */}
       <View style={estilos.buttonContainer}>
-            <TouchableOpacity style={estilos.nextButton} onPress={() => navigation.navigate('DetalleTarea')}>
-            <Text style={estilos.nextButtonText}>Iniciar changuita</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={estilos.prevButton} >
-            <Text style={estilos.prevButtonText}>Chatear</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={estilos.prevButton} onPress={() => navigation.navigate('ResultadosBusqueda')}>
-            <Text style={estilos.prevButtonText}>Bloquear</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={estilos.nextButton} onPress={() => navigation.navigate('DetalleTarea')}>
+          <Text style={estilos.nextButtonText}>Iniciar changuita</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={estilos.prevButton}>
+          <Text style={estilos.prevButtonText}>Chatear</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={estilos.prevButton} onPress={() => navigation.navigate('ResultadosBusqueda')}>
+          <Text style={estilos.prevButtonText}>Bloquear</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Datos adicionales */}
       <View style={estilos.datosExtras}>
@@ -68,12 +157,12 @@ const PantallaPerfilDeOtro = () => {
       {/* Datos Personales */}
       <Text style={estilos.tituloDatosPersonales}>DATOS PERSONALES</Text>
       <View style={estilos.datosPersonales}>
-        <Text style={estilos.infoUsuario}>Nombre: {userData.nombre}</Text>
-        <Text style={estilos.infoUsuario}>Apellido: {userData.apellido}</Text>
-        <Text style={estilos.infoUsuario}>Fecha de Nacimiento: {userData.fechaNacimiento}</Text>
-        <Text style={estilos.infoUsuario}>Correo Electronico: {userData.correo}</Text>
-        <Text style={estilos.infoUsuario}>Telefono: {userData.telefono}</Text>
-        <Text style={estilos.infoUsuario}>Direccion: {userData.direccion}</Text>
+        <Text style={estilos.infoUsuario}>Nombre: {usuario?.first_name}</Text>
+        <Text style={estilos.infoUsuario}>Apellido: {usuario?.last_name}</Text>
+        <Text style={estilos.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
+        <Text style={estilos.infoUsuario}>Correo Electronico: {usuario?.email}</Text>
+        <Text style={estilos.infoUsuario}>Telefono: {usuario?.telefono}</Text>
+        <Text style={estilos.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
       </View>
 
       {/* Barra de navegación inferior */}
@@ -98,7 +187,6 @@ const PantallaPerfilDeOtro = () => {
     </SafeAreaView>
   );
 };
-
 const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,

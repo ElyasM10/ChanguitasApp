@@ -17,6 +17,7 @@ class BuscarProveedoresAPIView(APIView):
         proveedores = servicio.obtener_proveedores()
         proveedores_data = [
             {
+                "id":proveedor.id,
                 "username": proveedor.username,
                 "nombre": proveedor.first_name,
                 "apellido": proveedor.last_name,

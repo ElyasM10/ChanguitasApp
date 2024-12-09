@@ -1,8 +1,9 @@
 from rest_framework import status
-from ChanguitasApi.models import Servicio
+from ChanguitasApi.models import ProveedorServicio, Servicio,Usuario
 from rest_framework.response import Response
 from ChanguitasApi.serializers import ServicioSerializer
 from rest_framework import viewsets
+from rest_framework.decorators import action
 
 class ServicioViewSet(viewsets.ModelViewSet):
     queryset = Servicio.objects.all()
@@ -32,3 +33,20 @@ class ServicioViewSet(viewsets.ModelViewSet):
             self.perform_update(serializer)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    #Para traer los servicios que tiene vinculado un usuario
+    @action(detail=False, methods=['get'], url_path='por-usuario/(?P<usuario_id>[^/.]+)')
+    def por_usuario(self, request, usuario_id=None):
+        try:
+            # Busca el usuario
+            usuario = Usuario.objects.get(id=usuario_id)
+            
+            # Obtiene los servicios asociados al usuario
+            proveedor_servicios = ProveedorServicio.objects.filter(proveedor=usuario)
+            servicios = [proveedor_servicio.servicio for proveedor_servicio in proveedor_servicios]
+            
+            # Serializa los servicios
+            serializer = ServicioSerializer(servicios, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Usuario.DoesNotExist:
+            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)

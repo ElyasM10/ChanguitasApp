@@ -1,11 +1,71 @@
-import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+import API_URL from '../API_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  interface Servicio {
+    id: number;
+    nombreServicio: string;
+    descripcion: string;
+    dia: string;
+    desdeHora: string;
+    hastaHora: string;
+  }
+
+  const [services, setServices] = useState<Servicio[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchUsuario = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const userId = await AsyncStorage.getItem('userId');
+
+      if (!accessToken || !userId) {
+        throw new Error('Token de acceso o ID de usuario no encontrado');
+      }
+
+      const response = await fetch(`${API_URL}/servicios/por-usuario/${userId}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al obtener servicios: ${response.status}`);
+      }
+
+      const data: Servicio[] = await response.json();
+      setServices(data);
+    } catch (error) {
+      console.error('Error al cargar los servicios del usuario:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsuario();
+  }, []);
+
+  const renderServiceItem = ({ item }: { item: Servicio }) => (
+    <View style={estilos.servicioCard}>
+      <Text style={estilos.nombreServicio}>{item.nombreServicio}</Text>
+      <Text style={estilos.descripcion}>{item.descripcion}</Text>
+      <Text style={estilos.horario}>
+        {item.dia}: {item.desdeHora} - {item.hastaHora}
+      </Text>
+    </View>
+  );
 
   return (
     <SafeAreaView style={estilos.contenedor}>
@@ -36,6 +96,20 @@ const MisServicios = () => {
           <Text style={estilos.textoBoton}>Agregar servicio</Text>
         </TouchableOpacity>
 
+         {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
+         {loading ? (
+          <Text style={estilos.cargando}>Cargando servicios...</Text>
+        ) : services.length === 0 ? (
+          <Text style={estilos.sinServicios}>Aún no tienes servicios vinculados.</Text>
+        ) : (
+          <FlatList
+            data={services}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderServiceItem}
+            contentContainerStyle={estilos.listaServicios}
+          />
+        )}
+
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
         <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
@@ -61,6 +135,7 @@ const MisServicios = () => {
 
   );
 };
+
 
 const estilos = StyleSheet.create({
   contenedor: {
@@ -202,6 +277,17 @@ const estilos = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 5,
   },
+  cargando: { 
+    textAlign: 'center', 
+    marginTop: 20, 
+    color: 'gray' 
+  },
+  listaServicios: { paddingHorizontal: 16 },
+  servicioCard: { padding: 16, marginBottom: 8, backgroundColor: '#fff', borderRadius: 8, elevation: 2 },
+  nombreServicio: { fontSize: 16, fontWeight: 'bold' },
+  descripcion: { fontSize: 14, color: 'gray' },
+  horario: { fontSize: 12, color: '#197278' },
+  sinServicios: { textAlign: 'center', marginTop: 20, color: 'gray', fontSize: 16 },
 });
 
 export default MisServicios;

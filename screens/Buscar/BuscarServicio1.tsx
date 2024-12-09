@@ -37,7 +37,7 @@ const BuscarServicio1 = () => {
         {/* Sección de servicios */}
          {/* Sección de servicios */}
          {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura", "Peluqueria", "Podologia"], selectedService, handleSelectService)}
-        {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
+        {renderCategory("JARDINERÍA", ["Jardinero","Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
         {renderCategory("HOGAR", [
           "Gasista", "Electricista", "Plomero", "Carpintero", 

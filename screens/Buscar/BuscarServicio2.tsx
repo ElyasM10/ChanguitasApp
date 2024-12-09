@@ -1,11 +1,61 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Switch } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import API_URL from "../API_URL"; 
+import ResultadosBusqueda from './ResultadosBusqueda';
 
 const BuscarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'BuscarServicio2'>>();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [providers, setProviders] = useState([]);
+
+
+  const buscarProveedores = async (nombreServicio: string) => {
+    setLoading(true);
+    setErrorMessage('');
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const userId = await AsyncStorage.getItem('userId');
+      if (!accessToken) {
+        throw new Error('No se encontró el token de acceso. Por favor, inicia sesión.');
+      }
+
+      const response = await axios.get(`${API_URL}/buscar-proveedores/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        params: { nombre_servicio: nombreServicio },
+      });
+
+      setProviders(response.data.proveedores || []);
+
+      navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
+
+    } catch (error: any) {
+      setErrorMessage(error.response?.data?.message || 'Error al buscar proveedores.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNext = () => {
+    if (!route.params || !route.params.selectedService) {
+      setErrorMessage('No se seleccionó ningún servicio.');
+      return;
+    }
+  
+    console.log('BuscarServicio2: servicio seleccionado:', route.params.selectedService);
+  
+    buscarProveedores(route.params.selectedService[0]);
+  };
+
   const [description, setDescription] = useState('');
   const [days, setDays] = useState({
     Lunes: false,
@@ -73,7 +123,7 @@ const BuscarServicio2 = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('ResultadosBusqueda')}>
+          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
             <Text style={styles.nextButtonText}>Buscar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.prevButton} onPress={() => navigation.navigate('BuscarServicio1')}>

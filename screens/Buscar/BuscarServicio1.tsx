@@ -20,7 +20,7 @@ const BuscarServicio1 = () => {
       alert("Por favor selecciona un servicio.");
       return;
     }
-    navigation.navigate('pruebaBusqueda', { selectedService: [selectedService] });
+    navigation.navigate('BuscarServicio2', { selectedService: [selectedService] });
   };
 
 

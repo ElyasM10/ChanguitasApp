@@ -62,8 +62,8 @@ export type RootStackParamList = {
   pruebaBusqueda: { selectedService: string[] }; 
   MisServicios: undefined;
   BuscarServicio1: undefined;
-  BuscarServicio2: undefined;
-  ResultadosBusqueda: undefined;
+  BuscarServicio2: { selectedService: string[] };
+  ResultadosBusqueda: { proveedores: any[] }; 
   PantallaPerfilDeOtro: undefined;
   Historial1: undefined;
   Historial2: undefined;

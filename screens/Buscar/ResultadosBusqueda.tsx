@@ -1,64 +1,98 @@
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React from "react";
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API_URL from "../API_URL"; 
 
 const ResultadosBusqueda = () => {
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
+    const { proveedores } = route.params; 
 
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Botón de regreso y título */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio2')}>
-            <Ionicons name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Resultados</Text>
-        </View>
+    console.log("Datos del arreglo de proveedores: ", proveedores);
 
-        {/* Elemento de resultado */}
-        <View style={styles.resultItem}>
-          <Image style={styles.image} source={{ uri: "https://via.placeholder.com/100" }} />
-          <View style={styles.resultDetails}>
-            <Text style={styles.name}>Nombre</Text>
-            <Text style={styles.category}>Categoría</Text>
-            <View style={styles.rating}>
-              {[...Array(5)].map((_, i) => (
-                <Ionicons key={i} name="star" size={16} color={i < 4 ? "black" : "#CCCCCC"} />
-              ))}
-            </View>
+
+    const obtenerFotoPerfil = (proveedor) => {
+      console.log(proveedor.fotoPerfil);
+      return proveedor.fotoPerfil || "https://via.placeholder.com/100";
+    };
+  
+
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          {/* Botón de regreso y título */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio2')}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Text style={styles.title}>Resultados</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilDeOtro')} style={styles.arrowButton}>
-            <Ionicons name="chevron-forward" size={20} color="#333" />
+  
+
+  
+          {/* Lista de resultados */}
+          {proveedores.map((item, index) => (
+                     
+            <View key={index} style={styles.resultItem}>
+              <Image
+                style={styles.image}
+  
+                source={{
+                  uri: item.fotoPerfil || "https://via.placeholder.com/100",
+                }}
+              />
+              
+              <View style={styles.resultDetails}>
+                <Text style={styles.name}>{item.nombre} {item.apellido}</Text>
+                <Text style={styles.category}>{item.categoria || "Categoría no especificada"}</Text>
+                <View style={styles.rating}>
+                  {[...Array(5)].map((_, i) => (
+                    <Ionicons
+                      key={i}
+                      name="star"
+                      size={16}
+                      color={i < item.puntaje ? "black" : "#CCCCCC"}
+                    />
+                  ))}
+                </View>
+              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('PantallaPerfilDeOtro')}
+                style={styles.arrowButton}
+              >
+                <Ionicons name="chevron-forward" size={20} color="#333" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+
+        {/* Barra de navegación inferior */}
+        <View style={styles.barraNavegacion}>
+          <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
+            <Ionicons name="home-outline" size={24} color="gray" />
+            <Text style={styles.textoNavegacion}>Inicio</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={styles.iconoNavegacion}>
+            <Ionicons name="search-outline" size={24} color="gray" />
+            <Text style={styles.textoNavegacion}>Buscar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={styles.iconoNavegacion}>
+            <Ionicons name="grid-outline" size={24} color="gray" />
+            <Text style={styles.textoNavegacion}>Historial</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={styles.iconoNavegacion}>
+            <Ionicons name="person-outline" size={24} color="gray" />
+            <Text style={styles.textoNavegacion}>Perfil</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
+    );
+  };
 
-      {/* Barra de navegación inferior */}
-      <View style={styles.barraNavegacion}>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.iconoNavegacion}>
-          <Ionicons name="home-outline" size={24} color="gray" />
-          <Text style={styles.textoNavegacion}>Inicio</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={styles.iconoNavegacion}>
-          <Ionicons name="search-outline" size={24} color="gray" />
-          <Text style={styles.textoNavegacion}>Buscar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={styles.iconoNavegacion}>
-          <Ionicons name="grid-outline" size={24} color="gray" />
-          <Text style={styles.textoNavegacion}>Historial</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={styles.iconoNavegacion}>
-          <Ionicons name="person-outline" size={24} color="gray" />
-          <Text style={styles.textoNavegacion}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-};
 
 const styles = StyleSheet.create({
     safeArea: {

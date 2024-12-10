@@ -16,8 +16,11 @@ const ResultadosBusqueda = () => {
 
 
     const obtenerFotoPerfil = (proveedor) => {
-      console.log(proveedor.fotoPerfil);
-      return proveedor.fotoPerfil || "https://via.placeholder.com/100";
+      console.log(proveedor.fotoPerfil); // Verificar qué valor tiene proveedor.fotoPerfil
+      if (proveedor.fotoPerfil) {
+        return `${API_URL}${proveedor.fotoPerfil}`;
+      }
+      return "https://via.placeholder.com/100";
     };
   
 
@@ -42,10 +45,9 @@ const ResultadosBusqueda = () => {
                 style={styles.image}
   
                 source={{
-                  uri: item.fotoPerfil || "https://via.placeholder.com/100",
+                  uri: obtenerFotoPerfil(item),
                 }}
               />
-              
               <View style={styles.resultDetails}>
                 <Text style={styles.name}>{item.nombre} {item.apellido}</Text>
                 <Text style={styles.category}>{item.categoria || "Categoría no especificada"}</Text>

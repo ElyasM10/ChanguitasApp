@@ -23,7 +23,8 @@ class BuscarProveedoresAPIView(APIView):
                 "apellido": proveedor.last_name,
                 "email": proveedor.email,
                 "puntaje": proveedor.puntaje,
-                "fotoPerfil": proveedor.fotoPerfil.url if proveedor.fotoPerfil else None
+                "fotoPerfil": proveedor.fotoPerfil.url if proveedor.fotoPerfil else None,
+                "nombreServicio": servicio.nombreServicio,
             }
             for proveedor in proveedores
         ]

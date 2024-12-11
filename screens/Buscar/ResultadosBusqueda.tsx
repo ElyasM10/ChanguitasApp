@@ -50,7 +50,7 @@ const ResultadosBusqueda = () => {
               />
               <View style={styles.resultDetails}>
                 <Text style={styles.name}>{item.nombre} {item.apellido}</Text>
-                <Text style={styles.category}>{item.categoria || "Categoría no especificada"}</Text>
+                <Text style={styles.category}>{item.nombreServicio || "Categoría no especificada"}</Text>
                 <View style={styles.rating}>
                   {[...Array(5)].map((_, i) => (
                     <Ionicons

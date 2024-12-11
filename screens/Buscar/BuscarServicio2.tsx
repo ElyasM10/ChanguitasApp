@@ -34,12 +34,16 @@ const BuscarServicio2 = () => {
         params: { nombre_servicio: nombreServicio },
       });
 
-      setProviders(response.data.proveedores || []);
+    //  setProviders(response.data.proveedores || []);
 
-      navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
+      if (response.data.proveedores && response.data.proveedores.length > 0) {
+        setProviders(response.data.proveedores);
+        navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
+      }
+ //     navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
 
     } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || 'Error al buscar proveedores.');
+      setErrorMessage(error.response?.data?.message || 'No se encontraron proveedores para el servicio solicitado.');
     } finally {
       setLoading(false);
     }
@@ -130,6 +134,13 @@ const BuscarServicio2 = () => {
             <Text style={styles.prevButtonText}>Atrás</Text>
           </TouchableOpacity>
         </View>
+       
+          {errorMessage ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        ) : null}
+              
         </ScrollView>
 
         {/* Barra de navegación inferior */}
@@ -281,6 +292,16 @@ const styles = StyleSheet.create({
   textoNavegacion: {
     fontSize: 12,
     color: 'gray',
+  },
+  errorContainer: {
+    backgroundColor: '#F8D7DA',
+    borderRadius: 10,
+    padding: 10,
+  },
+  errorText: {
+    color: '#A94442',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
 

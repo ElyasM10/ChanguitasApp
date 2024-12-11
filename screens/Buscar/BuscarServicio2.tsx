@@ -35,11 +35,23 @@ const BuscarServicio2 = () => {
       });
 
     //  setProviders(response.data.proveedores || []);
+     
+        const todosLosProveedores = response.data.proveedores || [];
 
-      if (response.data.proveedores && response.data.proveedores.length > 0) {
-        setProviders(response.data.proveedores);
-        navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
-      }
+        // Filtro para excluir tu propio usuario
+        const proveedoresFiltrados = todosLosProveedores.filter((proveedor: any) => proveedor.id !== parseInt(userId));
+        
+        if (proveedoresFiltrados.length > 0) {
+          setProviders(proveedoresFiltrados);
+          navigation.navigate('ResultadosBusqueda', { proveedores: proveedoresFiltrados });
+        } else {
+          setErrorMessage('No se encontraron proveedores para el servicio solicitado (excluyendo tu cuenta).');
+        }
+      
+    //  if (response.data.proveedores && response.data.proveedores.length > 0) {
+      //  setProviders(response.data.proveedores);
+      //  navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
+      //}
  //     navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
 
     } catch (error: any) {

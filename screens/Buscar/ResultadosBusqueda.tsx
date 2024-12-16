@@ -29,7 +29,7 @@ const ResultadosBusqueda = () => {
         <View style={styles.container}>
           {/* Botón de regreso y título */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio2')}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={24} color="#333" />
             </TouchableOpacity>
             <Text style={styles.title}>Resultados</Text>

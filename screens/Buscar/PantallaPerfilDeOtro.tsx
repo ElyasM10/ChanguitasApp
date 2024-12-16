@@ -109,7 +109,7 @@ const PantallaPerfilDeOtro = () => {
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={estilos.textoEncabezado}>Perfil de {usuario?.first_name}</Text>

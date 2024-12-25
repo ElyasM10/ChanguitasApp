@@ -5,6 +5,7 @@ import { useNavigation,useRoute, RouteProp, NavigationProp } from '@react-naviga
 import { RootStackParamList } from '../../AppNavigator';
 import API_URL from '../API_URL';
 import { Dialog } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AgregarServicio3 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -85,6 +86,38 @@ const AgregarServicio3 = () => {
       console.log('Datos recibidos de la API:', data);
 
       Alert.alert('Éxito', 'Servicio creado exitosamente');
+
+      const userId = await AsyncStorage.getItem('userId');
+
+      const servicio = data[0].id;
+    
+    const cuerpo = {
+      servicio:servicio, // ID del servicio
+      proveedor: userId, // ID del proveedor
+      fechaDesde: '2024-12-25', 
+      fechaHasta: null //por ahora null
+    };
+    console.log('Datos que se enviarán:', JSON.stringify(cuerpo));
+    // Se realiza la solicitud al backend para la vinculacion
+    const respuesta = await fetch(`${API_URL}/proveedores-servicios/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(cuerpo) 
+    });
+
+    // Manejo de la respuesta
+    if (respuesta.ok) {
+      const datos = await respuesta.json();
+      console.log('Vinculación exitosa:', datos);
+    } else {
+      console.error('Error al vincular el servicio:', respuesta.status, respuesta.statusText);
+    }
+
+
+
       navigation.navigate('PantallaHome');  // Navegar a PantallaHome
     } catch (error: any) {
       console.error('Error al guardar el servicio:', error);

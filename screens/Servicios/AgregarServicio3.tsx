@@ -91,12 +91,16 @@ const AgregarServicio3 = () => {
 
       const servicio = data[0].id;
     
+    const fechaDesde = new Date().toISOString().split('T')[0];
+    //obtiene la fecha actual en el formato ISO (YYYY-MM-DDTHH:mm:ss.sssZ), y luego extrae solo la parte de la fecha (YYYY-MM-DD).
     const cuerpo = {
       servicio:servicio, // ID del servicio
       proveedor: userId, // ID del proveedor
-      fechaDesde: '2024-12-25', 
+      fechaDesde: fechaDesde, 
       fechaHasta: null //por ahora null
     };
+
+
     console.log('Datos que se enviarán:', JSON.stringify(cuerpo));
     // Se realiza la solicitud al backend para la vinculacion
     const respuesta = await fetch(`${API_URL}/proveedores-servicios/`, {

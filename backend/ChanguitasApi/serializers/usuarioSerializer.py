@@ -20,12 +20,30 @@ class UsuarioSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
-        # Solo validamos si estamos creando un usuario (no en la actualización)
+        # Verifica unicidad para email, username y telefono
+        email = data.get('email', None)
+        username = data.get('username', None)
+        telefono = data.get('telefono', None)
+
+        # Validación de correo electrónico
+        if email and Usuario.objects.filter(email=email).exists():
+            raise serializers.ValidationError({"email": "El correo electrónico ya está en uso."})
+
+        # Validación de nombre de usuario
+        if username and Usuario.objects.filter(username=username).exists():
+            raise serializers.ValidationError({"username": "El nombre de usuario ya está en uso."})
+
+        # Validación de número de teléfono
+        if telefono and Usuario.objects.filter(telefono=telefono).exists():
+            raise serializers.ValidationError({"telefono": "El número de teléfono ya está en uso."})
+
+        # Validación de contraseñas coincidentes
         if 'password' in data and 'password2' in data:
             if data['password'] != data['password2']:
-                raise serializers.ValidationError("Las contraseñas no coinciden.")
+                raise serializers.ValidationError({"password": "Las contraseñas no coinciden."})
+
         return data
-    
+
     def create(self, validated_data):
         # Extrae los datos de la dirección
         direccion_data = validated_data.pop('direccion')

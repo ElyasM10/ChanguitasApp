@@ -5,191 +5,7 @@ import { RootStackParamList } from '../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import API_URL from './API_URL';
-/*
-const PantallaRegistro = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [mostrarContraseña, setMostrarContraseña] = useState(false);
-  const [mostrarConfirmarContraseña, setMostrarConfirmarContraseña] = useState(false);
 
-  
-  return (
-    <LinearGradient
-      colors={['#B7B7B7', '#B7B7B7']}
-      style={estilos.degradado}
-    >
-      <SafeAreaView style={estilos.areaSegura}>
-        <ScrollView>
-          <View style={estilos.contenedor}>
-            <View style={estilos.encabezado}>
-              <TouchableOpacity 
-                style={estilos.botonAtras} 
-                onPress={() => navigation.goBack()}
-              >
-                <Ionicons name="arrow-back" size={24} color="#fff" />
-              </TouchableOpacity>
-              <Text style={estilos.titulo}>Crear perfil</Text>
-            </View>
-
-            <View style={estilos.formulario}>
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Nombre</Text>
-                <TextInput
-                  placeholder="Nombre"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Apellido</Text>
-                <TextInput
-                  placeholder="Apellido"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Fecha de nacimiento</Text>
-                <TextInput
-                  placeholder="dd/mm/aaaa"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>DNI</Text>
-                <TextInput
-                  placeholder="12.345.678"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Teléfono</Text>
-                <TextInput
-                  placeholder="02901-12345678"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Calle</Text>
-                <TextInput
-                  placeholder="San Martín"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Altura</Text>
-                <TextInput
-                  placeholder="456"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Piso (opcional)</Text>
-                <TextInput
-                  placeholder="1"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Nro. dpto. (opcional)</Text>
-                <TextInput
-                  placeholder="A"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Barrio</Text>
-                <TextInput
-                  placeholder="Centro"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Correo electrónico</Text>
-                <TextInput
-                  placeholder="changuitas@app.com"
-                  placeholderTextColor="#666"
-                  style={estilos.entradaTexto}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Contraseña</Text>
-                <View style={estilos.contenedorContraseña}>
-                  <TextInput
-                    placeholder="************"
-                    placeholderTextColor="#666"
-                    style={estilos.entradaContraseña}
-                    secureTextEntry={!mostrarContraseña}
-                  />
-                  <TouchableOpacity onPress={() => setMostrarContraseña(!mostrarContraseña)}>
-                    <Ionicons 
-                      name={mostrarContraseña ? "eye-outline" : "eye-off-outline"}
-                      size={24} 
-                      color="#666" 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={estilos.campo}>
-                <Text style={estilos.etiqueta}>Confirme contraseña</Text>
-                <View style={estilos.contenedorContraseña}>
-                  <TextInput
-                    placeholder="************"
-                    placeholderTextColor="#666"
-                    style={estilos.entradaContraseña}
-                    secureTextEntry={!mostrarConfirmarContraseña}
-                  />
-                  <TouchableOpacity onPress={() => setMostrarConfirmarContraseña(!mostrarConfirmarContraseña)}>
-                    <Ionicons 
-                      name={mostrarConfirmarContraseña ? "eye-outline" : "eye-off-outline"}
-                      size={24} 
-                      color="#666" 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate('PantallaVerificacion1')}
-            >
-              <LinearGradient
-                colors={['#197278', '#9BCDC8']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={estilos.botonDegradado}
-              >
-                <Text style={estilos.textoBotonRegistro}>Registrarse</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </LinearGradient>
-  );
-};
-*/
 const PantallaRegistro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarContraseña, setMostrarContraseña] = useState(false);
@@ -267,28 +83,63 @@ const PantallaRegistro = () => {
           documento: 'Documento',
           telefono: 'Teléfono',
           direccion: 'Dirección',
+          calle: 'Calle',
+          altura: 'Altura',
           password: 'Contraseña',
+          password2: 'Repetir contraseña',
         };
-  
+    
         const translatedErrors: Record<string, string> = {
-          "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.": 
+          "This field may not be blank.": "Este campo no puede estar vacío.",
+          "This field may not be null.": "Este campo no puede ser vacío.",
+          "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.":
             "La fecha tiene un formato incorrecto. Usa el formato YYYY-MM-DD.",
-          "A user with that username already exists.": 
+          "A user with that username already exists.":
             "Ya existe un usuario con ese nombre.",
+          "Password fields didn’t match.": "Las contraseñas no coinciden.",
+          "user with this documento already exists.": "Ya existe un usuario con este documento.",
+          "Enter a valid email address.": "Introduce una dirección de correo electrónico válida.",
+        };
+
+
+        // Función para traducir errores, incluyendo estructuras anidadas
+        const translateErrors = (
+          errors: Record<string, any>,
+          parentKey: string = ''
+        ): string => {
+          let message = '';
+  
+          for (const [key, value] of Object.entries(errors)) {
+            const field = parentKey
+              ? `${translations[parentKey] || parentKey} -> ${translations[key] || key}`
+              : translations[key] || key;
+  
+            if (Array.isArray(value)) {
+              // Si es un array, traducimos cada mensaje
+              const messages = value.map(
+                (msg: string) => translatedErrors[msg] || msg
+              );
+              message += `${field}: ${messages.join(', ')}\n`;
+            } else if (typeof value === 'object') {
+              // Si es un objeto, llamamos recursivamente (Ayudin)
+              message += translateErrors(value, key);
+            } else {
+              // Caso general (no array, no objeto)
+              const singleMessage = translatedErrors[value] || value;
+              message += `${field}: ${singleMessage}\n`;
+            }
+          }
+  
+          return message;
         };
   
-        // Traduce y construye el mensaje
-        for (const [key, value] of Object.entries(errorData)) {
-          const field = translations[key] || key; // Traduce la clave si está en el diccionario
-          const messages = Array.isArray(value) 
-            ? value.map((msg: string) => translatedErrors[msg] || msg)
-            : [value]; // Si no es un array, lo tratamos como un mensaje único
-          errorMessage += `${field}: ${messages.join(', ')}\n`;
-        }
+        // Traducimos los errores
+        errorMessage = translateErrors(errorData).trim();
   
-        throw new Error(errorMessage.trim());
+        throw new Error(errorMessage);
       }
   
+      // Si la respuesta es exitosa
       const data = await response.json();
       console.log(data);
       Alert.alert('Éxito', 'Usuario creado exitosamente');
@@ -300,7 +151,7 @@ const PantallaRegistro = () => {
       setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
     }
   };
-
+  
   return (
     <LinearGradient colors={['#B7B7B7', '#B7B7B7']} style={estilos.degradado}>
       <SafeAreaView style={estilos.areaSegura}>

@@ -12,7 +12,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = [
             'id', 'username', 'first_name', 'last_name', 'email', 'password','password2', 'documento', 'telefono', 
-            'fotoPerfil', 'fechaNacimiento', 'direccion', 'fechaDisponible', 'horarioDisponible'
+            'fotoPerfil', 'fechaNacimiento', 'direccion'# 'fechaDisponible', 'horarioDisponible'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
@@ -44,8 +44,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             telefono=validated_data['telefono'],
             fechaNacimiento=validated_data['fechaNacimiento'],
             direccion=direccion,
-            fechaDisponible=validated_data['fechaDisponible'],
-            horarioDisponible=validated_data['horarioDisponible'],
+         #   fechaDisponible=validated_data['fechaDisponible'],
+          #  horarioDisponible=validated_data['horarioDisponible'],
         )
         return usuario
     

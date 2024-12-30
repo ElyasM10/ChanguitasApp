@@ -45,7 +45,7 @@ const BuscarServicio2 = () => {
           setProviders(proveedoresFiltrados);
           navigation.navigate('ResultadosBusqueda', { proveedores: proveedoresFiltrados });
         } else {
-          setErrorMessage('No se encontraron proveedores para el servicio solicitado (excluyendo tu cuenta).');
+        navigation.navigate('ResultadosBusqueda', { proveedores: [], error: 'No se encontraron proveedores para el servicio solicitado (excluyendo tu cuenta).' });
         }
       
     //  if (response.data.proveedores && response.data.proveedores.length > 0) {
@@ -55,7 +55,10 @@ const BuscarServicio2 = () => {
  //     navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
 
     } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || 'No se encontraron proveedores para el servicio solicitado.');
+      navigation.navigate('ResultadosBusqueda', { 
+        proveedores: [], 
+        error: error.response?.data?.message || 'No se encontraron proveedores para el servicio solicitado.' 
+      });
     } finally {
       setLoading(false);
     }

@@ -10,7 +10,7 @@ const ResultadosBusqueda = () => {
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
-    const { proveedores } = route.params; 
+    const { proveedores, error } = route.params;
 
     console.log("Datos del arreglo de proveedores: ", proveedores);
 
@@ -37,13 +37,18 @@ const ResultadosBusqueda = () => {
   
 
   
-          {/* Lista de resultados */}
-          {proveedores.map((item, index) => (
-                     
+         
+        {/* Mostrar mensaje de error si existe */}
+        {error ? (
+           <View style={styles.errorContainer}>
+           <Text style={styles.errorText}>{error}</Text>
+         </View>
+        ) : (
+          /* Lista de resultados */
+          proveedores.map((item, index) => (
             <View key={index} style={styles.resultItem}>
               <Image
                 style={styles.image}
-  
                 source={{
                   uri: obtenerFotoPerfil(item),
                 }}
@@ -64,14 +69,14 @@ const ResultadosBusqueda = () => {
               </View>
               <TouchableOpacity
                 onPress={() => navigation.navigate('PantallaPerfilDeOtro', { id: item.id })}
-                
                 style={styles.arrowButton}
               >
                 <Ionicons name="chevron-forward" size={20} color="#333" />
               </TouchableOpacity>
             </View>
-          ))}
-        </View>
+          ))
+        )}
+      </View>
 
         {/* Barra de navegación inferior */}
         <View style={styles.barraNavegacion}>
@@ -168,6 +173,17 @@ const styles = StyleSheet.create({
   textoNavegacion: {
     fontSize: 12,
     color: 'gray',
+  },
+  errorContainer: {
+    backgroundColor: '#F8D7DA',
+    borderRadius: 10,
+    padding: 10,
+    marginTop:20,
+  },
+  errorText: {
+    color: '#A94442',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
 

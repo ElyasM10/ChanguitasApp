@@ -10,31 +10,42 @@ import axios from 'axios';
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  // Estados para los datos personales
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [contrasena, setContrasena] = useState('');
   
   // Estado para la foto de perfil
   const [imageUri, setImageUri] = useState<string | null>(null);
 
-  // Nuevos estados para dirección
-  const [calle, setCalle] = useState('');
-  const [altura, setAltura] = useState('');
-  const [nroDepto, setNroDepto] = useState('');
-  const [piso, setPiso] = useState('');
-  const [barrio, setBarrio] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  //const decodeJWT = (token: string) => {
-  //  const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
-  //  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Reemplaza caracteres no válidos para Base64
-   // const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
-   // return decoded;
- // };
+  const [datosOriginales, setDatosOriginales] = useState({
+    first_name: '',
+    last_name: '',
+    fechaNacimiento: '',
+    email: '',
+    telefono: '',
+    direccion: {
+      calle: '',
+      altura: '',
+      nroDepto: '',
+      piso: '',
+      barrio: '',
+    },
+  });
+
+  const [camposModificados, setCamposModificados] = useState({
+    first_name: '',
+    last_name: '',
+    fechaNacimiento: '',
+    email: '',
+    telefono: '',
+    direccion: {
+      calle: '',
+      altura: '',
+      nroDepto: '',
+      piso: '',
+      barrio: '',
+    },
+  });
+
 
   // Función para obtener la foto de perfil desde el backend
   const obtenerFotoPerfil = async () => {
@@ -66,7 +77,42 @@ const EditarDatosPersonales = () => {
     obtenerFotoPerfil();
   }, []);
 
+  const manejarCambioCampo = (campo: string, valor: any) => {
+    if (campo.startsWith('direccion.')) {
+      const campoDir = campo.split('.')[1];
+      setCamposModificados(prev => ({
+        ...prev,
+        direccion: {
+          ...prev.direccion,
+          [campoDir]: valor
+        }
+      }));
+    } else {
+      setCamposModificados(prev => ({
+        ...prev,
+        [campo]: valor
+      }));
+    }
+  };
 
+
+ /*
+      const payload = {
+        first_name: nombre.trim(),
+        last_name: apellido.trim(),
+        fechaNacimiento: fechaNacimiento || null,
+        email: correo.trim(),
+        telefono: telefono.trim(),
+        direccion: {
+            calle: calle.trim(),
+            altura: altura && !isNaN(Number(altura)) ? parseInt(altura, 10) : null,
+            nroDepto: nroDepto && !isNaN(Number(nroDepto)) ? parseInt(nroDepto, 10) : null,
+            piso: piso && !isNaN(Number(piso)) ? parseInt(piso, 10) : null,
+            barrio: barrio.trim(),
+        },
+        fotoPerfil: imageUri || null,
+    };
+   */
 
  const enviarFoto = async () => {
   try {
@@ -108,70 +154,65 @@ const EditarDatosPersonales = () => {
   // Función para guardar cambios
   const guardarCambios = async () => {
     try {
-
-     
       const accessToken = await AsyncStorage.getItem('accessToken');
-    //  console.log('Token obtenido de AsyncStorage:', accessToken); // Debug: Verifica el token obtenido
+      const userId = await AsyncStorage.getItem('userId');
   
-      if (!accessToken) {
-        throw new Error('No se encontró el token de acceso');
+      if (!accessToken || !userId) {
+        throw new Error('No se encontraron credenciales de usuario');
       }
   
-      // Decodifica el token para extraer el ID del usuario
-      // Luego en el código
-    //  const decoded = decodeJWT(accessToken);
-     // console.log('Payload decodificado:', decoded);
-
-     // const userId = decoded.user_id;
-     const userId = await AsyncStorage.getItem('userId');  
-     console.log('ID del usuario extraído:', userId);
-
-
-      const payload = {
-        first_name: nombre.trim(),
-        last_name: apellido.trim(),
-        fechaNacimiento: fechaNacimiento || null,
-        email: correo.trim(),
-        telefono: telefono.trim(),
-        direccion: {
-            calle: calle.trim(),
-            altura: altura && !isNaN(Number(altura)) ? parseInt(altura, 10) : null,
-            nroDepto: nroDepto && !isNaN(Number(nroDepto)) ? parseInt(nroDepto, 10) : null,
-            piso: piso && !isNaN(Number(piso)) ? parseInt(piso, 10) : null,
-            barrio: barrio.trim(),
-        },
-        fotoPerfil: imageUri || null,
-    };
-    
-  
-            // Hacer la solicitud al backend
-      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
-        method: 'PATCH', // Se especifica el método PATCH
-        headers: {
-          'Content-Type': 'application/json', // Tipo de contenido JSON
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(payload), // Convertir el objeto payload a JSON
+      // Filtrar los campos que han sido modificados
+      const datosActualizados = {}; // Crea un objeto vacío para almacenar los campos que realmente han cambiado
+      Object.keys(camposModificados).forEach((campo) => { // Recorre todas las claves del objeto `camposModificados`, que contiene los campos editados.
+        if (typeof camposModificados[campo] === 'object') {
+          // Si es un objeto anidado (como direccion), filtrar los campos internos modificados
+          const subCampos = {};
+              // Recorre las claves del campo anidado (como 'ciudad', 'calle', etc.).
+          Object.keys(camposModificados[campo]).forEach((subCampo) => {
+             // Comparar el valor del subcampo modificado con el valor original.
+            // Si son diferentes, significa que el subcampo ha cambiado.
+            if (camposModificados[campo][subCampo] !== datosOriginales[campo][subCampo]) {
+              subCampos[subCampo] = camposModificados[campo][subCampo];
+            }
+          });
+          if (Object.keys(subCampos).length > 0) { // Si hay al menos un subcampo modificado, agregarlo al objeto `datosActualizados`.
+            datosActualizados[campo] = subCampos;
+          }
+        } else if (camposModificados[campo] !== datosOriginales[campo]) {
+          // Si es un campo simple, agregarlo si cambió
+          datosActualizados[campo] = camposModificados[campo];
+        }
       });
 
-      console.log('Response Status:', response.status);
-      const responseData = await response.json();
-      console.log('Response Data:', responseData);
+      // Si no hay cambios, no enviar la solicitud
+      if (Object.keys(datosActualizados).length === 0) {
+        Alert.alert('Sin cambios', 'No hay campos modificados para guardar.');
+        return;
+      }
+  
+      // Realizar la solicitud PATCH al backend
+      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(datosActualizados),
+      });
   
       if (response.ok) {
         Alert.alert('Éxito', 'Datos actualizados correctamente.');
         navigation.navigate('PantallaHome');
       } else {
-        const errorData = await response.json().catch(() => ({})); // Manejo de JSON malformado.
-        console.error('Error en la API:', errorData);
-        Alert.alert('Error', errorData.detail || 'No se pudieron guardar los cambios. Inténtalo de nuevo.');
+        const errorData = await response.json().catch(() => ({}));
+        Alert.alert('Error', errorData.detail || 'No se pudieron guardar los cambios.');
       }
     } catch (error) {
       console.error('Error al actualizar perfil:', error);
       Alert.alert('Error', 'Ocurrió un problema con la conexión.');
     }
   };
-
+  
   
   // Funciones para manejar la selección de imagen
   const manejarRespuestaSelectorImagen = (resultado: ImagePicker.ImagePickerResult) => {
@@ -276,42 +317,79 @@ const EditarDatosPersonales = () => {
           </TouchableOpacity>
         </View>
 
-      {/* Formulario de datos personales */}
-      <View style={estilos.formulario}>
-        <Text style={estilos.label}>Nombre</Text>
-        <TextInput style={estilos.input} placeholder="Nombre" value={nombre} onChangeText={setNombre}/>
+          {/* Formulario de datos personales */}
+          <View style={estilos.formulario}>
+      <Text style={estilos.label}>Nombre</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.first_name || datosOriginales.first_name || ''}
+            onChangeText={(valor) => manejarCambioCampo('first_name', valor)}
+          />
 
-        <Text style={estilos.label}>Apellido</Text>
-        <TextInput style={estilos.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
+          <Text style={estilos.label}>Apellido</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.last_name || datosOriginales.last_name || ''}
+            onChangeText={(valor) => manejarCambioCampo('last_name', valor)}
+          />
 
-        <Text style={estilos.label}>Fecha de nacimiento</Text>
-        <TextInput style={estilos.input} placeholder="aaaa-dd-mm" value={fechaNacimiento} onChangeText={setFechaNacimiento}/>
+          <Text style={estilos.label}>Fecha de nacimiento</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.fechaNacimiento || datosOriginales.fechaNacimiento || ''}
+            onChangeText={(valor) => manejarCambioCampo('fechaNacimiento', valor)}
+          />
 
-        <Text style={estilos.label}>Correo electrónico</Text>
-        <TextInput style={estilos.input} placeholder="changuitas@app.com" value={correo} onChangeText={setCorreo} />
+          <Text style={estilos.label}>Correo electrónico</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.email || datosOriginales.email || ''}
+            onChangeText={(valor) => manejarCambioCampo('email', valor)}
+          />
 
-        <Text style={estilos.label}>Teléfono</Text>
-        <TextInput style={estilos.input} placeholder="Número de teléfono" value={telefono} onChangeText={setTelefono} />
+          <Text style={estilos.label}>Teléfono</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.telefono || datosOriginales.telefono || ''}
+            onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
+          />
 
-        <Text style={estilos.label}>Calle</Text>
-        <TextInput style={estilos.input} placeholder="Nombre de la calle" value={calle} onChangeText={setCalle}/>
+          <Text style={estilos.label}>Calle</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
+          />
 
-        <Text style={estilos.label}>Altura</Text>
-        <TextInput style={estilos.input} placeholder="Número de altura" value={altura} onChangeText={setAltura} inputMode="numeric"/>
+          <Text style={estilos.label}>Altura</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
+          />
 
-        <Text style={estilos.label}>Número de Departamento</Text>
-        <TextInput style={estilos.input} placeholder="Número de departamento" value={nroDepto} onChangeText={setNroDepto} inputMode="numeric"/>
+          <Text style={estilos.label}>Número de Departamento</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
+          />
 
-        <Text style={estilos.label}>Piso</Text>
-        <TextInput style={estilos.input} placeholder="Número de piso" value={piso} onChangeText={setPiso} inputMode="numeric"/>
+          <Text style={estilos.label}>Piso</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
+          />
 
-        <Text style={estilos.label}>Barrio</Text>
-        <TextInput style={estilos.input} placeholder="Nombre del barrio" value={barrio} onChangeText={setBarrio}/>
-
-  
-
-
+          <Text style={estilos.label}>Barrio</Text>
+          <TextInput
+            style={estilos.input}
+            value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
+          />
      </View>
+      
       
       {/* Botón de Guardar Cambios*/}
       <TouchableOpacity onPress={guardarCambios} style={estilos.botonGuardarCambios}>
@@ -344,7 +422,7 @@ const EditarDatosPersonales = () => {
 
   );
 };
-
+ 
 const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,

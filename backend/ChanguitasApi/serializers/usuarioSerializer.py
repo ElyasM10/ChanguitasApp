@@ -16,7 +16,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
-            'password2': {'write_only': True, 'required': False}  # No es obligatorio en la actualización
+            'password2': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
+            'direccion': {'required': False}
         }
 
     def validate(self, data):
@@ -68,20 +69,25 @@ class UsuarioSerializer(serializers.ModelSerializer):
         return usuario
     
     def update(self, instance, validated_data):
-        # Si se pasa una nueva contraseña, actualízala
-        password = validated_data.pop('password', None)  # No lanzará error si no se pasa 'password'
-        if password:
-            instance.set_password(password)  # Solo actualiza la contraseña si se pasa
-
-        # Actualiza la dirección si está presente
-        direccion_data = validated_data.pop('direccion', None)
-        if direccion_data:
-            Direccion.objects.filter(id=instance.direccion.id).update(**direccion_data)
-
-        # Actualiza los demás campos
+        # Handle password update
+        if 'password' in validated_data:
+            instance.set_password(validated_data.pop('password'))
+        
+        # Handle address update
+        if 'direccion' in validated_data:
+            direccion_data = validated_data.pop('direccion')
+            if instance.direccion:
+                for key, value in direccion_data.items():
+                    setattr(instance.direccion, key, value)
+                instance.direccion.save()
+            else:
+                direccion = Direccion.objects.create(**direccion_data)
+                instance.direccion = direccion
+        
+        # Update remaining fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-
+        
         instance.save()
         return instance
 

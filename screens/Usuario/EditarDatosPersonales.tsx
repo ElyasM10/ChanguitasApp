@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../API_URL';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import FormData from 'form-data';
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -114,43 +115,67 @@ const EditarDatosPersonales = () => {
     };
    */
 
- const enviarFoto = async () => {
-  try {
-    if (!imageUri) {
-      alert("Por favor, selecciona una imagen antes de enviarla.");
-      return;
-    }
-
-    const formData = new FormData();
-    const response = await fetch(imageUri);
-    const blob = await response.blob();
+    const enviarFoto = async () => {
+      try {
+        if (!imageUri) {
+          alert("Por favor, selecciona una imagen antes de enviarla.");
+          return;
+        }
     
-    const fileType = blob.type.split('/')[1] || 'jpg'; // Define un tipo por defecto si no se encuentra
-    formData.append('fotoPerfil', blob, `photo.${fileType}`);
-
+        const formData = new FormData();
     
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    const userId = await AsyncStorage.getItem('userId');
-
-    if (!accessToken || !userId) {
-      throw new Error('No se encontraron credenciales de usuario');
-    }
-
-   
-    const respuesta = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'multipart/form-data',
+    
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+        const fileType = blob.type.split('/')[1] || 'jpg'; // Define un tipo por defecto si no se encuentra
+        
+      if(Platform.OS ==="web"){  
+        formData.append('fotoPerfil', blob, `photo.${fileType}`);
+      }else if(Platform.OS ==="android"){
+        formData.append('fotoPerfil', {
+          uri: imageUri, // URI de la imagen seleccionada.
+          name: 'photo.png', // Nombre del archivo.
+          type: 'image/png', // Tipo MIME del archivo.
+        });
       }
-    });
+ 
 
-    console.log('Response Data:', respuesta.data);
-    Alert.alert('Éxito', 'Foto de perfil actualizada correctamente.');
-  } catch (error) {
-    console.error('Error al enviar la foto:', error);
-    Alert.alert('Error', 'Ocurrió un problema con la conexión.');
-  }
-}
+
+
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        const userId = await AsyncStorage.getItem('userId');
+    
+        if (!accessToken || !userId) {
+          throw new Error('No se encontraron credenciales de usuario');
+        }
+    
+        const respuesta = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'multipart/form-data',
+          }
+        });
+    
+       // console.log('Response Data:', respuesta.data);
+        Alert.alert('Éxito', 'Foto de perfil actualizada correctamente.');
+      } catch (error) {
+        if (error.response) {
+          // Errores de respuesta del servidor (códigos 4xx o 5xx)
+          console.error('Error en la respuesta del servidor:', error.response.data);
+          Alert.alert('Error', `Servidor respondió con un error: ${error.response.data.detail || 'Desconocido'}`);
+        } else if (error.request) {
+          // Errores de la solicitud (el servidor no responde o no se alcanza)
+          console.error('Error en la solicitud:', error.request);
+          Alert.alert('Error', 'No se pudo alcanzar el servidor. Por favor, verifica tu conexión.');
+        } else {
+          // Otros errores (problemas de formato, configuración, etc.)
+          console.error('Error general:', error.message);
+          Alert.alert('Error', `Ocurrió un error: ${error.message}`);
+        }
+      }
+    };
+
+
   // Función para guardar cambios
   const guardarCambios = async () => {
     try {

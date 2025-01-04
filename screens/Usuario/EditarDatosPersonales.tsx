@@ -9,6 +9,8 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FormData from 'form-data';
 import { Snackbar } from 'react-native-paper';
+import EstilosEditarDatosPersonales from './estilos/EstilosEditarDatosPersonales';
+
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -423,39 +425,39 @@ const EditarDatosPersonales = () => {
 
   
   return (
-  <SafeAreaView style={estilos.contenedor}>
-    <ScrollView contentContainerStyle={estilos.scrollContainer}>
+  <SafeAreaView style={EstilosEditarDatosPersonales.contenedor}>
+    <ScrollView contentContainerStyle={EstilosEditarDatosPersonales.scrollContainer}>
       {/* Header con Perfil*/}
-      <View style={estilos.header}>
-        <Text style={estilos.textoEncabezado}>Perfil</Text>
+      <View style={EstilosEditarDatosPersonales.header}>
+        <Text style={EstilosEditarDatosPersonales.textoEncabezado}>Perfil</Text>
       </View>
 
      {/* Barra de pestañas */}
-     <View style={estilos.barraPestanas}>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')}>
-          <Text style={estilos.textoPestanaInactiva}>Perfil</Text>
+     <View style={EstilosEditarDatosPersonales.barraPestanas}>
+        <TouchableOpacity style={EstilosEditarDatosPersonales.pestanaInactiva} onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')}>
+          <Text style={EstilosEditarDatosPersonales.textoPestanaInactiva}>Perfil</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
-          <Text style={estilos.textoPestanaActiva}>Editar</Text>
+        <TouchableOpacity style={EstilosEditarDatosPersonales.pestanaActiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
+          <Text style={EstilosEditarDatosPersonales.textoPestanaActiva}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
-          <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
+        <TouchableOpacity style={EstilosEditarDatosPersonales.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
+          <Text style={EstilosEditarDatosPersonales.textoPestanaInactiva}>Mis servicios</Text>
         </TouchableOpacity>
       </View>
 
        {/* Sección para cambiar la foto */}
-       <View style={estilos.seccionFoto}>
+       <View style={EstilosEditarDatosPersonales.seccionFoto}>
           <Image 
             source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-            style={estilos.imagenUsuario} 
+            style={EstilosEditarDatosPersonales.imagenUsuario} 
           />
           <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
-            <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
+            <Text style={EstilosEditarDatosPersonales.cambiarFotoTexto}>Cambiar foto</Text>
           </TouchableOpacity>
-
+      
           {/* Botón para enviar la foto 
           <TouchableOpacity onPress={enviarFoto}>
-            <Text style={estilos.cambiarFotoTexto}>Enviar Foto</Text>
+            <Text style={EstilosEditarDatosPersonales.cambiarFotoTexto}>Enviar Foto</Text>
           </TouchableOpacity>
         </View>
         */}
@@ -463,66 +465,66 @@ const EditarDatosPersonales = () => {
         </View>
 
           {/* Formulario de datos personales */}
-          <View style={estilos.formulario}>
-      <Text style={estilos.label}>Nombre</Text>
+          <View style={EstilosEditarDatosPersonales.formulario}>
+      <Text style={EstilosEditarDatosPersonales.label}>Nombre</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.first_name || datosOriginales.first_name || ''}
             onChangeText={(valor) => manejarCambioCampo('first_name', valor)}
           />
 
-          <Text style={estilos.label}>Apellido</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Apellido</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.last_name || datosOriginales.last_name || ''}
             onChangeText={(valor) => manejarCambioCampo('last_name', valor)}
           />
 
-          <Text style={estilos.label}>Correo electrónico</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Correo electrónico</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.email || datosOriginales.email || ''}
             onChangeText={(valor) => manejarCambioCampo('email', valor)}
           />
 
-          <Text style={estilos.label}>Teléfono</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Teléfono</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.telefono || datosOriginales.telefono || ''}
             onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
           />
 
-          <Text style={estilos.label}>Calle</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Calle</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
             onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
           />
 
-          <Text style={estilos.label}>Altura</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Altura</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
             onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
           />
 
-          <Text style={estilos.label}>Número de Departamento</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Número de Departamento</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
             onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
           />
 
-          <Text style={estilos.label}>Piso</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Piso</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
             onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
           />
 
-          <Text style={estilos.label}>Barrio</Text>
+          <Text style={EstilosEditarDatosPersonales.label}>Barrio</Text>
           <TextInput
-            style={estilos.input}
+            style={EstilosEditarDatosPersonales.input}
             value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
             onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
           />
@@ -530,10 +532,10 @@ const EditarDatosPersonales = () => {
 
           {/* Botón para mostrar/ocultar campos de contraseña */}
           <TouchableOpacity 
-            style={estilos.botonCambiarPassword}
+            style={EstilosEditarDatosPersonales.botonCambiarPassword}
             onPress={() => setShowPasswordFields(!showPasswordFields)}
           >
-            <Text style={estilos.textoCambiarPassword}>
+            <Text style={EstilosEditarDatosPersonales.textoCambiarPassword}>
               {showPasswordFields ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña'}
             </Text>
           </TouchableOpacity>
@@ -541,16 +543,16 @@ const EditarDatosPersonales = () => {
           {/* Campos de contraseña */}
           {showPasswordFields && (
           <>
-            <Text style={estilos.label}>Contraseña actual</Text>
-            <View style={estilos.contenedorEntradaContrasena}>
+            <Text style={EstilosEditarDatosPersonales.label}>Contraseña actual</Text>
+            <View style={EstilosEditarDatosPersonales.contenedorEntradaContrasena}>
               <TextInput
-                style={estilos.inputContrasena}
+                style={EstilosEditarDatosPersonales.inputContrasena}
                 secureTextEntry={!showOldPassword}
                 value={camposModificados.old_password}
                 onChangeText={(valor) => manejarCambioCampo('old_password', valor)}
               />
               <TouchableOpacity 
-                style={estilos.iconoOjo}
+                style={EstilosEditarDatosPersonales.iconoOjo}
                 onPress={() => setShowOldPassword(!showOldPassword)}
               >
                 <Ionicons 
@@ -561,16 +563,16 @@ const EditarDatosPersonales = () => {
               </TouchableOpacity>
             </View>
 
-            <Text style={estilos.label}>Nueva contraseña</Text>
-            <View style={estilos.contenedorEntradaContrasena}>
+            <Text style={EstilosEditarDatosPersonales.label}>Nueva contraseña</Text>
+            <View style={EstilosEditarDatosPersonales.contenedorEntradaContrasena}>
               <TextInput
-                style={estilos.inputContrasena}
+                style={EstilosEditarDatosPersonales.inputContrasena}
                 secureTextEntry={!showNewPassword}
                 value={camposModificados.password}
                 onChangeText={(valor) => manejarCambioCampo('password', valor)}
               />
               <TouchableOpacity 
-                style={estilos.iconoOjo}
+                style={EstilosEditarDatosPersonales.iconoOjo}
                 onPress={() => setShowNewPassword(!showNewPassword)}
               >
                 <Ionicons 
@@ -581,16 +583,16 @@ const EditarDatosPersonales = () => {
               </TouchableOpacity>
             </View>
 
-            <Text style={estilos.label}>Confirmar nueva contraseña</Text>
-            <View style={estilos.contenedorEntradaContrasena}>
+            <Text style={EstilosEditarDatosPersonales.label}>Confirmar nueva contraseña</Text>
+            <View style={EstilosEditarDatosPersonales.contenedorEntradaContrasena}>
               <TextInput
-                style={estilos.inputContrasena}
+                style={EstilosEditarDatosPersonales.inputContrasena}
                 secureTextEntry={!showConfirmPassword}
                 value={camposModificados.password2}
                 onChangeText={(valor) => manejarCambioCampo('password2', valor)}
               />
               <TouchableOpacity 
-                style={estilos.iconoOjo}
+                style={EstilosEditarDatosPersonales.iconoOjo}
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <Ionicons 
@@ -608,8 +610,8 @@ const EditarDatosPersonales = () => {
       {/* Botón de Guardar Cambios*/}
      {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
       {!visible && (
-        <TouchableOpacity onPress={guardarCambios} style={estilos.botonGuardarCambios}>
-          <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
+        <TouchableOpacity onPress={guardarCambios} style={EstilosEditarDatosPersonales.botonGuardarCambios}>
+          <Text style={EstilosEditarDatosPersonales.textoBotonGuardar}>Guardar Cambios</Text>
         </TouchableOpacity>
       )}
 
@@ -632,22 +634,22 @@ const EditarDatosPersonales = () => {
       </ScrollView>
 
       {/* Barra de navegación inferior */}
-      <View style={estilos.barraNavegacion}>
-        <TouchableOpacity onPress={() =>navigation.navigate('PantallaHome')} style={estilos.iconoNavegacion}>
+      <View style={EstilosEditarDatosPersonales.barraNavegacion}>
+        <TouchableOpacity onPress={() =>navigation.navigate('PantallaHome')} style={EstilosEditarDatosPersonales.iconoNavegacion}>
           <Ionicons name="home-outline" size={24} color="gray" />
-          <Text style={estilos.textoNavegacion}>Inicio</Text>
+          <Text style={EstilosEditarDatosPersonales.textoNavegacion}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={EstilosEditarDatosPersonales.iconoNavegacion}>
           <Ionicons name="search-outline" size={24} color="gray" />
-          <Text style={estilos.textoNavegacion}>Buscar</Text>
+          <Text style={EstilosEditarDatosPersonales.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={EstilosEditarDatosPersonales.iconoNavegacion}>
           <Ionicons name="grid-outline" size={24} color="gray" />
-          <Text style={estilos.textoNavegacion}>Historial</Text>
+          <Text style={EstilosEditarDatosPersonales.textoNavegacion}>Historial</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={estilos.iconoNavegacion}>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')} style={EstilosEditarDatosPersonales.iconoNavegacion}>
           <Ionicons name="person-outline" size={24} color="gray" />
-          <Text style={estilos.textoNavegacion}>Perfil</Text>
+          <Text style={EstilosEditarDatosPersonales.textoNavegacion}>Perfil</Text>
         </TouchableOpacity>
       </View>
 
@@ -656,159 +658,5 @@ const EditarDatosPersonales = () => {
 
   );
 };
-const estilos = StyleSheet.create({
-  contenedor: {
-    flex: 1,
-    backgroundColor: 'white',
-    marginTop:43,
-  },
-  header: {
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 15,
-    backgroundColor: 'white',
-  },
-  textoEncabezado: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginRight:300,
-  },
-  encabezado: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  barraPestanas: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    marginBottom: 20,
-  },
-  pestanaActiva: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderBottomWidth: 2,
-    borderBottomColor: '#197278',
-  },
-  pestanaInactiva: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  textoPestanaActiva: {
-    fontSize: 16,
-    color: '#197278',
-  },
-  textoPestanaInactiva: {
-    fontSize: 16,
-    color: '#666',
-  },
-  opcion: {
-    fontSize: 16,
-    color: 'gray',
-  },
-  opcionSeleccionada: {
-    color: '#197278',
-    fontWeight: '600',
-  },
-  seccionFoto: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  imagenUsuario: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#f0f0f0',
-  },
-  cambiarFotoTexto: {
-    color: '#197278',
-    marginTop: 10,
-  },
-  formulario: {
-    paddingHorizontal: 20,
-    marginTop: -20,
-  },
-  label: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    backgroundColor: '#f0f0f0',
-  },
-  barraNavegacion: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 60,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-  iconoNavegacion: {
-    alignItems: 'center',
-  },
-  textoNavegacion: {
-    fontSize: 12,
-    color: 'gray',
-  },
-  botonGuardarCambios: {
-    backgroundColor: '#197278',
-    paddingVertical: 12,
-    borderRadius: 50,
-    alignItems: 'center',
-    width: '80%',  
-    alignSelf: 'center',
-    marginTop: 32, 
-  },
-  textoBotonGuardar: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    paddingBottom: 80, 
-  },
-
-  botonCambiarPassword: {
-    marginTop: 20,
-    marginBottom: 10,
-    alignItems: 'center',
-  },
-  textoCambiarPassword: {
-    color: '#197278',
-    fontSize: 16,
-    textDecorationLine: 'underline',
-  },
-  contenedorEntradaContrasena: {
-    position: 'relative',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-  },
-  inputContrasena: {
-    flex: 1,
-    height: 40,
-    paddingHorizontal: 15,
-  },
-  iconoOjo: {
-    padding: 10,
-  },
-});
 
 export default EditarDatosPersonales;

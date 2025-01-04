@@ -14,13 +14,13 @@ const EditarDatosPersonales = () => {
   
   // Estado para la foto de perfil
   const [imageUri, setImageUri] = useState<string | null>(null);
-
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const [showPasswordFields, setShowPasswordFields] = useState(false);
 
   const [datosOriginales, setDatosOriginales] = useState({
     first_name: '',
     last_name: '',
-    fechaNacimiento: '',
     email: '',
     telefono: '',
     direccion: {
@@ -35,9 +35,11 @@ const EditarDatosPersonales = () => {
   const [camposModificados, setCamposModificados] = useState({
     first_name: '',
     last_name: '',
-    fechaNacimiento: '',
     email: '',
     telefono: '',
+    old_password: '',
+    password: '',
+    password2: '',
     direccion: {
       calle: '',
       altura: '',
@@ -186,6 +188,27 @@ const EditarDatosPersonales = () => {
         throw new Error('No se encontraron credenciales de usuario');
       }
   
+    // Crear FormData para enviar tanto los datos como la imagen
+    const formData = new FormData();
+
+    // Agregar la imagen si existe
+    if (imageUri) {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      const fileType = blob.type.split('/')[1] || 'jpg';
+      
+      if (Platform.OS === "web") {
+        formData.append('fotoPerfil', blob, `photo.${fileType}`);
+      } else if (Platform.OS === "android") {
+        formData.append('fotoPerfil', {
+          uri: imageUri,
+          name: 'photo.png',
+          type: 'image/png',
+        });
+      }
+    }
+
+
       // Filtrar los campos que han sido modificados
       const datosActualizados = {}; // Crea un objeto vacío para almacenar los campos que realmente han cambiado
       Object.keys(camposModificados).forEach((campo) => { // Recorre todas las claves del objeto `camposModificados`, que contiene los campos editados.
@@ -196,18 +219,36 @@ const EditarDatosPersonales = () => {
           Object.keys(camposModificados[campo]).forEach((subCampo) => {
              // Comparar el valor del subcampo modificado con el valor original.
             // Si son diferentes, significa que el subcampo ha cambiado.
-            if (camposModificados[campo][subCampo] !== datosOriginales[campo][subCampo]) {
+            if (camposModificados[campo][subCampo] !== datosOriginales[campo]?.[subCampo]) {
               subCampos[subCampo] = camposModificados[campo][subCampo];
             }
           });
           if (Object.keys(subCampos).length > 0) { // Si hay al menos un subcampo modificado, agregarlo al objeto `datosActualizados`.
             datosActualizados[campo] = subCampos;
-          }
-        } else if (camposModificados[campo] !== datosOriginales[campo]) {
-          // Si es un campo simple, agregarlo si cambió
-          datosActualizados[campo] = camposModificados[campo];
+            }
+          } else if (camposModificados[campo] !== datosOriginales[campo] && campo !== 'password2') {
+            if (showPasswordFields && (campo === 'password' || campo === 'old_password')) {
+              if (camposModificados[campo]) {
+            // Si es un campo simple, agregarlo si cambió
+            datosActualizados[campo] = camposModificados[campo];
+            }
+          } else if (campo !== 'password' && campo !== 'old_password') {
+            datosActualizados[campo] = camposModificados[campo];
+            }
         }
       });
+
+      // Validar contraseñas si se están cambiando
+      if (showPasswordFields) {
+        if (camposModificados.password !== camposModificados.password2) {
+          Alert.alert('Error', 'Las contraseñas nuevas no coinciden');
+          return;
+        }
+        if (!camposModificados.old_password) {
+          Alert.alert('Error', 'Debe ingresar la contraseña actual');
+          return;
+        }
+      }
 
       // Si no hay cambios, no enviar la solicitud
       if (Object.keys(datosActualizados).length === 0) {
@@ -215,6 +256,15 @@ const EditarDatosPersonales = () => {
         return;
       }
   
+    // Agregar los datos actualizados al FormData
+    Object.keys(datosActualizados).forEach(key => {
+      if (typeof datosActualizados[key] === 'object') {
+        formData.append(key, JSON.stringify(datosActualizados[key]));
+      } else {
+        formData.append(key, datosActualizados[key]);
+      }
+    });
+
       // Realizar la solicitud PATCH al backend
       const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
         method: 'PATCH',
@@ -358,13 +408,6 @@ const EditarDatosPersonales = () => {
             onChangeText={(valor) => manejarCambioCampo('last_name', valor)}
           />
 
-          <Text style={estilos.label}>Fecha de nacimiento</Text>
-          <TextInput
-            style={estilos.input}
-            value={camposModificados.fechaNacimiento || datosOriginales.fechaNacimiento || ''}
-            onChangeText={(valor) => manejarCambioCampo('fechaNacimiento', valor)}
-          />
-
           <Text style={estilos.label}>Correo electrónico</Text>
           <TextInput
             style={estilos.input}
@@ -413,6 +456,46 @@ const EditarDatosPersonales = () => {
             value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
             onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
           />
+
+
+          {/* Botón para mostrar/ocultar campos de contraseña */}
+          <TouchableOpacity 
+            style={estilos.botonCambiarPassword}
+            onPress={() => setShowPasswordFields(!showPasswordFields)}
+          >
+            <Text style={estilos.textoCambiarPassword}>
+              {showPasswordFields ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Campos de contraseña */}
+          {showPasswordFields && (
+            <>
+              <Text style={estilos.label}>Contraseña actual</Text>
+              <TextInput
+                style={estilos.input}
+                secureTextEntry
+                value={camposModificados.old_password}
+                onChangeText={(valor) => manejarCambioCampo('old_password', valor)}
+              />
+
+              <Text style={estilos.label}>Nueva contraseña</Text>
+              <TextInput
+                style={estilos.input}
+                secureTextEntry
+                value={camposModificados.password}
+                onChangeText={(valor) => manejarCambioCampo('password', valor)}
+              />
+
+              <Text style={estilos.label}>Confirmar nueva contraseña</Text>
+              <TextInput
+                style={estilos.input}
+                secureTextEntry
+                value={camposModificados.password2}
+                onChangeText={(valor) => manejarCambioCampo('password2', valor)}
+              />
+            </>
+          )}
      </View>
       
       
@@ -572,7 +655,18 @@ const estilos = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 80, 
-  }
+  },
+
+  botonCambiarPassword: {
+    marginTop: 20,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  textoCambiarPassword: {
+    color: '#197278',
+    fontSize: 16,
+    textDecorationLine: 'underline',
+  },
 });
 
 export default EditarDatosPersonales;

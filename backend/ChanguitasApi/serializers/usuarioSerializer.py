@@ -7,45 +7,58 @@ class UsuarioSerializer(serializers.ModelSerializer):
     direccion = DireccionSerializer()
     password2 = serializers.CharField(write_only=True, required=False)  # password2 solo se necesita en la creación
     password = serializers.CharField(write_only=True, required=False)   # password es opcional en la actualización
+    old_password = serializers.CharField(write_only=True, required=False)  # Para validar contraseña actual
+
 
     class Meta:
         model = Usuario
         fields = [
-            'id', 'username', 'first_name', 'last_name', 'email', 'password','password2', 'documento', 'telefono', 
+            'id', 'username', 'first_name', 'last_name', 'email', 'password', 'old_password','password2', 'documento', 'telefono', 
             'fotoPerfil', 'fechaNacimiento', 'direccion'# 'fechaDisponible', 'horarioDisponible'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
             'password2': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
-            'direccion': {'required': False}
+            'direccion': {'required': False},
+            'fechaNacimiento': {'read_only': True}  # Hace que fechaNacimiento sea de solo lectura
         }
 
+
     def validate(self, data):
-        # Verifica unicidad para email, username y telefono
+        # Validación para creación de usuario
+        if self.instance is None:  # Es una creación
+            if 'password' in data and 'password2' in data:
+                if data['password'] != data['password2']:
+                    raise serializers.ValidationError({"password": "Las contraseñas no coinciden."})
+        
+        # Validación para cambio de contraseña
+        elif 'password' in data:  # Es una actualización y se intenta cambiar la contraseña
+            if not 'old_password' in data:
+                raise serializers.ValidationError({"old_password": "Debe proporcionar la contraseña actual."})
+            
+            if not self.instance.check_password(data['old_password']):
+                raise serializers.ValidationError({"old_password": "La contraseña actual es incorrecta."})
+
         email = data.get('email', None)
         username = data.get('username', None)
         telefono = data.get('telefono', None)
 
-        # Validación de correo electrónico
-        if email and Usuario.objects.filter(email=email).exists():
+        # Validaciones de unicidad excluyendo la instancia actual
+        if email and Usuario.objects.exclude(pk=getattr(self.instance, 'pk', None)).filter(email=email).exists():
             raise serializers.ValidationError({"email": "El correo electrónico ya está en uso."})
 
-        # Validación de nombre de usuario
-        if username and Usuario.objects.filter(username=username).exists():
+        if username and Usuario.objects.exclude(pk=getattr(self.instance, 'pk', None)).filter(username=username).exists():
             raise serializers.ValidationError({"username": "El nombre de usuario ya está en uso."})
 
-        # Validación de número de teléfono
-        if telefono and Usuario.objects.filter(telefono=telefono).exists():
+        if telefono and Usuario.objects.exclude(pk=getattr(self.instance, 'pk', None)).filter(telefono=telefono).exists():
             raise serializers.ValidationError({"telefono": "El número de teléfono ya está en uso."})
-
-        # Validación de contraseñas coincidentes
-        if 'password' in data and 'password2' in data:
-            if data['password'] != data['password2']:
-                raise serializers.ValidationError({"password": "Las contraseñas no coinciden."})
 
         return data
 
     def create(self, validated_data):
+        # Extrae los datos de la contraseña
+        validated_data.pop('old_password', None)
+
         # Extrae los datos de la dirección
         direccion_data = validated_data.pop('direccion')
         
@@ -69,11 +82,16 @@ class UsuarioSerializer(serializers.ModelSerializer):
         return usuario
     
     def update(self, instance, validated_data):
-        # Handle password update
+        # Maneja la actualización de contraseña si está presente
         if 'password' in validated_data:
             instance.set_password(validated_data.pop('password'))
+
+        # Remueve campos que no queremos actualizar
+        validated_data.pop('old_password', None)
+        validated_data.pop('password2', None)
+        validated_data.pop('fechaNacimiento', None)  # Asegura que no se actualice la fecha de nacimiento
         
-        # Handle address update
+        # Maneja la actualización de la dirección
         if 'direccion' in validated_data:
             direccion_data = validated_data.pop('direccion')
             if instance.direccion:
@@ -84,7 +102,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
                 direccion = Direccion.objects.create(**direccion_data)
                 instance.direccion = direccion
         
-        # Update remaining fields
+        # Actualiza los campos restantes
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         

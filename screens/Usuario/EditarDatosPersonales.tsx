@@ -18,6 +18,11 @@ const EditarDatosPersonales = () => {
 
   const [showPasswordFields, setShowPasswordFields] = useState(false);
 
+    // Estados para mostrar/ocultar contraseñas
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [datosOriginales, setDatosOriginales] = useState({
     first_name: '',
     last_name: '',
@@ -470,32 +475,68 @@ const EditarDatosPersonales = () => {
 
           {/* Campos de contraseña */}
           {showPasswordFields && (
-            <>
-              <Text style={estilos.label}>Contraseña actual</Text>
+          <>
+            <Text style={estilos.label}>Contraseña actual</Text>
+            <View style={estilos.contenedorEntradaContrasena}>
               <TextInput
-                style={estilos.input}
-                secureTextEntry
+                style={estilos.inputContrasena}
+                secureTextEntry={!showOldPassword}
                 value={camposModificados.old_password}
                 onChangeText={(valor) => manejarCambioCampo('old_password', valor)}
               />
+              <TouchableOpacity 
+                style={estilos.iconoOjo}
+                onPress={() => setShowOldPassword(!showOldPassword)}
+              >
+                <Ionicons 
+                  name={showOldPassword ? "eye-outline" : "eye-off-outline"} 
+                  size={20} 
+                  color="#666" 
+                />
+              </TouchableOpacity>
+            </View>
 
-              <Text style={estilos.label}>Nueva contraseña</Text>
+            <Text style={estilos.label}>Nueva contraseña</Text>
+            <View style={estilos.contenedorEntradaContrasena}>
               <TextInput
-                style={estilos.input}
-                secureTextEntry
+                style={estilos.inputContrasena}
+                secureTextEntry={!showNewPassword}
                 value={camposModificados.password}
                 onChangeText={(valor) => manejarCambioCampo('password', valor)}
               />
+              <TouchableOpacity 
+                style={estilos.iconoOjo}
+                onPress={() => setShowNewPassword(!showNewPassword)}
+              >
+                <Ionicons 
+                  name={showNewPassword ? "eye-outline" : "eye-off-outline"} 
+                  size={20} 
+                  color="#666" 
+                />
+              </TouchableOpacity>
+            </View>
 
-              <Text style={estilos.label}>Confirmar nueva contraseña</Text>
+            <Text style={estilos.label}>Confirmar nueva contraseña</Text>
+            <View style={estilos.contenedorEntradaContrasena}>
               <TextInput
-                style={estilos.input}
-                secureTextEntry
+                style={estilos.inputContrasena}
+                secureTextEntry={!showConfirmPassword}
                 value={camposModificados.password2}
                 onChangeText={(valor) => manejarCambioCampo('password2', valor)}
               />
-            </>
-          )}
+              <TouchableOpacity 
+                style={estilos.iconoOjo}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <Ionicons 
+                  name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
+                  size={20} 
+                  color="#666" 
+                />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
      </View>
       
       
@@ -666,6 +707,23 @@ const estilos = StyleSheet.create({
     color: '#197278',
     fontSize: 16,
     textDecorationLine: 'underline',
+  },
+  contenedorEntradaContrasena: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+  },
+  inputContrasena: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 15,
+  },
+  iconoOjo: {
+    padding: 10,
   },
 });
 

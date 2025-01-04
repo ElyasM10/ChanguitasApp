@@ -103,26 +103,7 @@ const EditarDatosPersonales = () => {
     }
   };
 
-
- /*
-      const payload = {
-        first_name: nombre.trim(),
-        last_name: apellido.trim(),
-        fechaNacimiento: fechaNacimiento || null,
-        email: correo.trim(),
-        telefono: telefono.trim(),
-        direccion: {
-            calle: calle.trim(),
-            altura: altura && !isNaN(Number(altura)) ? parseInt(altura, 10) : null,
-            nroDepto: nroDepto && !isNaN(Number(nroDepto)) ? parseInt(nroDepto, 10) : null,
-            piso: piso && !isNaN(Number(piso)) ? parseInt(piso, 10) : null,
-            barrio: barrio.trim(),
-        },
-        fotoPerfil: imageUri || null,
-    };
-   */
-
-    const enviarFoto = async () => {
+   /* const enviarFoto = async () => {
       try {
         if (!imageUri) {
           alert("Por favor, selecciona una imagen antes de enviarla.");
@@ -130,7 +111,6 @@ const EditarDatosPersonales = () => {
         }
     
         const formData = new FormData();
-    
     
         const response = await fetch(imageUri);
         const blob = await response.blob();
@@ -145,9 +125,6 @@ const EditarDatosPersonales = () => {
           type: 'image/png', // Tipo MIME del archivo.
         });
       }
- 
-
-
 
         const accessToken = await AsyncStorage.getItem('accessToken');
         const userId = await AsyncStorage.getItem('userId');
@@ -181,7 +158,7 @@ const EditarDatosPersonales = () => {
         }
       }
     };
-
+*/
 
   // Función para guardar cambios
   const guardarCambios = async () => {
@@ -196,23 +173,28 @@ const EditarDatosPersonales = () => {
     // Crear FormData para enviar tanto los datos como la imagen
     const formData = new FormData();
 
-    // Agregar la imagen si existe
-    if (imageUri) {
-      const response = await fetch(imageUri);
-      const blob = await response.blob();
-      const fileType = blob.type.split('/')[1] || 'jpg';
-      
-      if (Platform.OS === "web") {
-        formData.append('fotoPerfil', blob, `photo.${fileType}`);
-      } else if (Platform.OS === "android") {
-        formData.append('fotoPerfil', {
-          uri: imageUri,
-          name: 'photo.png',
-          type: 'image/png',
-        });
+      // Agregar la imagen si existe y ha sido modificada
+      if (imageUri) {
+        try {
+          const response = await fetch(imageUri);
+          const blob = await response.blob();
+          const fileType = blob.type.split('/')[1] || 'jpg';
+          
+          if (Platform.OS === "web") {
+            formData.append('fotoPerfil', blob, `photo.${fileType}`);
+          } else if (Platform.OS === "android") {
+            formData.append('fotoPerfil', {
+              uri: imageUri,
+              name: 'photo.png',
+              type: 'image/png',
+            });
+          }
+        } catch (error) {
+          console.error('Error al procesar la imagen:', error);
+          Alert.alert('Error', 'No se pudo procesar la imagen seleccionada.');
+          return;
+        }
       }
-    }
-
 
       // Filtrar los campos que han sido modificados
       const datosActualizados = {}; // Crea un objeto vacío para almacenar los campos que realmente han cambiado
@@ -255,8 +237,8 @@ const EditarDatosPersonales = () => {
         }
       }
 
-      // Si no hay cambios, no enviar la solicitud
-      if (Object.keys(datosActualizados).length === 0) {
+      // Si no hay cambios y no hay nueva imagen, no enviar la solicitud
+      if (Object.keys(datosActualizados).length === 0 && !imageUri) {
         Alert.alert('Sin cambios', 'No hay campos modificados para guardar.');
         return;
       }
@@ -270,6 +252,7 @@ const EditarDatosPersonales = () => {
       }
     });
 
+    /*
       // Realizar la solicitud PATCH al backend
       const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
         method: 'PATCH',
@@ -290,7 +273,27 @@ const EditarDatosPersonales = () => {
     } catch (error) {
       console.error('Error al actualizar perfil:', error);
       Alert.alert('Error', 'Ocurrió un problema con la conexión.');
+    }*/
+
+    // Realizar la solicitud PATCH al backend usando FormData
+    const response = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.status === 200) {
+      Alert.alert('Éxito', 'Datos actualizados correctamente.');
+      navigation.navigate('PantallaHome');
+    } else {
+      Alert.alert('Error', 'No se pudieron guardar los cambios.');
     }
+    } catch (error) {
+    console.error('Error al actualizar perfil:', error);
+    Alert.alert('Error', 'Ocurrió un problema con la conexión.');
+    }
+
   };
   
   
@@ -391,10 +394,15 @@ const EditarDatosPersonales = () => {
             <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
           </TouchableOpacity>
 
-          {/* Botón para enviar la foto */}
+
+        
+          {/* Botón para enviar la foto 
           <TouchableOpacity onPress={enviarFoto}>
             <Text style={estilos.cambiarFotoTexto}>Enviar Foto</Text>
           </TouchableOpacity>
+        </View>
+        */}
+
         </View>
 
           {/* Formulario de datos personales */}

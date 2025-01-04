@@ -31,3 +31,5 @@ npm install react-native-image-picker
  pip install -U drf-yasg
  Ver pasos que se siguieron: https://drf-yasg.readthedocs.io/en/stable/readme.html#usage 
 
+#Para mensaje de error
+npm install react-native-paper

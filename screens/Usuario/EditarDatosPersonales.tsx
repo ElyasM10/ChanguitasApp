@@ -8,6 +8,7 @@ import API_URL from '../API_URL';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FormData from 'form-data';
+import { Snackbar } from 'react-native-paper';
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -22,7 +23,10 @@ const EditarDatosPersonales = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
+   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+   const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
+ 
   const [datosOriginales, setDatosOriginales] = useState({
     first_name: '',
     last_name: '',
@@ -289,14 +293,71 @@ const EditarDatosPersonales = () => {
     } else {
       Alert.alert('Error', 'No se pudieron guardar los cambios.');
     }
-    } catch (error) {
-    console.error('Error al actualizar perfil:', error);
-    Alert.alert('Error', 'Ocurrió un problema con la conexión.');
-    }
-
+} catch (error) {
+        //-------------------Mensajes de Error----------------
+  if (error.response && error.response.status === 400) {
+          const errorData = error.response.data; 
+  let errorMessage = '';
+  console.log("Bad request");
+  // Diccionario para traducir claves y mensajes
+  const translations = {
+    email: 'Correo electrónico',
+    telefono: 'Teléfono',
+    direccion: 'Dirección',
+    calle: 'Calle',
+    altura: 'Altura',
+    password: 'Contraseña',
+    password2: 'Repetir contraseña',
   };
+
+  const translatedErrors = {
+    "Enter a valid email address.": "Introduce una dirección de correo electrónico válida.",
+     "A valid integer is required.":"Introduce un valor valido",
+    "A valid string is required.":"Introduce un valor valido"
+  };
+
+  // Función para traducir errores, incluyendo estructuras anidadas
+  const translateErrors = (
+    errors: Record<string, unknown>, // Especificamos que los valores pueden ser de cualquier tipo
+    parentKey: string = ''
+  ): string => {
+    let message = '';
   
+    for (const [key, value] of Object.entries(errors)) {
+      const field = parentKey
+        ? `${translations[parentKey] || parentKey} -> ${translations[key] || key}`
+        : translations[key] || key;
   
+      if (Array.isArray(value)) {
+        // Si es un array, traducimos cada mensaje
+        const messages = value.map((msg) =>
+          typeof msg === 'string' ? translatedErrors[msg] || msg : ''
+        );
+        message += `${field}: ${messages.join(', ')}\n`;
+      } else if (typeof value === 'object' && value !== null) {
+        // Si es un objeto, llamamos recursivamente
+        message += translateErrors(value as Record<string, unknown>, key);
+      } else if (typeof value === 'string') {
+        // Caso general (no array, no objeto)
+        const singleMessage = translatedErrors[value] || value;
+        message += `${field}: ${singleMessage}\n`;
+      }
+    }
+  
+    return message;
+  };
+
+  // Traducimos los errores
+  errorMessage = translateErrors(errorData).trim();
+  
+     
+        // Mostramos el mensaje de error en el Snackbar
+        setMessage(errorMessage);
+        setVisible(true);  // Mostrar el Snackbar
+} 
+  Alert.alert('Error', 'Ocurrió un problema con la conexión.');
+}
+  };
   // Funciones para manejar la selección de imagen
   const manejarRespuestaSelectorImagen = (resultado: ImagePicker.ImagePickerResult) => {
     if (!resultado.canceled && resultado.assets && resultado.assets.length > 0) {
@@ -306,7 +367,7 @@ const EditarDatosPersonales = () => {
 
  
   const manejarCambioArchivoWeb = (event: Event) => {
-    const target = event.target as HTMLInputElement; // Asegúrate de que el target sea un input de archivo
+    const target = event.target as HTMLInputElement; 
     const file = target.files ? target.files[0] : null;
   
     if (file) {
@@ -362,7 +423,7 @@ const EditarDatosPersonales = () => {
 
   
   return (
-    <SafeAreaView style={estilos.contenedor}>
+  <SafeAreaView style={estilos.contenedor}>
     <ScrollView contentContainerStyle={estilos.scrollContainer}>
       {/* Header con Perfil*/}
       <View style={estilos.header}>
@@ -382,8 +443,6 @@ const EditarDatosPersonales = () => {
         </TouchableOpacity>
       </View>
 
-
-   
        {/* Sección para cambiar la foto */}
        <View style={estilos.seccionFoto}>
           <Image 
@@ -394,8 +453,6 @@ const EditarDatosPersonales = () => {
             <Text style={estilos.cambiarFotoTexto}>Cambiar foto</Text>
           </TouchableOpacity>
 
-
-        
           {/* Botón para enviar la foto 
           <TouchableOpacity onPress={enviarFoto}>
             <Text style={estilos.cambiarFotoTexto}>Enviar Foto</Text>
@@ -549,9 +606,29 @@ const EditarDatosPersonales = () => {
       
       
       {/* Botón de Guardar Cambios*/}
-      <TouchableOpacity onPress={guardarCambios} style={estilos.botonGuardarCambios}>
-        <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
-      </TouchableOpacity>
+     {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
+      {!visible && (
+        <TouchableOpacity onPress={guardarCambios} style={estilos.botonGuardarCambios}>
+          <Text style={estilos.textoBotonGuardar}>Guardar Cambios</Text>
+        </TouchableOpacity>
+      )}
+
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
+        duration={Snackbar.DURATION_SHORT}    // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
+        style={{
+          position: 'absolute',
+          top: -150,
+          left: 0,
+          right: 0,
+          zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos
+        }}
+      >
+        {message}
+      </Snackbar>
+
+
       </ScrollView>
 
       {/* Barra de navegación inferior */}
@@ -579,7 +656,6 @@ const EditarDatosPersonales = () => {
 
   );
 };
- 
 const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Linking  } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -88,6 +88,14 @@ const PantallaPerfilDeOtro = () => {
     }
   };
 
+  // Función para manejar el enlace de WhatsApp
+  const handleChat = () => {
+    const phoneNumber = usuario?.telefono; // Número de teléfono del usuario
+    const whatsappLink = `https://wa.me/${phoneNumber}`; // Crear el enlace de WhatsApp
+
+    Linking.openURL(whatsappLink).catch((err) => console.error('Error al abrir WhatsApp', err));
+  };
+
   // Mostrar la vista de carga o error
   if (loading) {
     return (
@@ -130,7 +138,7 @@ const PantallaPerfilDeOtro = () => {
         <TouchableOpacity style={estilos.nextButton} onPress={() => navigation.navigate('DetalleTarea')}>
           <Text style={estilos.nextButtonText}>Iniciar changuita</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={estilos.prevButton}>
+        <TouchableOpacity style={estilos.prevButton} onPress={handleChat}>
           <Text style={estilos.prevButtonText}>Chatear</Text>
         </TouchableOpacity>
         <TouchableOpacity style={estilos.prevButton} onPress={() => navigation.navigate('ResultadosBusqueda')}>

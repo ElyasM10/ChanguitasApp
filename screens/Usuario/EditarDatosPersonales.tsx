@@ -404,7 +404,11 @@ const EditarDatosPersonales = () => {
       return;
     }
 
-    const resultado = await ImagePicker.launchImageLibraryAsync();
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+    allowsEditing: true, // Activa el recorte
+    aspect: [1, 1], // Define la relación de aspecto del recorte (cuadrado)
+    quality: 0.8, // Calidad de la imagen (0.1 a 1.0)
+    });
 
     manejarRespuestaSelectorImagen(resultado);
   };

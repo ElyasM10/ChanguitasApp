@@ -33,3 +33,6 @@ npm install react-native-image-picker
 
 #Para mensaje de error
 npm install react-native-paper
+
+#Para desplegable en buscar servicio
+npm install @react-native-picker/picker

@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import API_URL from "../API_URL"; 
 import ResultadosBusqueda from './ResultadosBusqueda';
+import { Picker } from '@react-native-picker/picker';
 
 const BuscarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -106,6 +107,15 @@ const BuscarServicio2 = () => {
     }));
   };
 
+  const generateHourOptions = () => {
+    const options = [];
+    for (let i = 0; i < 24; i++) {
+      const hour = i < 10 ? `0${i}:00` : `${i}:00`;
+      options.push(<Picker.Item key={hour} label={hour} value={hour} />);
+    }
+    return options;
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Buscar un servicio (2/2)</Text>
@@ -122,21 +132,28 @@ const BuscarServicio2 = () => {
                 onValueChange={() => toggleDay(day)}
               />
               <Text style={styles.dayText}>{day}</Text>
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Inicio"
-                value={hours[day].start}
-                onChangeText={(value) => handleTimeChange(day, 'start', value)}
-                editable={days[day]}
-              />
-              <Text style={styles.toText}>a</Text>
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Fin"
-                value={hours[day].end}
-                onChangeText={(value) => handleTimeChange(day, 'end', value)}
-                editable={days[day]}
-              />
+              
+              {/* Picker para la hora de inicio */}
+              <Picker
+                selectedValue={hours[day].start}
+                onValueChange={(itemValue) => handleTimeChange(day, 'start', itemValue)}
+                enabled={days[day]}
+                style={styles.picker}
+              >
+                {generateHourOptions()}
+              </Picker>
+
+              <Text style={styles.toText}> a </Text>
+
+               {/* Picker para la hora de fin */}
+              <Picker
+                selectedValue={hours[day].end}
+                onValueChange={(itemValue) => handleTimeChange(day, 'end', itemValue)}
+                enabled={days[day]}
+                style={styles.picker}
+              >
+                {generateHourOptions()}
+              </Picker>
             </View>
           ))}
         </View>
@@ -317,6 +334,15 @@ const styles = StyleSheet.create({
     color: '#A94442',
     fontSize: 14,
     textAlign: 'center',
+  },
+  picker: {
+    height: 50,
+    width: 120,
+    marginVertical: 10,
+  },
+  pickerItem: {
+    fontSize: 50, // Aumenta el tamaño de la fuente para que sea más fácil de leer
+    paddingVertical: 30, // Da más espacio entre las opciones
   },
 });
 

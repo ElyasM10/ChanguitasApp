@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Switch
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation,useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+import { Picker } from '@react-native-picker/picker';
 
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -84,6 +85,17 @@ const AgregarServicio2 = () => {
     navigation.navigate('AgregarServicio3', { datosSeleccionados });
   };
   
+    // Función para generar las opciones de hora
+    const generarOpcionesHora = () => {
+      const horas = [];
+      for (let i = 0; i < 24; i++) {
+        const hora = `${i.toString().padStart(2, '0')}:00`;
+        horas.push(
+          <Picker.Item label={hora} value={hora} key={hora} />
+        );
+      }
+      return horas;
+    };
   return (
     <View style={estilos.contenedorPrincipal}>
       <View style={estilos.contenedorEncabezado}>
@@ -111,21 +123,27 @@ const AgregarServicio2 = () => {
               onValueChange={() => cambiarDia(dia)}
             />
             <Text style={estilos.textoDia}>{dia}</Text>
-            <TextInput
-              style={estilos.campoHora}
-              placeholder="Inicio"
-              value={horasSeleccionadas[dia].inicio}
-              onChangeText={(valor) => manejarCambioHora(dia, 'inicio', valor)}
-              editable={diasSeleccionados[dia]}
-            />
-            <Text style={estilos.textoSeparador}>a</Text>
-            <TextInput
-              style={estilos.campoHora}
-              placeholder="Fin"
-              value={horasSeleccionadas[dia].fin}
-              onChangeText={(valor) => manejarCambioHora(dia, 'fin', valor)}
-              editable={diasSeleccionados[dia]}
-            />
+             {/* Picker para la hora de inicio */}
+             <Picker
+              selectedValue={horasSeleccionadas[dia].inicio}
+              onValueChange={(itemValue) => manejarCambioHora(dia, 'inicio', itemValue)}
+              enabled={diasSeleccionados[dia]}
+              style={estilos.picker}
+            >
+              {generarOpcionesHora()}
+            </Picker>
+
+            <Text style={estilos.textoSeparador}> a </Text>
+
+              {/* Picker para la hora de fin */}
+            <Picker
+              selectedValue={horasSeleccionadas[dia].fin}
+              onValueChange={(itemValue) => manejarCambioHora(dia, 'fin', itemValue)}
+              enabled={diasSeleccionados[dia]}
+              style={estilos.picker}
+            >
+              {generarOpcionesHora()}
+            </Picker>
           </View>
         ))}
 
@@ -282,6 +300,15 @@ const estilos = StyleSheet.create({
   textoNavegacion: {
     fontSize: 12,
     color: 'gray',
+  },
+  picker: {
+    height: 50,
+    width: 120,
+    marginVertical: 10,
+  },
+  pickerItem: {
+    fontSize: 50, // Aumenta el tamaño de la fuente para que sea más fácil de leer
+    paddingVertical: 30, // Da más espacio entre las opciones
   },
 });
 

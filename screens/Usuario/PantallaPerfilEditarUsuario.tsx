@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PantallaPerfiEditarUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   //Extraemos los datos del token para obtener el id 
  /*
     El token  es una cadena codificada en base64url de tres partes:
@@ -53,6 +53,38 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
+
+   // Función para cerrar sesión
+   const cerrarSesion = async () => {
+    try {
+      const refreshToken = await AsyncStorage.getItem('refreshToken');
+      if (!refreshToken) throw new Error('No se encontró el refresh token');
+      
+      const response = await fetch(`${API_URL}/logout/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      if (response.ok) {
+        console.log('Sesión cerrada correctamente');
+        await AsyncStorage.removeItem('accessToken');
+        await AsyncStorage.removeItem('refreshToken');
+        navigation.navigate('PantallaBienvenida');
+      } else {
+        const errorData = await response.json();
+        console.error('Error al cerrar sesión:', errorData);
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud de logout:', error);
+    }
+  };
+
+  const toggleDesplegable = () => {
+    setMostrarDesplegable(!mostrarDesplegable);
+  };
 
   useEffect(() => {
     fetchUsuario();
@@ -127,15 +159,23 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={estilos.contenedor}>
+     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
         <Text style={estilos.textoEncabezado}>Perfil</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toggleDesplegable}>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
+      {/* Menú Desplegable */}
+      {mostrarDesplegable && (
+        <View style={estilos.desplegable}>
+          <TouchableOpacity onPress={cerrarSesion} style={estilos.opcionDesplegable}>
+            <Text style={estilos.textoDesplegable}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {/* Barra de pestañas */}
       <View style={estilos.barraPestanas}>
         <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('PantallaBienvenida')}>
@@ -336,6 +376,28 @@ const estilos = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
   },
+  desplegable: {
+    position: 'absolute',
+    top: 70,
+    right: 20,
+    width: 150,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    zIndex: 10,
+  },
+  opcionDesplegable: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  textoDesplegable: {
+    fontSize: 16,
+    color: '#333333',
+  },
 });
-
 export default PantallaPerfiEditarUsuario;

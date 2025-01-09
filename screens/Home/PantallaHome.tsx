@@ -5,6 +5,8 @@ import { RootStackParamList } from '../../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../API_URL';
+import { Alert } from 'react-native';
+import {cerrarSesion} from '../Autenticacion/authService';
 
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
@@ -48,6 +50,7 @@ const renovarToken = async () => {
   }
 };
 
+/*
   // Función para cerrar sesión
   const cerrarSesion = async () => {
     try {
@@ -77,7 +80,16 @@ const renovarToken = async () => {
       console.error('Error al realizar la solicitud de logout:', error);
     }
   };
-  
+  */
+  const logout = async () => {
+    try {
+      await cerrarSesion();
+      navigation.navigate('PantallaBienvenida');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
+
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado */}
@@ -95,7 +107,7 @@ const renovarToken = async () => {
             <Text onPress={() => navigation.navigate('PantallaAyuda')} style={estilos.textoDesplegable}>Ayuda</Text>
           </TouchableOpacity>
           <TouchableOpacity style={estilos.opcionDesplegable}>
-            <Text onPress={cerrarSesion} style={estilos.textoDesplegable}>Cerrar sesión</Text>
+            <Text onPress={logout} style={estilos.textoDesplegable}>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>
       )}

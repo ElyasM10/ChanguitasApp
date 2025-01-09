@@ -6,7 +6,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import API_URL from '../API_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import {cerrarSesion} from '../Autenticacion/authService';
 
 
 const PantallaPerfiEditarUsuario: React.FC = () => {
@@ -54,31 +54,12 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
 
-   // Función para cerrar sesión
-   const cerrarSesion = async () => {
+  const logout = async () => {
     try {
-      const refreshToken = await AsyncStorage.getItem('refreshToken');
-      if (!refreshToken) throw new Error('No se encontró el refresh token');
-      
-      const response = await fetch(`${API_URL}/logout/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refresh_token: refreshToken }),
-      });
-
-      if (response.ok) {
-        console.log('Sesión cerrada correctamente');
-        await AsyncStorage.removeItem('accessToken');
-        await AsyncStorage.removeItem('refreshToken');
-        navigation.navigate('PantallaBienvenida');
-      } else {
-        const errorData = await response.json();
-        console.error('Error al cerrar sesión:', errorData);
-      }
+      await cerrarSesion();
+      navigation.navigate('PantallaBienvenida');
     } catch (error) {
-      console.error('Error al realizar la solicitud de logout:', error);
+      Alert.alert('Error', error.message);
     }
   };
 
@@ -171,7 +152,7 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
       {/* Menú Desplegable */}
       {mostrarDesplegable && (
         <View style={estilos.desplegable}>
-          <TouchableOpacity onPress={cerrarSesion} style={estilos.opcionDesplegable}>
+          <TouchableOpacity onPress={logout} style={estilos.opcionDesplegable}>
             <Text style={estilos.textoDesplegable}>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>

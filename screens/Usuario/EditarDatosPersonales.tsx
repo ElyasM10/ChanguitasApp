@@ -185,6 +185,16 @@ const EditarDatosPersonales = () => {
 
   // Función para guardar cambios
   const guardarCambios = async () => {
+
+     // Validación de que los tres campos de contraseña estén completos
+  if (!camposModificados.old_password || !camposModificados.password || !camposModificados.password2) {
+    // Si alguno de los campos está vacío, mostrar un mensaje en el Snackbar
+    setMessage('Por favor, complete todos los campos de contraseña.');
+    setVisible(true); // Mostrar el Snackbar
+    return; // No continuar con el proceso de guardar cambios
+  }
+
+
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
       const userId = await AsyncStorage.getItem('userId');
@@ -307,7 +317,6 @@ const EditarDatosPersonales = () => {
   if (error.response && error.response.status === 400) {
           const errorData = error.response.data; 
   let errorMessage = '';
-  console.log("Bad request");
   // Diccionario para traducir claves y mensajes
   const translations = {
     email: 'Correo electrónico',
@@ -317,6 +326,7 @@ const EditarDatosPersonales = () => {
     altura: 'Altura',
     password: 'Contraseña',
     password2: 'Repetir contraseña',
+    old_password:'Contraseña',
   };
 
   const translatedErrors = {
@@ -646,7 +656,7 @@ const EditarDatosPersonales = () => {
         <TouchableOpacity onPress={guardarCambios} style={EstilosEditarDatosPersonales.botonGuardarCambios}>
           <Text style={EstilosEditarDatosPersonales.textoBotonGuardar}>Guardar Cambios</Text>
         </TouchableOpacity>
-      )}
+      )} 
 
       <Snackbar
         visible={visible}

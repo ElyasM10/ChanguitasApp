@@ -10,11 +10,15 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { Snackbar } from 'react-native-paper';
 import EstilosEditarDatosPersonales from './estilos/EstilosEditarDatosPersonales';
+import {cerrarSesion} from '../Autenticacion/authService';
 
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
+ //Estado para el cerrarSesion
+ const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
+
   // Estado para la foto de perfil
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -61,6 +65,15 @@ const EditarDatosPersonales = () => {
   });
 
 
+  const logout = async () => {
+    try {
+      await cerrarSesion();
+      navigation.navigate('PantallaBienvenida');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
+ 
   // Función para obtener la foto de perfil desde el backend
   const obtenerFotoPerfil = async () => {
     try {
@@ -165,6 +178,10 @@ const EditarDatosPersonales = () => {
       }
     };
 */
+
+    const toggleDesplegable = () => {
+      setMostrarDesplegable(!mostrarDesplegable);
+    };
 
   // Función para guardar cambios
   const guardarCambios = async () => {
@@ -434,7 +451,21 @@ const EditarDatosPersonales = () => {
       {/* Header con Perfil*/}
       <View style={EstilosEditarDatosPersonales.header}>
         <Text style={EstilosEditarDatosPersonales.textoEncabezado}>Perfil</Text>
+        <TouchableOpacity onPress={toggleDesplegable}>
+          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+        </TouchableOpacity>
       </View>
+
+  
+          {/* Menú Desplegable */}
+          {mostrarDesplegable && (
+        <View style={EstilosEditarDatosPersonales.desplegable}>
+          <TouchableOpacity onPress={logout} style={EstilosEditarDatosPersonales.opcionDesplegable}>
+            <Text style={EstilosEditarDatosPersonales.textoDesplegable}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
 
      {/* Barra de pestañas */}
      <View style={EstilosEditarDatosPersonales.barraPestanas}>

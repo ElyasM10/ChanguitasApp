@@ -7,10 +7,13 @@ const EstilosEditarDatosPersonales = StyleSheet.create({
       marginTop:43,
     },
     header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
       alignItems: 'center',
-      paddingTop: 10,
-      paddingBottom: 15,
+      paddingHorizontal: 20,
+      paddingVertical: 15,
       backgroundColor: 'white',
+      marginTop: 5,
     },
     textoEncabezado: {
       fontSize: 24,
@@ -152,6 +155,29 @@ const EstilosEditarDatosPersonales = StyleSheet.create({
     },
     iconoOjo: {
       padding: 10,
+    },
+    desplegable: {
+      position: 'absolute',
+      top: 70,
+      right: 20,
+      width: 150,
+      backgroundColor: '#ffffff',
+      borderRadius: 16,
+      paddingVertical: 10,
+      shadowColor: '#000',
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 5,
+      zIndex: 10,
+    },
+    opcionDesplegable: {
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+    },
+    textoDesplegable: {
+      fontSize: 16,
+      color: '#333333',
     },
   });
   

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity,Alert, FlatList } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import API_URL from '../API_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {cerrarSesion} from '../Autenticacion/authService';
 
 
 
@@ -22,6 +23,20 @@ const MisServicios = () => {
 
   const [services, setServices] = useState<Servicio[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
+  
+  const toggleDesplegable = () => {
+    setMostrarDesplegable(!mostrarDesplegable);
+  };
+
+  const logout = async () => {
+    try {
+      await cerrarSesion();
+      navigation.navigate('PantallaBienvenida');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
 
   const fetchUsuario = async () => {
     try {
@@ -72,7 +87,19 @@ const MisServicios = () => {
       {/* Header con Perfil*/}
       <View style={estilos.header}>
         <Text style={estilos.textoEncabezado}>Perfil</Text>
+        <TouchableOpacity onPress={toggleDesplegable}>
+          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+        </TouchableOpacity>
       </View>
+
+        {/* Menú Desplegable */}
+           {mostrarDesplegable && (
+        <View style={estilos.desplegable}>
+          <TouchableOpacity onPress={logout} style={estilos.opcionDesplegable}>
+            <Text style={estilos.textoDesplegable}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
      {/* Barra de pestañas */}
      <View style={estilos.barraPestanas}>
@@ -144,10 +171,13 @@ const estilos = StyleSheet.create({
     marginTop:43,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     backgroundColor: 'white',
+    marginTop: 5,
   },
   textoEncabezado: {
     fontSize: 24,
@@ -288,6 +318,29 @@ const estilos = StyleSheet.create({
   descripcion: { fontSize: 14, color: 'gray' },
   horario: { fontSize: 12, color: '#197278' },
   sinServicios: { textAlign: 'center', marginTop: 20, color: 'gray', fontSize: 16 },
+  desplegable: {
+    position: 'absolute',
+    top: 70,
+    right: 20,
+    width: 150,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    zIndex: 10,
+  },
+  opcionDesplegable: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  textoDesplegable: {
+    fontSize: 16,
+    color: '#333333',
+  },
 });
 
 export default MisServicios;

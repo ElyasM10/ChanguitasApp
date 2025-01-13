@@ -1,22 +1,48 @@
-import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState} from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
+import {cerrarSesion} from '../Autenticacion/authService';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
+
+
+  const toggleDesplegable = () => {
+    setMostrarDesplegable(!mostrarDesplegable);
+  };
+
+
+  const logout = async () => {
+    try {
+      await cerrarSesion();
+      navigation.navigate('PantallaBienvenida');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
 
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={estilos.encabezado}>
         <Text style={estilos.textoEncabezado}>Historial</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toggleDesplegable}>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
+        {/* Menú Desplegable */}
+       {mostrarDesplegable && (
+        <View style={estilos.desplegable}>
+          <TouchableOpacity onPress={logout} style={estilos.opcionDesplegable}>
+            <Text style={estilos.textoDesplegable}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+         
          {/* Barra de pestañas */}
          <View style={estilos.barraPestanas}>
         <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('Historial1')}>
@@ -160,6 +186,29 @@ const estilos = StyleSheet.create({
   textoNavegacion: {
     fontSize: 12,
     color: 'gray',
+  },
+  desplegable: {
+    position: 'absolute',
+    top: 80,
+    right: 20,
+    width: 150,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    zIndex: 10,
+  },
+  opcionDesplegable: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  textoDesplegable: {
+    fontSize: 16,
+    color: '#333333',
   },
 });
 

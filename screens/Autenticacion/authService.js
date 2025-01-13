@@ -66,3 +66,34 @@ export const cerrarSesion = async () => {
     throw error;
   }
 };
+
+
+/**
+ * Renueva el token de acceso usando el token de actualización.
+ * @returns {string|null} Nuevo token de acceso o null si falla.
+ */
+export const renovarToken = async () => {
+  try {
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
+    if (!refreshToken) throw new Error('No se encontró el token de actualización');
+
+    const response = await fetch(`${API_URL}/refresh/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh: refreshToken }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      await AsyncStorage.setItem('accessToken', data.access); // Almacena el nuevo token
+      return data.access;
+    } else {
+      const errorData = await response.json();
+      console.error('Error al renovar el token:', errorData);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error al intentar renovar el token:', error);
+    return null;
+  }
+}; 

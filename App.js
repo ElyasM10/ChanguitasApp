@@ -94,6 +94,7 @@ export default App;
 class App extends React.Component {
   state = { details: [] };
 
+  /*
   componentDidMount() {
     axios.get('http://localhost:8000')
       .then(res => {
@@ -106,6 +107,7 @@ class App extends React.Component {
         console.error(err);
       });
   }
+  */
 
   render() {
     return (

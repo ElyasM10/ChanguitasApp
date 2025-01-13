@@ -149,15 +149,15 @@ const PantallaPerfilDeOtro = () => {
       {/* Datos adicionales */}
       <View style={estilos.datosExtras}>
         <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>1986</Text>
+        <Text style={estilos.datoNumero}>{(usuario as any)?.cantServiciosContratados ?? 0}</Text>
           <Text style={estilos.datoLabel}>Contrató</Text>
         </View>
         <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>2728</Text>
+        <Text style={estilos.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
           <Text style={estilos.datoLabel}>Trabajó</Text>
         </View>
         <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>4.2</Text>
+        <Text style={estilos.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
           <Text style={estilos.datoLabel}>Puntaje</Text>
         </View>
       </View>

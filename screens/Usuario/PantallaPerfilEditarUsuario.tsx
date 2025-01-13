@@ -81,12 +81,7 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
         throw new Error('No se encontró el token de acceso');
       }
   
-      // Decodifica el token para extraer el ID del usuario
-     // Luego en el código
-   //  const decoded = decodeJWT(accessToken);
-      //console.log('Payload decodificado:', decoded);
       const userId = await AsyncStorage.getItem('userId');  
-    // const userId = decoded.user_id;
      console.log('ID del usuario extraído:', userId);
 
     
@@ -182,19 +177,21 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
       {/* Datos adicionales */}
       <View style={estilos.datosExtras}>
         <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>1986</Text>
+        <Text style={estilos.datoNumero}>{(usuario as any)?.cantServiciosContratados ?? 0}</Text>
+        {/*Esta parte convierte (o "castea") el objeto usuario al tipo any.
+El tipo any en TypeScript desactiva las verificaciones de tipo, permitiendo acceder a cualquier propiedad sin que TypeScript marque un error de momento temporal*/}
           <Text style={estilos.datoLabel}>Contrató</Text>
         </View>
         <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>2728</Text>
+        <Text style={estilos.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
           <Text style={estilos.datoLabel}>Trabajó</Text>
         </View>
         <View style={estilos.datoItem}>
-          <Text style={estilos.datoNumero}>4.2</Text>
+        <Text style={estilos.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
           <Text style={estilos.datoLabel}>Puntaje</Text>
         </View>
       </View>
-
+ 
       {/* Datos Personales */}
       <Text style={estilos.tituloDatosPersonales}>DATOS PERSONALES</Text>
       <View style={estilos.datosPersonales}>

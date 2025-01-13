@@ -251,14 +251,26 @@ const EditarDatosPersonales = () => {
       // Validar contraseñas si se están cambiando
       if (showPasswordFields) {
         if (camposModificados.password !== camposModificados.password2) {
-          Alert.alert('Error', 'Las contraseñas nuevas no coinciden');
+          if (Platform.OS === 'web') {
+            // Lanza un error específico para que se capture en el bloque catch
+            throw new Error('Las contraseñas nuevas no coinciden');
+          } else {
+            Alert.alert('Error', 'Las contraseñas nuevas no coinciden');
+          }
           return;
         }
+      
         if (!camposModificados.old_password) {
-          Alert.alert('Error', 'Debe ingresar la contraseña actual');
+          if (Platform.OS === 'web') {
+            // Lanza un error específico para que se capture en el bloque catch
+            throw new Error('Debe ingresar la contraseña actual');
+          } else {
+            Alert.alert('Error', 'Debe ingresar la contraseña actual');
+          }
           return;
         }
       }
+      
 
       // Si no hay cambios y no hay nueva imagen, no enviar la solicitud
       if (Object.keys(datosActualizados).length === 0 && !imageUri) {
@@ -275,28 +287,6 @@ const EditarDatosPersonales = () => {
       }
     });
 
-    /*
-      // Realizar la solicitud PATCH al backend
-      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(datosActualizados),
-      });
-  
-      if (response.ok) {
-        Alert.alert('Éxito', 'Datos actualizados correctamente.');
-        navigation.navigate('PantallaHome');
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        Alert.alert('Error', errorData.detail || 'No se pudieron guardar los cambios.');
-      }
-    } catch (error) {
-      console.error('Error al actualizar perfil:', error);
-      Alert.alert('Error', 'Ocurrió un problema con la conexión.');
-    }*/
 
     // Realizar la solicitud PATCH al backend usando FormData
     const response = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
@@ -373,7 +363,15 @@ const EditarDatosPersonales = () => {
         // Mostramos el mensaje de error en el Snackbar
         setMessage(errorMessage);
         setVisible(true);  // Mostrar el Snackbar
-} 
+} else if (error.message) {
+  // Mostrar el mensaje del error lanzado por las contraseñas no coincidentes
+  setMessage(error.message);
+  setVisible(true);  // Mostrar el Snackbar
+} else {
+  // Otro tipo de error genérico
+  setMessage('Ocurrió un error inesperado.');
+  setVisible(true);  // Mostrar el Snackbar
+}
   Alert.alert('Error', 'Ocurrió un problema con la conexión.');
 }
   };

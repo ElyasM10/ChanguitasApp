@@ -1,33 +1,26 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Alert,Modal } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
-import API_URL from '../API_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {cerrarSesion} from '../Autenticacion/authService';
-
+import api from '../Autenticacion/api';
+import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 const PantallaPerfiEditarUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  //Extraemos los datos del token para obtener el id 
- /*
-    El token  es una cadena codificada en base64url de tres partes:
-    <Encabezado>.<Cuerpo>.<Firma>
-  Encabezado: Describe el algoritmo y el tipo de token.
-  Cuerpo (Payload): Contiene los datos del usuario y otras informaciones (como user_id, role, iat, exp).
-  Firma: Garantiza que el token no ha sido alterado.
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
   
-  const decodeJWT = (token: string) => {
-    const base64Url = token.split('.')[1]; // Extrae la segunda parte del token (payload)
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Reemplaza caracteres no válidos para Base64
-    const decoded = JSON.parse(atob(base64)); // Decodifica y parsea el JSON
-    return decoded;
-  };
-  */
-  
+    const handleImagePress = () => {
+      setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
+    };
+
+    const handleCloseModal = () => {
+      setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
+    };
 
   // Interfaz para el tipo de datos del usuario
   interface Direccion {
@@ -88,26 +81,23 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
   
 
       // Se realiza la solicitud utilizando el ID del usuario
-      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
-        method: 'GET',
+      const response = await api.get(`/usuarios/${userId}/`, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`, // Incluimos el token en el encabezado
+          'Authorization': `Bearer ${accessToken}`, // Axios maneja automáticamente los headers
         },
       });
   
       console.log('Response status:', response.status); // Verificamos el estado de la respuesta
   
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error(`Error al obtener el usuario: ${response.status}`);
       }
-  
+
       // Procesa los datos recibidos
-      const data: Usuario = await response.json();
+      const data: Usuario = response.data;
       console.log('Datos del usuario recibidos:', data); // Verifica los datos del usuario
       setUsuario(data);
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
-
 
     } catch (error: any) {
       console.error('Error al cargar datos del usuario:', error); //  Detalles del error
@@ -165,14 +155,32 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Información del Usuario */}
-      <View style={estilos.seccionUsuario}>
-        <Image 
-          source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-          style={estilos.imagenUsuario} 
-        />
+        {/* Información del Usuario */}
+        <View style={estilos.seccionUsuario}>
+        <TouchableOpacity onPress={handleImagePress}>
+          <Image 
+            source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+            style={estilos.imagenUsuario} 
+          />
+        </TouchableOpacity>
         <Text style={estilos.nombreCompleto}>{usuario?.username}</Text>
       </View>
+      
+      <Modal
+        visible={modalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableWithoutFeedback onPress={handleCloseModal}>
+          <View style={estilos.modalContainer}>
+            <Image 
+              source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+              style={estilos.imagenModal} 
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
       {/* Datos adicionales */}
       <View style={estilos.datosExtras}>
@@ -376,6 +384,37 @@ const estilos = StyleSheet.create({
   textoDesplegable: {
     fontSize: 16,
     color: '#333333',
+  },
+   // Estilos para el modal
+   modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+  },
+  imagenGrande: {
+    width: '90%',
+    height: '80%',
+    borderRadius: 10,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+    borderRadius: 50,
+  },
+  closeText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  imagenModal: {
+    width: 200,   // Ajusta el tamaño de la imagen en el modal
+    height: 200,  
+    borderRadius: 100,  // Garantiza que la imagen sea circular
+    resizeMode: 'cover',  // Mantiene la proporción de la imagen
   },
 });
 export default PantallaPerfiEditarUsuario;

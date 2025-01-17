@@ -87,15 +87,16 @@ const AgregarServicio2 = () => {
   
     // Función para generar las opciones de hora
     const generarOpcionesHora = () => {
-      const horas = [];
-      for (let i = 0; i < 24; i++) {
-        const hora = `${i.toString().padStart(2, '0')}:00`;
-        horas.push(
+      const opciones = [];
+      for (let i = 0; i < 24; i++) {  // Generar horas entre 00 y 23
+        const hora = `${i.toString().padStart(2, '0')} hs`;  // Formato de hora: 00, 01, ..., 23
+        opciones.push(
           <Picker.Item label={hora} value={hora} key={hora} />
         );
       }
-      return horas;
+      return opciones;
     };
+
   return (
     <View style={estilos.contenedorPrincipal}>
       <View style={estilos.contenedorEncabezado}>
@@ -123,7 +124,9 @@ const AgregarServicio2 = () => {
               onValueChange={() => cambiarDia(dia)}
             />
             <Text style={estilos.textoDia}>{dia}</Text>
+
              {/* Picker para la hora de inicio */}
+             <View style={estilos.pickerContainer}>
              <Picker
               selectedValue={horasSeleccionadas[dia].inicio}
               onValueChange={(itemValue) => manejarCambioHora(dia, 'inicio', itemValue)}
@@ -132,10 +135,12 @@ const AgregarServicio2 = () => {
             >
               {generarOpcionesHora()}
             </Picker>
+            </View>
 
             <Text style={estilos.textoSeparador}> a </Text>
 
               {/* Picker para la hora de fin */}
+            <View style={estilos.pickerContainer}>
             <Picker
               selectedValue={horasSeleccionadas[dia].fin}
               onValueChange={(itemValue) => manejarCambioHora(dia, 'fin', itemValue)}
@@ -144,6 +149,8 @@ const AgregarServicio2 = () => {
             >
               {generarOpcionesHora()}
             </Picker>
+            </View>
+
           </View>
         ))}
 
@@ -303,12 +310,23 @@ const estilos = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: 120,
+    width: 121,
     marginVertical: 10,
   },
   pickerItem: {
     fontSize: 50, // Aumenta el tamaño de la fuente para que sea más fácil de leer
     paddingVertical: 30, // Da más espacio entre las opciones
+  },
+  pickerContainer: {
+    borderWidth: 1, // Borde alrededor del contenedor
+    borderColor: '#197278', // Color del borde
+    borderRadius: 8, // Bordes redondeados
+    backgroundColor: 'white', // Fondo blanco
+    shadowColor: '#000', // Color de la sombra
+    shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
+    shadowOpacity: 0.2, // Opacidad de la sombra
+    shadowRadius: 4, // Radio de la sombra
+    elevation: 4, // Elevación para Android
   },
 });
 

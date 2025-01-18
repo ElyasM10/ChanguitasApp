@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from '../../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -8,16 +8,20 @@ import API_URL from '../API_URL';
 import { Alert } from 'react-native';
 import {cerrarSesion} from '../Autenticacion/authService';
 import { renovarToken } from '../Autenticacion/authService';
+import { AuthContext } from '../Autenticacion/auth';
+
 
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [accessToken, setAccessToken] = useState('');
+  const [state,setState] = useContext(AuthContext);
   const caracteristicas = [
     '+30 servicios',
      'Confiable',
      'Ushuaia'
       
   ];
+
 
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -79,11 +83,32 @@ const PantallaHome = () => {
 
   const logout = async () => {
     try {
-      await cerrarSesion();
-      navigation.navigate('PantallaBienvenida');
+    
+
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      setState({ token: "" });
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      Alert.alert('Error', error.message);
+    
+      console.log('Error en el cierre de sesión:', error.message); // Log en caso de error
+      Alert.alert("Error", error.message);
+    } finally {
+
+      // Navegar a la pantalla de bienvenida
+      navigation.navigate("PantallaBienvenida");
+    
+
+      // Esperar y luego redirigir a la pantalla de inicio de sesión
+      setTimeout(() => {
+       
+        console.log('Redirigiendo a la pantalla de inicio de sesión'); 
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "PantallaInicioSesion" }],
+        });
+      }, 10); 
     }
+
   };
 
   return (
@@ -143,6 +168,7 @@ const PantallaHome = () => {
     </SafeAreaView>
   );
 };
+
 
 const estilos = StyleSheet.create({
   contenedor: {

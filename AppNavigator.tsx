@@ -33,6 +33,9 @@ import CrearCategoria from './screens/Admin/CrearCategoria';
 import EditarCategoria from './screens/Admin/EditarCategoria';
 import EditarDatosCategoria from './screens/Admin/EditarDatosCategoria';
 import SeleccionImagenes from './screens/SeleccionImagenes';
+import { useContext } from 'react';
+import { AuthContext } from './screens/Autenticacion/auth';
+import React from 'react';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -80,6 +83,7 @@ export type RootStackParamList = {
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList
 const Stack = createStackNavigator<RootStackParamList>();
 
+/*
 const AppNavigator = () => {
   return (
     <Stack.Navigator
@@ -88,7 +92,6 @@ const AppNavigator = () => {
     }}
   >
 
-      {/* Pantallas principales */}
       <Stack.Screen
         name="PantallaBienvenida"
         component={PantallaBienvenida}
@@ -244,13 +247,22 @@ const AppNavigator = () => {
 };
 
 export default AppNavigator;
+*/
 
-/*
-const AppNavigator = ({ isAuthenticated }) => {
+export default function  AppNavigator () {
+
+  const [state,setState] = useContext(AuthContext);
+
+  const authenticated =  state.token !=="" ; 
+  
   return (
-    <Stack.Navigator>
-
-      {isAuthenticated ? (
+    <Stack.Navigator
+    initialRouteName={authenticated ? "PantallaHome" : "PantallaInicioSesion"}
+    screenOptions={{
+      cardStyle: { flex: 1 }, // Para que el scroll funcione en web
+    }}
+  > 
+      {authenticated ? (
         <>
           <Stack.Screen 
             name="PantallaHome" 
@@ -273,13 +285,6 @@ const AppNavigator = ({ isAuthenticated }) => {
             component={PantallaPerfilEditarUsuario} 
             options={{ headerShown: false }}  
           />
-       
-        
-      <Stack.Screen 
-        name="PantallaRegistro" 
-        component={PantallaRegistro} 
-        options={{ headerShown: false }}  
-      />
       <Stack.Screen 
         name="PruebaSolicitud" 
         component={PruebaSolicitud} 
@@ -403,12 +408,16 @@ const AppNavigator = ({ isAuthenticated }) => {
         </>
       ) : (
         <>
-        
-          <Stack.Screen 
+         <Stack.Screen 
             name="PantallaInicioSesion" 
             component={PantallaInicioSesion} 
             options={{ headerShown: false }}  
           />
+          <Stack.Screen 
+          name="PantallaRegistro" 
+          component={PantallaRegistro} 
+          options={{ headerShown: false }}  
+        />
           <Stack.Screen 
             name="PantallaHome" 
             component={PantallaHome} 
@@ -424,6 +433,3 @@ const AppNavigator = ({ isAuthenticated }) => {
     </Stack.Navigator>
   );
 };
-
-export default AppNavigator;
-*/

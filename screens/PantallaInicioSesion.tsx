@@ -1,6 +1,6 @@
 
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../AppNavigator';
@@ -8,6 +8,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import API_URL from './API_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {handleLogin} from './Autenticacion/authService';
+import { AuthContext } from "./Autenticacion/auth";
+import axios from "axios";
 
 const PantallaInicioSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -15,40 +17,8 @@ const PantallaInicioSesion = () => {
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
-
-  /*
-  const handleLogin = async () => {
-    setErrorMessage(null); // Resetea el mensaje de error antes de intentar iniciar sesión
-    try {
-      const response = await fetch(`${API_URL}/login/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
-    
-
-      if (response.ok) {
-        const data = await response.json();
-        await AsyncStorage.setItem('accessToken', data.access); // `data.access` es el token de acceso
-        await AsyncStorage.setItem('refreshToken', data.refresh); // `data.refresh` es el token de refresco
-        //Lo guardamos para despues utilizarlo para mostrar el perfil por ejemplo
-        await AsyncStorage.setItem('userId', data.id.toString());
-        console.log('Tokens y id almacenados correctamente'); // Almacena el token recibido
-
-        navigation.navigate('PantallaHome');
-      } else {
-        const data = await response.json();
-        setErrorMessage(data.detail || 'Nombre de usuario o contraseña incorrectos');
-      }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      setErrorMessage('Hubo un error al conectar con el servidor. Inténtalo nuevamente.');
-    }
-  }; 
-   */
+  const [state, setState] = useContext(AuthContext);
+ 
   const login = async () => {
 
     if (!username.trim() || !password.trim()) {
@@ -58,14 +28,35 @@ const PantallaInicioSesion = () => {
     }
   
     try {
-      const data = await handleLogin(username, password);
-      console.log('Inicio de sesión exitoso:', data);
+      const {data} = await axios.post(`${API_URL}/login/`,{username,password,
+      });
 
-      // Redirige a PantallaHome si el login es exitoso
+      if (data.error) {
+        alert(data.error);
+        throw new Error(data.error); // Lanza un error con el mensaje del servidor
+    }
+        setState({
+          token: data.access,
+      });
+      await AsyncStorage.setItem("@auth", JSON.stringify({ token: data.access }));
+      
+      console.log("Token guardado: ", data.access);
+
+      // Almacena tokens y userId
+      await AsyncStorage.setItem('accessToken', data.access);
+      await AsyncStorage.setItem('refreshToken', data.refresh);
+      await AsyncStorage.setItem('userId', data.id.toString());
+     
+     // Limpiar los campos de username y password después del login exitoso
+     setusername(''); 
+     setPassword('');
+
       navigation.navigate('PantallaHome');
+     
     } catch (error) {
       setErrorMessage(error.message);
     }
+   
   };
 
 
@@ -135,6 +126,14 @@ const PantallaInicioSesion = () => {
             <Text style={estilos.textoBoton}>Ingresar</Text>
           </LinearGradient>
         </TouchableOpacity>
+
+             {/* Botón de registrarse */}
+      <TouchableOpacity
+        style={estilos.botonRegistrarse}
+        onPress={() => navigation.navigate('PantallaRegistro')} 
+      >
+        <Text style={estilos.textoRegistrarse}>¿No tienes una cuenta? Regístrate</Text>
+      </TouchableOpacity>
 
         {/* Texto de pie de página */}
         <Text style={estilos.textoPie}>
@@ -231,6 +230,18 @@ const estilos = StyleSheet.create({
     marginTop: 'auto',
     marginBottom: 80,
     paddingHorizontal: 40,
+  },
+  botonRegistrarse: {
+    marginTop: 20, // Espaciado entre el botón de "Ingresar" y el de "Registrarse"
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  textoRegistrarse: {
+    fontSize: 14, // Tamaño de fuente 
+    color: '#197278',
+    textDecorationLine: 'underline', // Subrayado
+    textDecorationColor: '#197278', // Color del subrayado 
+    textDecorationStyle: 'solid', // Estilo de subrayado
   },
 });
 

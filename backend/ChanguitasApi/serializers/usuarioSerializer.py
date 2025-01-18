@@ -76,7 +76,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             documento=validated_data['documento'],
             telefono=validated_data['telefono'],
-            fechaNacimiento=validated_data['fechaNacimiento'],
+            fechaNacimiento = validated_data.get('fechaNacimiento', None),
             direccion=direccion,
          #   fechaDisponible=validated_data['fechaDisponible'],
           #  horarioDisponible=validated_data['horarioDisponible'],

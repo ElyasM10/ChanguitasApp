@@ -54,8 +54,10 @@ export const cerrarSesion = async () => {
 
     if (response.ok) {
       console.log('Sesión cerrada correctamente');
-      await AsyncStorage.removeItem('accessToken');
-      await AsyncStorage.removeItem('refreshToken');
+     // await AsyncStorage.removeItem('accessToken');
+     // await AsyncStorage.removeItem('refreshToken');
+      
+      await AsyncStorage.clear();
     } else {
       const errorData = await response.json();
       console.error('Error al cerrar sesión:', errorData);

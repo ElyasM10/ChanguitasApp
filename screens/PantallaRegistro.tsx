@@ -46,7 +46,7 @@ const PantallaRegistro = () => {
       first_name: firstName,
       last_name: lastName,
       email,
-      documento: parseInt(documento, 10),
+      documento: parseInt(documento, 8),
       telefono: parseInt(telefono, 10),
       fotoPerfil: null,
       fechaNacimiento: fechaNacimientoFormatoCorrecto,
@@ -215,7 +215,7 @@ const PantallaRegistro = () => {
               <View style={estilos.campo}>
                 <Text style={estilos.etiqueta}>DNI</Text>
                 <TextInput
-                  placeholder="12.345.678"
+                  placeholder="12345678"
                   placeholderTextColor="#666"
                   style={estilos.entradaTexto}
                   value={documento}
@@ -226,7 +226,7 @@ const PantallaRegistro = () => {
               <View style={estilos.campo}>
                 <Text style={estilos.etiqueta}>Teléfono</Text>
                 <TextInput
-                  placeholder="02901-12345678"
+                  placeholder="2901245599"
                   placeholderTextColor="#666"
                   style={estilos.entradaTexto}
                   value={telefono}

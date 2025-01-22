@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Alert,Modal } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -8,11 +8,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {cerrarSesion} from '../Autenticacion/authService';
 import api from '../Autenticacion/api';
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { AuthContext } from '../Autenticacion/auth';
 
 const PantallaPerfiEditarUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
+  const [state,setState] = useContext(AuthContext);
   
     const handleImagePress = () => {
       setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -49,11 +51,32 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
 
   const logout = async () => {
     try {
-      await cerrarSesion();
-      navigation.navigate('PantallaBienvenida');
+    
+
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      setState({ token: "" });
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      Alert.alert('Error', error.message);
+    
+      console.log('Error en el cierre de sesión:', error.message); // Log en caso de error
+      Alert.alert("Error", error.message);
+    } finally {
+
+      // Navegar a la pantalla de bienvenida
+      navigation.navigate("PantallaBienvenida");
+    
+
+      // Esperar y luego redirigir a la pantalla de inicio de sesión
+      setTimeout(() => {
+       
+        console.log('Redirigiendo a la pantalla de inicio de sesión'); 
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "PantallaInicioSesion" }],
+        });
+      }, 10); 
     }
+
   };
 
   const toggleDesplegable = () => {

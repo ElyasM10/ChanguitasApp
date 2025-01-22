@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform} from 'react-native';
+import React, { useState,useEffect, useContext } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -11,6 +11,7 @@ import FormData from 'form-data';
 import { Snackbar } from 'react-native-paper';
 import EstilosEditarDatosPersonales from './estilos/EstilosEditarDatosPersonales';
 import {cerrarSesion} from '../Autenticacion/authService';
+import { AuthContext } from '../Autenticacion/auth';
 
 
 const EditarDatosPersonales = () => {
@@ -24,6 +25,8 @@ const EditarDatosPersonales = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [showPasswordFields, setShowPasswordFields] = useState(false);
+  const [state,setState] = useContext(AuthContext);
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
 
     // Estados para mostrar/ocultar contraseñas
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -64,16 +67,44 @@ const EditarDatosPersonales = () => {
     },
   });
 
+  const handleImagePress = () => {
+    setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
+  };
+
 
   const logout = async () => {
     try {
-      await cerrarSesion();
-      navigation.navigate('PantallaBienvenida');
+    
+
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      setState({ token: "" });
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      Alert.alert('Error', error.message);
+    
+      console.log('Error en el cierre de sesión:', error.message); // Log en caso de error
+      Alert.alert("Error", error.message);
+    } finally {
+
+      // Navegar a la pantalla de bienvenida
+      navigation.navigate("PantallaBienvenida");
+    
+
+      // Esperar y luego redirigir a la pantalla de inicio de sesión
+      setTimeout(() => {
+       
+        console.log('Redirigiendo a la pantalla de inicio de sesión'); 
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "PantallaInicioSesion" }],
+        });
+      }, 10); 
     }
+
   };
- 
   // Función para obtener la foto de perfil desde el backend
   const obtenerFotoPerfil = async () => {
     try {
@@ -122,62 +153,6 @@ const EditarDatosPersonales = () => {
     }
   };
 
-   /* const enviarFoto = async () => {
-      try {
-        if (!imageUri) {
-          alert("Por favor, selecciona una imagen antes de enviarla.");
-          return;
-        }
-    
-        const formData = new FormData();
-    
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-        const fileType = blob.type.split('/')[1] || 'jpg'; // Define un tipo por defecto si no se encuentra
-        
-      if(Platform.OS ==="web"){  
-        formData.append('fotoPerfil', blob, `photo.${fileType}`);
-      }else if(Platform.OS ==="android"){
-        formData.append('fotoPerfil', {
-          uri: imageUri, // URI de la imagen seleccionada.
-          name: 'photo.png', // Nombre del archivo.
-          type: 'image/png', // Tipo MIME del archivo.
-        });
-      }
-
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        const userId = await AsyncStorage.getItem('userId');
-    
-        if (!accessToken || !userId) {
-          throw new Error('No se encontraron credenciales de usuario');
-        }
-    
-        const respuesta = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'multipart/form-data',
-          }
-        });
-    
-       // console.log('Response Data:', respuesta.data);
-        Alert.alert('Éxito', 'Foto de perfil actualizada correctamente.');
-      } catch (error) {
-        if (error.response) {
-          // Errores de respuesta del servidor (códigos 4xx o 5xx)
-          console.error('Error en la respuesta del servidor:', error.response.data);
-          Alert.alert('Error', `Servidor respondió con un error: ${error.response.data.detail || 'Desconocido'}`);
-        } else if (error.request) {
-          // Errores de la solicitud (el servidor no responde o no se alcanza)
-          console.error('Error en la solicitud:', error.request);
-          Alert.alert('Error', 'No se pudo alcanzar el servidor. Por favor, verifica tu conexión.');
-        } else {
-          // Otros errores (problemas de formato, configuración, etc.)
-          console.error('Error general:', error.message);
-          Alert.alert('Error', `Ocurrió un error: ${error.message}`);
-        }
-      }
-    };
-*/
 
     const toggleDesplegable = () => {
       setMostrarDesplegable(!mostrarDesplegable);
@@ -490,22 +465,33 @@ const EditarDatosPersonales = () => {
 
        {/* Sección para cambiar la foto */}
        <View style={EstilosEditarDatosPersonales.seccionFoto}>
+       <TouchableOpacity onPress={handleImagePress}>
           <Image 
             source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
             style={EstilosEditarDatosPersonales.imagenUsuario} 
           />
+          </TouchableOpacity>
           <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
             <Text style={EstilosEditarDatosPersonales.cambiarFotoTexto}>Cambiar foto</Text>
           </TouchableOpacity>
-      
-          {/* Botón para enviar la foto 
-          <TouchableOpacity onPress={enviarFoto}>
-            <Text style={EstilosEditarDatosPersonales.cambiarFotoTexto}>Enviar Foto</Text>
-          </TouchableOpacity>
         </View>
-        */}
 
-        </View>
+        <Modal
+        visible={modalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableWithoutFeedback onPress={handleCloseModal}>
+          <View style={EstilosEditarDatosPersonales.modalContainer}>
+            <Image 
+              source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+              style={EstilosEditarDatosPersonales.imagenModal} 
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
 
           {/* Formulario de datos personales */}
           <View style={EstilosEditarDatosPersonales.formulario}>

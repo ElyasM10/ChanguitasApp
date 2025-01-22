@@ -1,15 +1,16 @@
-import React, { useState} from 'react';
+import React, { useContext, useState} from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image,Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import {cerrarSesion} from '../Autenticacion/authService';
+import { AuthContext } from '../Autenticacion/auth';
 
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-
+  const [state,setState] = useContext(AuthContext);
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -18,12 +19,34 @@ const Historial1 = () => {
 
   const logout = async () => {
     try {
-      await cerrarSesion();
-      navigation.navigate('PantallaBienvenida');
+    
+
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      setState({ token: "" });
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      Alert.alert('Error', error.message);
+    
+      console.log('Error en el cierre de sesión:', error.message); // Log en caso de error
+      Alert.alert("Error", error.message);
+    } finally {
+
+      // Navegar a la pantalla de bienvenida
+      navigation.navigate("PantallaBienvenida");
+    
+
+      // Esperar y luego redirigir a la pantalla de inicio de sesión
+      setTimeout(() => {
+       
+        console.log('Redirigiendo a la pantalla de inicio de sesión'); 
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "PantallaInicioSesion" }],
+        });
+      }, 10); 
     }
+
   };
+
 
   return (
     <SafeAreaView style={estilos.contenedor}>

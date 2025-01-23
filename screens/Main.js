@@ -5,10 +5,10 @@ import AppNavigator from "../AppNavigator"; // Asegúrate de importar AppNavigat
 
 export default function Main() {
     return (
-        <NavigationContainer>
+    //    <NavigationContainer>
             <AuthProvider>
                 <AppNavigator />
             </AuthProvider>
-        </NavigationContainer>
+      //  </NavigationContainer>
     );
 }

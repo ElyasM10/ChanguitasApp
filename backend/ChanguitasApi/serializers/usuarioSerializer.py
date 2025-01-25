@@ -23,7 +23,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'password': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
             'password2': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
             'direccion': {'required': False},
-            'fechaNacimiento': {'read_only': True}  # Hace que fechaNacimiento sea de solo lectura
+            'fechaNacimiento': {'required': True}
+           # 'fechaNacimiento': {'read_only': True} 
         }
 
     def validate(self, data):

@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth import authenticate
 from ChanguitasApi.models import Usuario, Direccion
 from rest_framework import serializers
@@ -25,8 +26,17 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'fechaNacimiento': {'read_only': True}  # Hace que fechaNacimiento sea de solo lectura
         }
 
-
     def validate(self, data):
+        if self.instance is None and 'fechaNacimiento' in data:
+            birthdate = data['fechaNacimiento']
+            today = date.today()
+            age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+            
+            if age < 18:
+                raise serializers.ValidationError({
+                    "fechaNacimiento": "Debes tener al menos 18 años para registrarte."
+                })
+
         # Validación para creación de usuario
         if self.instance is None:  # Es una creación
             if 'password' in data and 'password2' in data:

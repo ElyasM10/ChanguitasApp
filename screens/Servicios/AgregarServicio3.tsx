@@ -30,23 +30,20 @@ const AgregarServicio3 = () => {
       return;
     }
 
-   //Este era solo para enviar uno a la vez 
-//    const primerDia = datosSeleccionados.dias[0];
-//   const datosServicio = {
-  //    nombreServicio: datosSeleccionados.nombreServicio,
-    //  descripcion: datosSeleccionados.descripcion,
-    //  dia: primerDia.dia, // El nombre del primer día
-    //  desdeHora: primerDia.desdeHora || '00:00:00', // Hora de inicio (o '00:00:00' si no está definida)
-    //  hastaHora: primerDia.hastaHora || '00:00:00', // Hora de fin (o '00:00:00' si no está definida)
-   // };
-    
+ 
    // Armo la lista de datos para enviar
-  const datosServicio = datosSeleccionados.dias.map((dia) => ({
+   const formatearHora = (hora: string) => {
+    const [horaPartes, minutos] = hora.split(':');
+    return `${horaPartes}:${minutos}:00`;  // Añadir los segundos
+  };
+  
+  // Uso en el frontend para enviar los datos
+  const datosServicio = datosSeleccionados.dias.map(dia => ({
     nombreServicio: datosSeleccionados.nombreServicio,
     descripcion: datosSeleccionados.descripcion,
-    dia: dia.dia, 
-    desdeHora: dia.desdeHora || '00:00:00', 
-    hastaHora: dia.hastaHora || '00:00:00', 
+    dia: dia.dia,
+    desdeHora: formatearHora(dia.desdeHora),
+    hastaHora: formatearHora(dia.hastaHora),
   }));
  
 
@@ -66,6 +63,8 @@ const AgregarServicio3 = () => {
     try {
       // Verifica que los datos estén bien formateados
       console.log('Preparando el POST...');
+      console.log("Datos que se enviarán al backend:", JSON.stringify(datosServicio, null, 2));
+
       const response = await fetch(`${API_URL}/servicios/`, {
         method: 'POST',
         headers: {
@@ -76,13 +75,16 @@ const AgregarServicio3 = () => {
       });
 
       console.log('Respuesta de la API:', response);
+      
+      const data = await response.json();
 
       if (!response.ok) {
         console.log('Respuesta no OK:', response.status, response.statusText);
+        console.error("Detalles del error:", data);  // Muestra los detalles
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json();
+      
       console.log('Datos recibidos de la API:', data);
 
       Alert.alert('Éxito', 'Servicio creado exitosamente');

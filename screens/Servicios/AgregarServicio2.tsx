@@ -90,7 +90,7 @@ const AgregarServicio2 = () => {
       const opciones = [];
       for (let i = 0; i < 24; i++) { // Generar horas entre 00 y 23
         for (let j = 0; j < 60; j += 30) { // Generar minutos en intervalos de 30
-          const hora = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')} hs`; // Formato: 00:00, 00:30, etc.
+          const hora = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')}`; // Formato: 00:00, 00:30, etc.
           opciones.push(
             <Picker.Item label={hora} value={hora} key={hora} />
           );

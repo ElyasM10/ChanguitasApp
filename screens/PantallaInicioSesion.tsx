@@ -63,14 +63,7 @@ const PantallaInicioSesion = () => {
   return (
     <SafeAreaView style={estilos.areaSegura}>
       <View style={estilos.contenedor}>
-        {/* Botón de volver */}
         <View style={estilos.encabezado}>
-          <TouchableOpacity 
-            style={estilos.botonAtras} 
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
           <Text style={estilos.titulo}>Iniciar sesión</Text>
         </View>
 

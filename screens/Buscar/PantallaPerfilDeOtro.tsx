@@ -1,15 +1,56 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Linking  } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Linking,Alert  } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../API_URL';
+import {cerrarSesion} from '../Autenticacion/authService';
+import { AuthContext } from '../Autenticacion/auth';
 
 const PantallaPerfilDeOtro = () => {
 
   const route = useRoute<RouteProp<RootStackParamList, 'PantallaPerfilDeOtro'>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [state,setState] = useContext(AuthContext);
+  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
+
+
+  const toggleDesplegable = () => {
+    setMostrarDesplegable(!mostrarDesplegable);
+  };
+
+
+
+  const logout = async () => {
+    try {
+    
+
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      setState({ token: "" });
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
+    } catch (error) {
+    
+      console.log('Error en el cierre de sesión:', error.message); // Log en caso de error
+      Alert.alert("Error", error.message);
+    } finally {
+
+      // Navegar a la pantalla de bienvenida
+      navigation.navigate("PantallaBienvenida");
+    
+
+      // Esperar y luego redirigir a la pantalla de inicio de sesión
+      setTimeout(() => {
+       
+        console.log('Redirigiendo a la pantalla de inicio de sesión'); 
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "PantallaInicioSesion" }],
+        });
+      }, 10); 
+    }
+
+  };
 
   interface Direccion {
     calle: string;
@@ -121,10 +162,20 @@ const PantallaPerfilDeOtro = () => {
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={estilos.textoEncabezado}>Perfil de {usuario?.first_name}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toggleDesplegable}>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
         </TouchableOpacity>
       </View>
+
+            {/* Menú Desplegable */}
+            {mostrarDesplegable && (
+        <View style={estilos.desplegable}>
+          <TouchableOpacity onPress={logout} style={estilos.opcionDesplegable}>
+            <Text style={estilos.textoDesplegable}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
 
       {/* Información del Usuario */}
       <View style={estilos.seccionUsuario}>
@@ -332,6 +383,29 @@ const estilos = StyleSheet.create({
   textoNavegacion: {
     fontSize: 12,
     color: 'gray',
+  },
+  desplegable: {
+    position: 'absolute',
+    top: 80,
+    right: 20,
+    width: 150,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    zIndex: 10,
+  },
+  opcionDesplegable: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  textoDesplegable: {
+    fontSize: 16,
+    color: '#333333',
   },
 });
 

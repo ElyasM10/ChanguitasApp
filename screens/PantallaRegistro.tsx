@@ -38,15 +38,36 @@ const PantallaRegistro = () => {
       return;
     }
   
+    if (!fechaNacimiento.trim()) {
+      Alert.alert('Error', 'El campo de fecha de nacimiento no puede estar vacío.');
+      setErrorMessage('El campo de fecha de nacimiento no puede estar vacío.');
+      return;
+    }
+    
     // Reformatea fecha de nacimiento a 'YYYY-MM-DD'
     const fechaNacimientoFormatoCorrecto = fechaNacimiento.split('/').reverse().join('-');
   
+    const birthDate = new Date(fechaNacimientoFormatoCorrecto);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+  
+    if (age < 18) {
+      Alert.alert('Error', 'Debes tener al menos 18 años para registrarte');
+      setErrorMessage('Debes tener al menos 18 años para registrarte');
+      return;
+    }
+
     const usuario = {
       username,
       first_name: firstName,
       last_name: lastName,
       email,
-      documento: parseInt(documento, 10),
+      documento: parseInt(documento, 8),
       telefono: parseInt(telefono, 10),
       fotoPerfil: null,
       fechaNacimiento: fechaNacimientoFormatoCorrecto,
@@ -215,7 +236,7 @@ const PantallaRegistro = () => {
               <View style={estilos.campo}>
                 <Text style={estilos.etiqueta}>DNI</Text>
                 <TextInput
-                  placeholder="12.345.678"
+                  placeholder="12345678"
                   placeholderTextColor="#666"
                   style={estilos.entradaTexto}
                   value={documento}
@@ -226,7 +247,7 @@ const PantallaRegistro = () => {
               <View style={estilos.campo}>
                 <Text style={estilos.etiqueta}>Teléfono</Text>
                 <TextInput
-                  placeholder="02901-12345678"
+                  placeholder="2901245599"
                   placeholderTextColor="#666"
                   style={estilos.entradaTexto}
                   value={telefono}

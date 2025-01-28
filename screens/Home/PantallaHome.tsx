@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from '../../AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -7,9 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../API_URL';
 import { Alert } from 'react-native';
 import {cerrarSesion} from '../Autenticacion/authService';
+import { renovarToken } from '../Autenticacion/authService';
+import { AuthContext } from '../Autenticacion/auth';
+
 
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
+  const [accessToken, setAccessToken] = useState('');
+  const [state,setState] = useContext(AuthContext);
   const caracteristicas = [
     '+30 servicios',
      'Confiable',
@@ -18,76 +23,92 @@ const PantallaHome = () => {
   ];
 
 
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
-const renovarToken = async () => {
-  try {
-    const refreshToken = await AsyncStorage.getItem('refreshToken');
-    if (!refreshToken) throw new Error('No se encontró el token de actualización');
+  useEffect(() => {
+    // Obtén el token de acceso al cargar el componente
+    const fetchAccessToken = async () => {
+      const storedAccessToken = await AsyncStorage.getItem('accessToken');
+      if (storedAccessToken) {
+        setAccessToken(storedAccessToken);
+      }
+    };
 
-    const response = await fetch(`${API_URL}/token/refresh/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh: refreshToken }),
-    });
+    fetchAccessToken();
 
-    if (response.ok) {
-      const data = await response.json();
-      await AsyncStorage.setItem('accessToken', data.access); // Almacena el nuevo token
-      return data.access;
-    } else {
-      const errorData = await response.json();
-      console.error('Error al renovar el token:', errorData);
-      return null;
-    }
-  } catch (error) {
-    console.error('Error al intentar renovar el token:', error);
-    return null;
-  }
-};
+    // Refrescar el token cada 5 minutos (300000ms)
+    const intervalId = setInterval(async () => {
+      const newAccessToken = await renovarToken();
+      if (newAccessToken) {
+        setAccessToken(newAccessToken);
+      }
+    },60000);// 60000:1 minuto,300000); // 5 minutos
 
-/*
-  // Función para cerrar sesión
-  const cerrarSesion = async () => {
+    // Limpia el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId);
+  }, []);
+
+  /*
+  const renovarToken = async () => {
     try {
       const refreshToken = await AsyncStorage.getItem('refreshToken');
-      if (!refreshToken) throw new Error('No se encontró el refresh token');
-      
-  
-      const response = await fetch(`${API_URL}/logout/`, {
+      if (!refreshToken) throw new Error('No se encontró el token de actualización');
+
+      const response = await fetch(`${API_URL}/refresh/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refresh_token: refreshToken }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh: refreshToken }),
       });
-  
+
       if (response.ok) {
-        console.log('Sesión cerrada correctamente');
-        console.log('Refresh Token:', refreshToken);
-        await AsyncStorage.removeItem('accessToken');
-        await AsyncStorage.removeItem('refreshToken');
-        navigation.navigate('PantallaBienvenida');
+        const data = await response.json();
+        await AsyncStorage.setItem('accessToken', data.access); // Almacena el nuevo token
+        return data.access;
       } else {
         const errorData = await response.json();
-        console.error('Error al cerrar sesión:', errorData);
+        console.error('Error al renovar el token:', errorData);
+        return null;
       }
     } catch (error) {
-      console.error('Error al realizar la solicitud de logout:', error);
+      console.error('Error al intentar renovar el token:', error);
+      return null;
     }
   };
-  */
+ */
+
   const logout = async () => {
     try {
-      await cerrarSesion();
-      navigation.navigate('PantallaBienvenida');
+    
+
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      setState({ token: "" });
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      Alert.alert('Error', error.message);
+    
+      console.log('Error en el cierre de sesión:', error.message); // Log en caso de error
+      Alert.alert("Error", error.message);
+    } finally {
+
+      // Navegar a la pantalla de bienvenida
+      navigation.navigate("PantallaBienvenida");
+    
+
+      // Esperar y luego redirigir a la pantalla de inicio de sesión
+      setTimeout(() => {
+       
+        console.log('Redirigiendo a la pantalla de inicio de sesión'); 
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "PantallaInicioSesion" }],
+        });
+      }, 10); 
     }
+
   };
 
   return (
@@ -147,6 +168,7 @@ const renovarToken = async () => {
     </SafeAreaView>
   );
 };
+
 
 const estilos = StyleSheet.create({
   contenedor: {

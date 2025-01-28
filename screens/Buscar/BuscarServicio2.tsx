@@ -107,14 +107,19 @@ const BuscarServicio2 = () => {
     }));
   };
 
-  const generateHourOptions = () => {
-    const options = [];
-    for (let i = 0; i < 24; i++) {
-      const hour = i < 10 ? `0${i}:00` : `${i}:00`;
-      options.push(<Picker.Item key={hour} label={hour} value={hour} />);
-    }
-    return options;
-  };
+   // Función para generar las opciones de hora
+   const generateHourOptions = () => {
+      const opciones = [];
+      for (let i = 0; i < 24; i++) { // Generar horas entre 00 y 23
+        for (let j = 0; j < 60; j += 30) { // Generar minutos en intervalos de 30
+          const hora = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')} hs`; // Formato: 00:00, 00:30, etc.
+          opciones.push(
+            <Picker.Item label={hora} value={hora} key={hora} />
+          );
+        }
+      }
+      return opciones;
+    };
 
   return (
     <View style={styles.container}>
@@ -133,27 +138,32 @@ const BuscarServicio2 = () => {
               />
               <Text style={styles.dayText}>{day}</Text>
               
-              {/* Picker para la hora de inicio */}
-              <Picker
-                selectedValue={hours[day].start}
-                onValueChange={(itemValue) => handleTimeChange(day, 'start', itemValue)}
-                enabled={days[day]}
-                style={styles.picker}
-              >
-                {generateHourOptions()}
-              </Picker>
+            {/* Picker para la hora de inicio */}
+            <View style={styles.pickerContainer}>
+             <Picker
+              selectedValue={hours[day].inicio}
+              onValueChange={(itemValue) => handleTimeChange(day, 'inicio', itemValue)}
+              enabled={days[day]}
+              style={styles.picker}
+            >
+              {generateHourOptions()}
+            </Picker>
+            </View>
 
               <Text style={styles.toText}> a </Text>
 
-               {/* Picker para la hora de fin */}
-              <Picker
-                selectedValue={hours[day].end}
-                onValueChange={(itemValue) => handleTimeChange(day, 'end', itemValue)}
-                enabled={days[day]}
-                style={styles.picker}
-              >
-                {generateHourOptions()}
-              </Picker>
+            {/* Picker para la hora de fin */}
+            <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={hours[day].fin}
+              onValueChange={(itemValue) => handleTimeChange(day, 'fin', itemValue)}
+              enabled={days[day]}
+              style={styles.picker}
+            >
+              {generateHourOptions()}
+            </Picker>
+            </View>
+
             </View>
           ))}
         </View>
@@ -337,12 +347,23 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: 120,
+    width: 121,
     marginVertical: 10,
   },
   pickerItem: {
     fontSize: 50, // Aumenta el tamaño de la fuente para que sea más fácil de leer
     paddingVertical: 30, // Da más espacio entre las opciones
+  },
+  pickerContainer: {
+    borderWidth: 1, // Borde alrededor del contenedor
+    borderColor: '#197278', // Color del borde
+    borderRadius: 8, // Bordes redondeados
+    backgroundColor: 'white', // Fondo blanco
+    shadowColor: '#000', // Color de la sombra
+    shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
+    shadowOpacity: 0.2, // Opacidad de la sombra
+    shadowRadius: 4, // Radio de la sombra
+    elevation: 4, // Elevación para Android
   },
 });
 

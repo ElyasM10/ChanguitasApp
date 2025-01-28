@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform} from 'react-native';
+import React, { useState,useEffect, useContext } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -10,16 +10,23 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { Snackbar } from 'react-native-paper';
 import EstilosEditarDatosPersonales from './estilos/EstilosEditarDatosPersonales';
+import {cerrarSesion} from '../Autenticacion/authService';
+import { AuthContext } from '../Autenticacion/auth';
 
 
 const EditarDatosPersonales = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
+ //Estado para el cerrarSesion
+ const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
+
   // Estado para la foto de perfil
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [showPasswordFields, setShowPasswordFields] = useState(false);
+  const [state,setState] = useContext(AuthContext);
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
 
     // Estados para mostrar/ocultar contraseñas
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -60,7 +67,44 @@ const EditarDatosPersonales = () => {
     },
   });
 
+  const handleImagePress = () => {
+    setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
+  };
 
+  const handleCloseModal = () => {
+    setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
+  };
+
+
+  const logout = async () => {
+    try {
+    
+
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      setState({ token: "" });
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
+    } catch (error) {
+    
+      console.log('Error en el cierre de sesión:', error.message); // Log en caso de error
+      Alert.alert("Error", error.message);
+    } finally {
+
+      // Navegar a la pantalla de bienvenida
+      navigation.navigate("PantallaBienvenida");
+    
+
+      // Esperar y luego redirigir a la pantalla de inicio de sesión
+      setTimeout(() => {
+       
+        console.log('Redirigiendo a la pantalla de inicio de sesión'); 
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "PantallaInicioSesion" }],
+        });
+      }, 10); 
+    }
+
+  };
   // Función para obtener la foto de perfil desde el backend
   const obtenerFotoPerfil = async () => {
     try {
@@ -109,65 +153,23 @@ const EditarDatosPersonales = () => {
     }
   };
 
-   /* const enviarFoto = async () => {
-      try {
-        if (!imageUri) {
-          alert("Por favor, selecciona una imagen antes de enviarla.");
-          return;
-        }
-    
-        const formData = new FormData();
-    
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-        const fileType = blob.type.split('/')[1] || 'jpg'; // Define un tipo por defecto si no se encuentra
-        
-      if(Platform.OS ==="web"){  
-        formData.append('fotoPerfil', blob, `photo.${fileType}`);
-      }else if(Platform.OS ==="android"){
-        formData.append('fotoPerfil', {
-          uri: imageUri, // URI de la imagen seleccionada.
-          name: 'photo.png', // Nombre del archivo.
-          type: 'image/png', // Tipo MIME del archivo.
-        });
-      }
 
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        const userId = await AsyncStorage.getItem('userId');
-    
-        if (!accessToken || !userId) {
-          throw new Error('No se encontraron credenciales de usuario');
-        }
-    
-        const respuesta = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'multipart/form-data',
-          }
-        });
-    
-       // console.log('Response Data:', respuesta.data);
-        Alert.alert('Éxito', 'Foto de perfil actualizada correctamente.');
-      } catch (error) {
-        if (error.response) {
-          // Errores de respuesta del servidor (códigos 4xx o 5xx)
-          console.error('Error en la respuesta del servidor:', error.response.data);
-          Alert.alert('Error', `Servidor respondió con un error: ${error.response.data.detail || 'Desconocido'}`);
-        } else if (error.request) {
-          // Errores de la solicitud (el servidor no responde o no se alcanza)
-          console.error('Error en la solicitud:', error.request);
-          Alert.alert('Error', 'No se pudo alcanzar el servidor. Por favor, verifica tu conexión.');
-        } else {
-          // Otros errores (problemas de formato, configuración, etc.)
-          console.error('Error general:', error.message);
-          Alert.alert('Error', `Ocurrió un error: ${error.message}`);
-        }
-      }
+    const toggleDesplegable = () => {
+      setMostrarDesplegable(!mostrarDesplegable);
     };
-*/
 
   // Función para guardar cambios
   const guardarCambios = async () => {
+
+     // Validación de que los tres campos de contraseña estén completos
+  if (!camposModificados.old_password || !camposModificados.password || !camposModificados.password2) {
+    // Si alguno de los campos está vacío, mostrar un mensaje en el Snackbar
+    setMessage('Por favor, complete todos los campos de contraseña.');
+    setVisible(true); // Mostrar el Snackbar
+    return; // No continuar con el proceso de guardar cambios
+  }
+
+
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
       const userId = await AsyncStorage.getItem('userId');
@@ -234,14 +236,26 @@ const EditarDatosPersonales = () => {
       // Validar contraseñas si se están cambiando
       if (showPasswordFields) {
         if (camposModificados.password !== camposModificados.password2) {
-          Alert.alert('Error', 'Las contraseñas nuevas no coinciden');
+          if (Platform.OS === 'web') {
+            // Lanza un error específico para que se capture en el bloque catch
+            throw new Error('Las contraseñas nuevas no coinciden');
+          } else {
+            Alert.alert('Error', 'Las contraseñas nuevas no coinciden');
+          }
           return;
         }
+      
         if (!camposModificados.old_password) {
-          Alert.alert('Error', 'Debe ingresar la contraseña actual');
+          if (Platform.OS === 'web') {
+            // Lanza un error específico para que se capture en el bloque catch
+            throw new Error('Debe ingresar la contraseña actual');
+          } else {
+            Alert.alert('Error', 'Debe ingresar la contraseña actual');
+          }
           return;
         }
       }
+      
 
       // Si no hay cambios y no hay nueva imagen, no enviar la solicitud
       if (Object.keys(datosActualizados).length === 0 && !imageUri) {
@@ -258,28 +272,6 @@ const EditarDatosPersonales = () => {
       }
     });
 
-    /*
-      // Realizar la solicitud PATCH al backend
-      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(datosActualizados),
-      });
-  
-      if (response.ok) {
-        Alert.alert('Éxito', 'Datos actualizados correctamente.');
-        navigation.navigate('PantallaHome');
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        Alert.alert('Error', errorData.detail || 'No se pudieron guardar los cambios.');
-      }
-    } catch (error) {
-      console.error('Error al actualizar perfil:', error);
-      Alert.alert('Error', 'Ocurrió un problema con la conexión.');
-    }*/
 
     // Realizar la solicitud PATCH al backend usando FormData
     const response = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
@@ -300,7 +292,6 @@ const EditarDatosPersonales = () => {
   if (error.response && error.response.status === 400) {
           const errorData = error.response.data; 
   let errorMessage = '';
-  console.log("Bad request");
   // Diccionario para traducir claves y mensajes
   const translations = {
     email: 'Correo electrónico',
@@ -310,6 +301,7 @@ const EditarDatosPersonales = () => {
     altura: 'Altura',
     password: 'Contraseña',
     password2: 'Repetir contraseña',
+    old_password:'Contraseña',
   };
 
   const translatedErrors = {
@@ -356,7 +348,15 @@ const EditarDatosPersonales = () => {
         // Mostramos el mensaje de error en el Snackbar
         setMessage(errorMessage);
         setVisible(true);  // Mostrar el Snackbar
-} 
+} else if (error.message) {
+  // Mostrar el mensaje del error lanzado por las contraseñas no coincidentes
+  setMessage(error.message);
+  setVisible(true);  // Mostrar el Snackbar
+} else {
+  // Otro tipo de error genérico
+  setMessage('Ocurrió un error inesperado.');
+  setVisible(true);  // Mostrar el Snackbar
+}
   Alert.alert('Error', 'Ocurrió un problema con la conexión.');
 }
   };
@@ -434,7 +434,21 @@ const EditarDatosPersonales = () => {
       {/* Header con Perfil*/}
       <View style={EstilosEditarDatosPersonales.header}>
         <Text style={EstilosEditarDatosPersonales.textoEncabezado}>Perfil</Text>
+        <TouchableOpacity onPress={toggleDesplegable}>
+          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+        </TouchableOpacity>
       </View>
+
+  
+          {/* Menú Desplegable */}
+          {mostrarDesplegable && (
+        <View style={EstilosEditarDatosPersonales.desplegable}>
+          <TouchableOpacity onPress={logout} style={EstilosEditarDatosPersonales.opcionDesplegable}>
+            <Text style={EstilosEditarDatosPersonales.textoDesplegable}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
 
      {/* Barra de pestañas */}
      <View style={EstilosEditarDatosPersonales.barraPestanas}>
@@ -451,22 +465,33 @@ const EditarDatosPersonales = () => {
 
        {/* Sección para cambiar la foto */}
        <View style={EstilosEditarDatosPersonales.seccionFoto}>
+       <TouchableOpacity onPress={handleImagePress}>
           <Image 
             source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
             style={EstilosEditarDatosPersonales.imagenUsuario} 
           />
+          </TouchableOpacity>
           <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
             <Text style={EstilosEditarDatosPersonales.cambiarFotoTexto}>Cambiar foto</Text>
           </TouchableOpacity>
-      
-          {/* Botón para enviar la foto 
-          <TouchableOpacity onPress={enviarFoto}>
-            <Text style={EstilosEditarDatosPersonales.cambiarFotoTexto}>Enviar Foto</Text>
-          </TouchableOpacity>
         </View>
-        */}
 
-        </View>
+        <Modal
+        visible={modalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableWithoutFeedback onPress={handleCloseModal}>
+          <View style={EstilosEditarDatosPersonales.modalContainer}>
+            <Image 
+              source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+              style={EstilosEditarDatosPersonales.imagenModal} 
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
 
           {/* Formulario de datos personales */}
           <View style={EstilosEditarDatosPersonales.formulario}>
@@ -617,7 +642,7 @@ const EditarDatosPersonales = () => {
         <TouchableOpacity onPress={guardarCambios} style={EstilosEditarDatosPersonales.botonGuardarCambios}>
           <Text style={EstilosEditarDatosPersonales.textoBotonGuardar}>Guardar Cambios</Text>
         </TouchableOpacity>
-      )}
+      )} 
 
       <Snackbar
         visible={visible}

@@ -43,10 +43,10 @@ class UsuarioManager(BaseUserManager):
 class Usuario(AbstractUser):
     #nombre, apellido, contraseña y email lo trae por defecto el usuario de django
     documento = models.IntegerField(unique=True, blank=False, null=False)
-    telefono = models.IntegerField(blank=True, null=True)
+    telefono = models.IntegerField(blank=True, null=False, default=1234)
     # fotoPerfil - blank=True se debe sacar una vez terminado el proyecto
     fotoPerfil = models.ImageField(upload_to='imagenesUsuario', null=True, blank=True, default='imagenesUsuario/empty.jpg')
-    fechaNacimiento = models.DateField(blank=False, null=True, verbose_name="fecha nacimiento")
+    fechaNacimiento = models.DateField(blank=False, null=False, verbose_name="fecha nacimiento", default="2000-01-01")
     direccion = models.OneToOneField(Direccion, on_delete=models.CASCADE, null=False)
     # explote las clases hijas Cliente y Proveedor en Usuario ya que un usuario va a poder contratar y ser contratado
     # por lo tanto y al final de cuentas, hace lo mismo sin importar la diferenciación de tipo de usuario.

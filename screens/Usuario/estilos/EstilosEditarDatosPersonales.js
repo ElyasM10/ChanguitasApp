@@ -7,10 +7,13 @@ const EstilosEditarDatosPersonales = StyleSheet.create({
       marginTop:43,
     },
     header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
       alignItems: 'center',
-      paddingTop: 10,
-      paddingBottom: 15,
+      paddingHorizontal: 20,
+      paddingVertical: 15,
       backgroundColor: 'white',
+      marginTop: 5,
     },
     textoEncabezado: {
       fontSize: 24,
@@ -153,6 +156,42 @@ const EstilosEditarDatosPersonales = StyleSheet.create({
     iconoOjo: {
       padding: 10,
     },
+    desplegable: {
+      position: 'absolute',
+      top: 70,
+      right: 20,
+      width: 150,
+      backgroundColor: '#ffffff',
+      borderRadius: 16,
+      paddingVertical: 10,
+      shadowColor: '#000',
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 5,
+      zIndex: 10,
+    },
+    opcionDesplegable: {
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+    },
+    textoDesplegable: {
+      fontSize: 16,
+      color: '#333333',
+    },
+       // Estilos para el modal
+   modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+  },
+  imagenModal: {
+    width: 200,   // Ajusta el tamaño de la imagen en el modal
+    height: 200,  
+    borderRadius: 100,  // Garantiza que la imagen sea circular
+    resizeMode: 'cover',  // Mantiene la proporción de la imagen
+  },
   });
   
   export default EstilosEditarDatosPersonales;

@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth import authenticate
 from ChanguitasApi.models import Usuario, Direccion
 from rest_framework import serializers
@@ -22,11 +23,21 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'password': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
             'password2': {'write_only': True, 'required': False},  # No es obligatorio en la actualización
             'direccion': {'required': False},
-            'fechaNacimiento': {'read_only': True}  # Hace que fechaNacimiento sea de solo lectura
+            'fechaNacimiento': {'required': True}
+           # 'fechaNacimiento': {'read_only': True} 
         }
 
-
     def validate(self, data):
+        if self.instance is None and 'fechaNacimiento' in data:
+            birthdate = data['fechaNacimiento']
+            today = date.today()
+            age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+            
+            if age < 18:
+                raise serializers.ValidationError({
+                    "fechaNacimiento": "Debes tener al menos 18 años para registrarte."
+                })
+
         # Validación para creación de usuario
         if self.instance is None:  # Es una creación
             if 'password' in data and 'password2' in data:
@@ -76,7 +87,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             documento=validated_data['documento'],
             telefono=validated_data['telefono'],
-            fechaNacimiento=validated_data['fechaNacimiento'],
+            fechaNacimiento = validated_data.get('fechaNacimiento', None),
             direccion=direccion,
          #   fechaDisponible=validated_data['fechaDisponible'],
           #  horarioDisponible=validated_data['horarioDisponible'],

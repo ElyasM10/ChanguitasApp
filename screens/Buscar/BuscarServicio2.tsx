@@ -72,7 +72,14 @@ const BuscarServicio2 = () => {
     }
   
     console.log('BuscarServicio2: servicio seleccionado:', route.params.selectedService);
-  
+     
+    // Mostrar las horas seleccionadas para cada día
+     Object.keys(days).forEach((day) => {
+      if (days[day]) { // Solo mostrar días activos
+        console.log(`${day}: Desde ${hours[day].inicio} hasta ${hours[day].fin}`);
+      }
+    });
+
     buscarProveedores(route.params.selectedService[0]);
   };
 
@@ -109,18 +116,20 @@ const BuscarServicio2 = () => {
 
    // Función para generar las opciones de hora
    const generateHourOptions = () => {
-      const opciones = [];
-      for (let i = 0; i < 24; i++) { // Generar horas entre 00 y 23
-        for (let j = 0; j < 60; j += 30) { // Generar minutos en intervalos de 30
-          const hora = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')} hs`; // Formato: 00:00, 00:30, etc.
-          opciones.push(
-            <Picker.Item label={hora} value={hora} key={hora} />
-          );
-        }
+    const opciones = [];
+    for (let i = 0; i < 24; i++) { // Generar horas entre 00 y 23
+      for (let j = 0; j < 60; j += 30) { // Generar minutos en intervalos de 30
+        const horaConSegundos = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')}:00`; // Formato con segundos
+        const horaSinSegundos = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')}`; // Solo horas y minutos
+  
+        opciones.push(
+          <Picker.Item label={horaSinSegundos} value={horaConSegundos} key={horaConSegundos} />
+        );
       }
-      return opciones;
-    };
-
+    }
+    return opciones;
+  };
+  
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Buscar un servicio (2/2)</Text>

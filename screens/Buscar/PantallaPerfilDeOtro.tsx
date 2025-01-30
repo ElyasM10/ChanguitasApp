@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Linking,Alert  } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Linking,Alert, Modal, TouchableWithoutFeedback, Pressable  } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -75,7 +75,16 @@ const PantallaPerfilDeOtro = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
 
+
+  const handleImagePress = () => {
+    setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
+  };
   
   // Mostrar los datos pasados desde la pantalla anterior
   useEffect(() => {
@@ -177,12 +186,30 @@ const PantallaPerfilDeOtro = () => {
       )}
 
 
-      {/* Información del Usuario */}
-      <View style={estilos.seccionUsuario}>
-        <Image source={{ uri: imageUri }} style={estilos.imagenUsuario} />
-        <Text style={estilos.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
-        <Text style={estilos.rolUsuario}>User role</Text>
-      </View>
+{/* Información del Usuario */}
+<View style={estilos.seccionUsuario}>
+  <Pressable onPress={handleImagePress}>
+    <Image source={{ uri: imageUri }} style={estilos.imagenUsuario} />
+  </Pressable>
+  <Text style={estilos.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
+  <Text style={estilos.rolUsuario}>User role</Text>
+</View>
+
+<Modal
+  visible={modalVisible}
+  animationType="fade"
+  transparent={true}
+  onRequestClose={handleCloseModal}
+>
+  <TouchableWithoutFeedback onPress={handleCloseModal}>
+    <View style={estilos.modalContainer}>
+      <Image 
+        source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+        style={estilos.imagenModal} 
+      />
+    </View>
+  </TouchableWithoutFeedback>
+</Modal>
 
       {/* Botones */}
       <View style={estilos.buttonContainer}>
@@ -246,6 +273,7 @@ const PantallaPerfilDeOtro = () => {
     </SafeAreaView>
   );
 };
+
 const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,
@@ -407,6 +435,19 @@ const estilos = StyleSheet.create({
     fontSize: 16,
     color: '#333333',
   },
+    // Estilos para el modal
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+    },
+    imagenModal: {
+      width: 200,   // Ajusta el tamaño de la imagen en el modal
+      height: 200,  
+      borderRadius: 100,  // Garantiza que la imagen sea circular
+      resizeMode: 'cover',  // Mantiene la proporción de la imagen
+    },
 });
 
 export default PantallaPerfilDeOtro;

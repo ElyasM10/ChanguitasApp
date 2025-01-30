@@ -160,14 +160,28 @@ const EditarDatosPersonales = () => {
 
   // Función para guardar cambios
   const guardarCambios = async () => {
+    
+    // Verificar si el usuario realmente quiere cambiar la contraseña
+    const quiereCambiarPassword = 
+    camposModificados.password || 
+    camposModificados.password2 || 
+    camposModificados.old_password;
+    
 
-     // Validación de que los tres campos de contraseña estén completos
-  if (!camposModificados.old_password || !camposModificados.password || !camposModificados.password2) {
-    // Si alguno de los campos está vacío, mostrar un mensaje en el Snackbar
-    setMessage('Por favor, complete todos los campos de contraseña.');
-    setVisible(true); // Mostrar el Snackbar
-    return; // No continuar con el proceso de guardar cambios
-  }
+    // Si el usuario quiere cambiar la contraseña, validar que todos los campos estén llenos
+    if (quiereCambiarPassword) {
+      if (!camposModificados.old_password || !camposModificados.password || !camposModificados.password2) {
+        setMessage('Por favor, complete todos los campos de contraseña.');
+        setVisible(true);
+        return;
+      }
+  
+      if (camposModificados.password !== camposModificados.password2) {
+        setMessage('Las contraseñas nuevas no coinciden.');
+        setVisible(true);
+        return;
+      }
+    }
 
 
     try {

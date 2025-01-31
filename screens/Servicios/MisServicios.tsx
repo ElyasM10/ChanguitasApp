@@ -16,11 +16,16 @@ const MisServicios = () => {
     id: number;
     nombreServicio: string;
     descripcion: string;
-    dia: string;
-    desdeHora: string;
-    hastaHora: string;
+    dia?: string;
+    desdeHora?: string;
+    hastaHora?: string;
+    dias?: Array<{
+      dia: string;
+      desdeHora: string;
+      hastaHora: string;
+    }>;
   }
-
+  
   const [services, setServices] = useState<Servicio[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
@@ -99,9 +104,17 @@ const MisServicios = () => {
     <View style={estilos.servicioCard}>
       <Text style={estilos.nombreServicio}>{item.nombreServicio}</Text>
       <Text style={estilos.descripcion}>{item.descripcion}</Text>
-      <Text style={estilos.horario}>
-        {item.dia}: {item.desdeHora} - {item.hastaHora}
-      </Text>
+      {item.dias && item.dias.map((dia, index) => (
+        <Text key={index} style={estilos.horario}>
+          {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
+        </Text>
+      ))}
+      {/* Fallback for original single day format */}
+      {!item.dias && (
+        <Text style={estilos.horario}>
+          {item.dia}: {item.desdeHora} - {item.hastaHora}
+        </Text>
+      )}
     </View>
   );
 

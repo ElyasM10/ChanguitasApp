@@ -10,7 +10,7 @@ class ServicioViewSet(viewsets.ModelViewSet):
     serializer_class = ServicioSerializer
 
     def create(self, request, *args, **kwargs):
-        # Si recibimos una lista, manejamos múltiples registros
+        # manejo para múltiples registros
         if isinstance(request.data, list):
             serializer = self.get_serializer(data=request.data, many=True)
             if serializer.is_valid():
@@ -45,6 +45,9 @@ class ServicioViewSet(viewsets.ModelViewSet):
             proveedor_servicios = ProveedorServicio.objects.filter(proveedor=usuario)
             servicios = [proveedor_servicio.servicio for proveedor_servicio in proveedor_servicios]
             
+            # Obtenga servicios únicos para evitar duplicados
+            servicios = list({ps.servicio.id: ps.servicio for ps in proveedor_servicios}.values())
+
             # Serializa los servicios
             serializer = ServicioSerializer(servicios, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)

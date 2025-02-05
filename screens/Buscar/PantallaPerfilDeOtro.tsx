@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Linking,Alert  } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator, Linking,Alert, Modal, TouchableWithoutFeedback, Pressable  } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -10,6 +10,8 @@ import { AuthContext } from '../Autenticacion/auth';
 
 const PantallaPerfilDeOtro = () => {
 
+  const [modalResenasVisible, setModalResenasVisible] = useState(false);
+  const [resenas, setResenas] = useState([]);
   const route = useRoute<RouteProp<RootStackParamList, 'PantallaPerfilDeOtro'>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [state,setState] = useContext(AuthContext);
@@ -20,6 +22,13 @@ const PantallaPerfilDeOtro = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
+  useEffect(() => {
+    // Simulación de carga de reseñas
+    setResenas([
+      { id: '1', usuario: 'Tito', comentario: 'Excelente servicio de jardineria, recomiendo a este usuario', puntaje: 5},
+      {id: '2', usuario: 'Calderon', comentario: 'El goat', puntaje: 5} 
+    ]);
+  }, []);
 
 
   const logout = async () => {
@@ -75,8 +84,26 @@ const PantallaPerfilDeOtro = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
 
+
+  const handleImagePress = () => {
+    setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
+  };
   
+  const handleOpenResenasModal = () => {
+    setModalResenasVisible(true);
+  };
+
+
+  const handleCloseResenasModal = () => {
+    setModalResenasVisible(false);
+  };
+
   // Mostrar los datos pasados desde la pantalla anterior
   useEffect(() => {
     console.log('Componente de id montado');
@@ -177,12 +204,30 @@ const PantallaPerfilDeOtro = () => {
       )}
 
 
-      {/* Información del Usuario */}
-      <View style={estilos.seccionUsuario}>
-        <Image source={{ uri: imageUri }} style={estilos.imagenUsuario} />
-        <Text style={estilos.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
-        <Text style={estilos.rolUsuario}>User role</Text>
-      </View>
+{/* Información del Usuario */}
+<View style={estilos.seccionUsuario}>
+  <Pressable onPress={handleImagePress}>
+    <Image source={{ uri: imageUri }} style={estilos.imagenUsuario} />
+  </Pressable>
+  <Text style={estilos.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
+  <Text style={estilos.rolUsuario}>User role</Text>
+</View>
+
+<Modal
+  visible={modalVisible}
+  animationType="fade"
+  transparent={true}
+  onRequestClose={handleCloseModal}
+>
+  <TouchableWithoutFeedback onPress={handleCloseModal}>
+    <View style={estilos.modalContainer}>
+      <Image 
+        source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+        style={estilos.imagenModal} 
+      />
+    </View>
+  </TouchableWithoutFeedback>
+</Modal>
 
       {/* Botones */}
       <View style={estilos.buttonContainer}>
@@ -207,11 +252,36 @@ const PantallaPerfilDeOtro = () => {
         <Text style={estilos.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
           <Text style={estilos.datoLabel}>Trabajó</Text>
         </View>
-        <View style={estilos.datoItem}>
-        <Text style={estilos.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
+
+         {/* Puntaje con botón para abrir reseñas */}
+        <TouchableOpacity onPress={handleOpenResenasModal} style={estilos.datoItem}>
+          <Text style={[estilos.datoNumero, { color: 'black' }]}>
+            {(usuario as any)?.puntaje ?? 0}
+          </Text>
           <Text style={estilos.datoLabel}>Puntaje</Text>
-        </View>
+        </TouchableOpacity>
       </View>
+
+      <Modal visible={modalResenasVisible} transparent animationType="fade">
+        <View style={estilos.modalContainer}>
+          <View style={estilos.modalContenido}>
+            <Text style={estilos.modalTitulo}>Reseñas</Text>
+            <FlatList
+              data={resenas}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={estilos.resenaItem}>
+                  <Text style={estilos.resenaUsuario}>{item.usuario} -  {item.puntaje} ⭐</Text>
+                  <Text style={estilos.resenaComentario}>{item.comentario}</Text>
+                </View>
+              )}
+            />
+            <TouchableOpacity onPress={handleCloseResenasModal} style={estilos.botonCerrar}>
+              <Text style={estilos.botonCerrarTexto}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Datos Personales */}
       <Text style={estilos.tituloDatosPersonales}>DATOS PERSONALES</Text>
@@ -246,6 +316,7 @@ const PantallaPerfilDeOtro = () => {
     </SafeAreaView>
   );
 };
+
 const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,
@@ -407,6 +478,47 @@ const estilos = StyleSheet.create({
     fontSize: 16,
     color: '#333333',
   },
+    // Estilos para el modal
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+    },
+    imagenModal: {
+      width: 200,   // Ajusta el tamaño de la imagen en el modal
+      height: 200,  
+      borderRadius: 100,  // Garantiza que la imagen sea circular
+      resizeMode: 'cover',  // Mantiene la proporción de la imagen
+    },
+    modalContenido: {
+      backgroundColor: 'white',
+      padding: 20,
+      borderRadius: 16,
+      width: '80%',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 5,
+    },
+    botonCerrar: {
+      marginTop: 10,
+      backgroundColor: '#197278',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 50,
+    },
+    botonCerrarTexto: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    modalTitulo: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
+    resenaItem: { borderBottomWidth: 1, borderBottomColor: '#ddd', paddingVertical: 10 },
+    resenaUsuario: { fontWeight: 'bold' },
+    resenaComentario: { fontSize: 14, color: '#333' },
 });
 
 export default PantallaPerfilDeOtro;

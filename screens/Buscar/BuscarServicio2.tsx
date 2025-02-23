@@ -20,41 +20,38 @@ const BuscarServicio2 = () => {
   const buscarProveedores = async (nombreServicio: string) => {
     setLoading(true);
     setErrorMessage('');
+    
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
       const userId = await AsyncStorage.getItem('userId');
+      
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso. Por favor, inicia sesión.');
       }
-
+  
+      // Filtrar los días activos
+      const diasSeleccionados = Object.keys(days).filter((day) => days[day]);
+  
       const response = await axios.get(`${API_URL}/buscar-proveedores/`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
-        params: { nombre_servicio: nombreServicio },
+        params: { 
+          nombre_servicio: nombreServicio,
+          dias: diasSeleccionados, // Pasar los días seleccionados
+        },
       });
-
-    //  setProviders(response.data.proveedores || []);
-     
-        const todosLosProveedores = response.data.proveedores || [];
-
-        // Filtro para excluir tu propio usuario
-        const proveedoresFiltrados = todosLosProveedores.filter((proveedor: any) => proveedor.id !== parseInt(userId));
-        
-        if (proveedoresFiltrados.length > 0) {
-          setProviders(proveedoresFiltrados);
-          navigation.navigate('ResultadosBusqueda', { proveedores: proveedoresFiltrados });
-        } else {
+  
+      const todosLosProveedores = response.data.proveedores || [];
+      const proveedoresFiltrados = todosLosProveedores.filter((proveedor: any) => proveedor.id !== parseInt(userId));
+  
+      if (proveedoresFiltrados.length > 0) {
+        setProviders(proveedoresFiltrados);
+        navigation.navigate('ResultadosBusqueda', { proveedores: proveedoresFiltrados });
+      } else {
         navigation.navigate('ResultadosBusqueda', { proveedores: [], error: 'No se encontraron proveedores para el servicio solicitado (excluyendo tu cuenta).' });
-        }
-      
-    //  if (response.data.proveedores && response.data.proveedores.length > 0) {
-      //  setProviders(response.data.proveedores);
-      //  navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
-      //}
- //     navigation.navigate('ResultadosBusqueda', { proveedores: response.data.proveedores });
-
+      }
     } catch (error: any) {
       navigation.navigate('ResultadosBusqueda', { 
         proveedores: [], 

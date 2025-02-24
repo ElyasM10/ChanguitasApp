@@ -428,19 +428,21 @@ const EditarDatosPersonales = () => {
   };
 
   const abrirCamara = async () => {
-    const resultadoPermiso = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (resultadoPermiso.granted === false) {
-      alert("Has rechazado el acceso a la cámara.");
+    const { status } = await ImagePicker.requestCameraPermissionsAsync(); // Solicita permisos
+  
+    if (status !== "granted") {
+      alert("Se requieren permisos para acceder a la cámara.");
       return;
     }
-
-    const resultado = await ImagePicker.launchCameraAsync();
-
+  
+    const resultado = await ImagePicker.launchCameraAsync({
+      allowsEditing: true, // Activa el recorte
+      aspect: [1, 1], // Relación de aspecto cuadrada
+      quality: 0.8, // Calidad de la imagen
+    });
+  
     manejarRespuestaSelectorImagen(resultado);
   };
-
-
   
   return (
   <SafeAreaView style={EstilosEditarDatosPersonales.contenedor}>

@@ -184,11 +184,6 @@ export default function AppNavigator() {
         component={PantallaVerificacion4} 
         options={{ headerShown: false }}  
       /> 
-       <Stack.Screen 
-        name="PantallaVerificacion5" 
-        component={PantallaVerificacion5} 
-        options={{ headerShown: false }}  
-      /> 
         <Stack.Screen 
         name="PantallaEditarUsuario" 
         component={PantallaEditarUsuario} 
@@ -302,6 +297,11 @@ export default function AppNavigator() {
             component={PantallaBienvenida}
              options={{ headerShown: false }}
           />
+            <Stack.Screen 
+        name="PantallaVerificacion5" 
+        component={PantallaVerificacion5} 
+        options={{ headerShown: false }}  
+      /> 
         </>
       )}
     </Stack.Navigator>

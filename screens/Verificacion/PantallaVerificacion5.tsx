@@ -1,23 +1,99 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Alert, Platform, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
-
+import * as ImagePicker from 'expo-image-picker';
 
 const PantallaVerificacion5 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
+  
+  // Estado para la foto de perfil
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
 
-
-  const seleccionarImagenDeGaleria = () => {
-      // Esto seria para mas  adelante 
+  const handleImagePress = () => {
+    setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
   };
 
-  const tomarFotoConCamara = () => {
-    // Esto seria para mas  adelante 
+  const handleCloseModal = () => {
+    setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
   };
+
+  // Funciones para manejar la selección de imagen
+  const manejarRespuestaSelectorImagen = (resultado: ImagePicker.ImagePickerResult) => {
+    if (!resultado.canceled && resultado.assets && resultado.assets.length > 0) {
+      setImageUri(resultado.assets[0].uri);
+    }
+  };
+
+ 
+  const manejarCambioArchivoWeb = (event: Event) => {
+    const target = event.target as HTMLInputElement; 
+    const file = target.files ? target.files[0] : null;
+  
+    if (file) {
+      console.log("Imagen seleccionada:", file);
+      setImageFile(file); // Actualiza el estado con el archivo seleccionado
+      const imageUrl = URL.createObjectURL(file); // Genera una URL para mostrar la imagen seleccionada
+      setImageUri(imageUrl);
+    }
+  };
+
+  const mostrarOpcionesSelectorImagen = () => {
+    if (Platform.OS === 'web') {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.onchange = manejarCambioArchivoWeb;
+      fileInput.click();
+    } else {
+      Alert.alert("Seleccionar una imagen", "Elige la opción para seleccionar una imagen", [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Tomar una foto", onPress: abrirCamara },
+        { text: "Elegir desde la galería", onPress: abrirSelectorImagen },
+      ]);
+    }
+  };
+
+  const abrirSelectorImagen = async () => {
+    const resultadoPermiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (resultadoPermiso.granted === false) {
+      alert("Has rechazado el acceso a la galería de imágenes.");
+      return;
+    }
+
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+    allowsEditing: true, // Activa el recorte
+    aspect: [1, 1], // Define la relación de aspecto del recorte (cuadrado)
+    quality: 0.8, // Calidad de la imagen (0.1 a 1.0)
+    });
+
+    manejarRespuestaSelectorImagen(resultado);
+  };
+
+  const abrirCamara = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync(); // Solicita permisos
+  
+    if (status !== "granted") {
+      alert("Se requieren permisos para acceder a la cámara.");
+      return;
+    }
+  
+    const resultado = await ImagePicker.launchCameraAsync({
+      allowsEditing: true, // Activa el recorte
+      aspect: [1, 1], // Relación de aspecto cuadrada
+      quality: 0.8, // Calidad de la imagen
+    });
+  
+    manejarRespuestaSelectorImagen(resultado);
+  };
+
+
 
   return (
     <SafeAreaView style={styles.areaSegura}>
@@ -25,22 +101,37 @@ const PantallaVerificacion5 = () => {
         <Text style={styles.titulo}>Verificación</Text>
         <Text style={styles.textoPaso}>PASO 5</Text>
         <Text style={styles.subtitulo}>Subir foto de perfil</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}></TouchableOpacity>
 
         <View style={styles.contenedorImagenPerfil}>
-          {imagenSeleccionada ? (
-            <Image source={require('../../assets/icon.png')} style={styles.imagenPerfil} />
+
+          {imageUri ? (
+            <Image source={{ uri: imageUri }} style={styles.imagenPerfil} />
           ) : (
             <Ionicons name="person-circle-outline" size={100} color="#B7B7B7" />
           )}
-        </View>
+     
+      </View>
 
-        <TouchableOpacity onPress={seleccionarImagenDeGaleria}>
-          <Text style={styles.textoOpcion}>+ Buscar en el teléfono</Text>
+        <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
+          <Text style={styles.textoOpcion}>+ Seleccionar Imagen</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={tomarFotoConCamara}>
-          <Text style={styles.textoOpcion}>+ Sacar foto con la cámara</Text>
-        </TouchableOpacity>
+        <Modal
+        visible={modalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableWithoutFeedback onPress={handleCloseModal}>
+          <View style={styles.modalContainer}>
+            <Image 
+              source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+              style={styles.imagenModal} 
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
         <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')}>
           <LinearGradient
@@ -106,7 +197,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   botonGradiente: {
-    marginTop: 30,
+    marginTop: 50,
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,
@@ -117,6 +208,18 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+  },
+  imagenModal: {
+    width: 200,   // Ajusta el tamaño de la imagen en el modal
+    height: 200,  
+    borderRadius: 100,  // Garantiza que la imagen sea circular
+    resizeMode: 'cover',  // Mantiene la proporción de la imagen
   },
 });
 

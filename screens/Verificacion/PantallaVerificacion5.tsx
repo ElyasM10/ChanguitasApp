@@ -104,44 +104,37 @@ const PantallaVerificacion5 = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}></TouchableOpacity>
 
         <View style={styles.contenedorImagenPerfil}>
-
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.imagenPerfil} />
           ) : (
             <Ionicons name="person-circle-outline" size={100} color="#B7B7B7" />
           )}
-     
-      </View>
+        </View>
 
+  
         <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
           <Text style={styles.textoOpcion}>+ Seleccionar Imagen</Text>
         </TouchableOpacity>
+  
 
         <Modal
-        visible={modalVisible}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={handleCloseModal}
-      >
-        <TouchableWithoutFeedback onPress={handleCloseModal}>
-          <View style={styles.modalContainer}>
-            <Image 
-              source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-              style={styles.imagenModal} 
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+          visible={modalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={handleCloseModal}
+        >
+          <TouchableWithoutFeedback onPress={handleCloseModal}>
+            <View style={styles.modalContainer}>
+              <Image 
+                source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+                style={styles.imagenModal} 
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
 
-        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')}>
-          <LinearGradient
-            colors={['#197278', '#9BCDC8']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.botonGradiente}
-          >
-            <Text style={styles.textoBoton}>Siguiente</Text>
-          </LinearGradient>
+        <TouchableOpacity onPress={() => navigation.navigate('PantallaHome')} style={styles.botonContenedor}>
+          <Text style={styles.textoBoton}>Siguiente →</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -156,14 +149,15 @@ const styles = StyleSheet.create({
   contenedor: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 70,
-    alignItems: 'center',
+    paddingTop: 50,
+    alignItems: 'flex-start',
   },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 20,
+    marginBottom: 10,
+    marginRight:10,
   },
   textoPaso: {
     fontSize: 16,
@@ -177,35 +171,40 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   contenedorImagenPerfil: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     backgroundColor: '#E6E6E6',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
     marginBottom: 15,
+    borderWidth: 5, 
+    borderColor: '#5A9EA2',
   },
   imagenPerfil: {
     width: '100%',
     height: '100%',
-    borderRadius: 60,
+    borderRadius: 75,
   },
   textoOpcion: {
     fontSize: 16,
     color: '#197278',
-    marginTop: 10,
+    marginBottom: 10,
     textDecorationLine: 'underline',
   },
-  botonGradiente: {
-    marginTop: 50,
+  botonContenedor: {
+    marginTop: 30,
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#197278',
     alignItems: 'center',
-    justifyContent: 'center',
+    alignSelf: 'center',
   },
   textoBoton: {
-    color: '#fff',
+    color: '#197278',
     fontSize: 18,
     fontWeight: '600',
   },
@@ -213,13 +212,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   imagenModal: {
-    width: 200,   // Ajusta el tamaño de la imagen en el modal
-    height: 200,  
-    borderRadius: 100,  // Garantiza que la imagen sea circular
-    resizeMode: 'cover',  // Mantiene la proporción de la imagen
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    resizeMode: 'cover',
   },
 });
 

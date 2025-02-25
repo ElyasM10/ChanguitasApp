@@ -104,29 +104,31 @@ const PantallaVerificacion5 = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}></TouchableOpacity>
 
         <View style={styles.contenedorImagenPerfil}>
-          {imageUri ? (
-            <Image source={{ uri: imageUri }} style={styles.imagenPerfil} />
-          ) : (
-            <Ionicons name="person-circle-outline" size={100} color="#B7B7B7" />
-          )}
-        </View>
+  <TouchableOpacity onPress={handleImagePress} style={styles.contenedorImagenPerfil}>
+    {imageUri ? (
+      <Image 
+        source={{ uri: imageUri }} 
+        style={styles.imagenPerfil} 
+      />
+    ) : (
+      <Ionicons 
+        name="person-circle-outline" 
+        size={100} 
+        color="#B7B7B7" 
+      />
+    )}
+  </TouchableOpacity>
+</View>
 
-  
         <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
           <Text style={styles.textoOpcion}>+ Seleccionar Imagen</Text>
         </TouchableOpacity>
-  
 
-        <Modal
-          visible={modalVisible}
-          animationType="fade"
-          transparent={true}
-          onRequestClose={handleCloseModal}
-        >
+        <Modal visible={modalVisible} animationType="fade" transparent>
           <TouchableWithoutFeedback onPress={handleCloseModal}>
             <View style={styles.modalContainer}>
               <Image 
-                source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+                source={{ uri: imageUri || 'https://via.placeholder.com/100' }} 
                 style={styles.imagenModal} 
               />
             </View>
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#197278',
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   subtitulo: {
     fontSize: 16,
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 5, 
     borderColor: '#5A9EA2',
+    marginTop:10,
   },
   imagenPerfil: {
     width: '100%',

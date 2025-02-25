@@ -9,24 +9,11 @@ import {cerrarSesion} from '../Autenticacion/authService';
 import { AuthContext } from '../Autenticacion/auth';
 
 
-const MisServicios = () => {
+const UsuariosBloqueados = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  interface Servicio {
-    id: number;
-    nombreServicio: string;
-    descripcion: string;
-    dia?: string;
-    desdeHora?: string;
-    hastaHora?: string;
-    dias?: Array<{
-      dia: string;
-      desdeHora: string;
-      hastaHora: string;
-    }>;
-  }
+
   
-  const [services, setServices] = useState<Servicio[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [state,setState] = useContext(AuthContext);
@@ -66,6 +53,7 @@ const MisServicios = () => {
 
   };
 
+
   const fetchUsuario = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -84,40 +72,23 @@ const MisServicios = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error al obtener servicios: ${response.status}`);
+        throw new Error(`Error al obtener los usuarios: ${response.status}`);
       }
 
-      const data: Servicio[] = await response.json();
-      setServices(data);
+  
     } catch (error) {
-      console.error('Error al cargar los servicios del usuario:', error);
+      console.error('Error al cargar los usuarios bloqueados:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchUsuario();
   }, []);
 
-  const renderServiceItem = ({ item }: { item: Servicio }) => (
-    <View style={estilos.servicioCard}>
-      <Text style={estilos.nombreServicio}>{item.nombreServicio}</Text>
-      <Text style={estilos.descripcion}>{item.descripcion}</Text>
-      {item.dias && item.dias.map((dia, index) => (
-        <Text key={index} style={estilos.horario}>
-          {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
-        </Text>
-      ))}
-      {/* Fallback for original single day format */}
-      {!item.dias && (
-        <Text style={estilos.horario}>
-          {item.dia}: {item.desdeHora} - {item.hastaHora}
-        </Text>
-      )}
-    </View>
-  );
-
+ 
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Header con Perfil*/}
@@ -139,42 +110,43 @@ const MisServicios = () => {
 
      {/* Barra de pestañas */}
      <View style={estilos.barraPestanas}>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')}>
-          <Text style={estilos.textoPestanaInactiva}>Perfil</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('EditarDatosPersonales')}>
-          <Text style={estilos.textoPestanaInactiva}>Editar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaActiva} onPress={() => navigation.navigate('MisServicios')}>
-          <Text style={estilos.textoPestanaActiva}>Mis servicios</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('UsuariosBloqueados')}>
-          <Text style={estilos.textoPestanaInactiva}>Bloqueados</Text>
-        </TouchableOpacity>
-      </View>
+  <TouchableOpacity 
+    style={estilos.pestanaInactiva} 
+    onPress={() => navigation.navigate('PantallaPerfilEditarUsuario')}>
+    <Text style={estilos.textoPestanaInactiva}>Perfil</Text>
+  </TouchableOpacity>
+  <TouchableOpacity 
+    style={estilos.pestanaInactiva} 
+    onPress={() => navigation.navigate('EditarDatosPersonales')}>
+    <Text style={estilos.textoPestanaInactiva}>Editar</Text>
+  </TouchableOpacity>
+  <TouchableOpacity 
+    style={estilos.pestanaInactiva} 
+    onPress={() => navigation.navigate('MisServicios')}>
+    <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
+  </TouchableOpacity>
+  <TouchableOpacity 
+    style={estilos.pestanaActiva} 
+    onPress={() => navigation.navigate('UsuariosBloqueados')}>
+    <Text style={estilos.textoPestanaActiva}>Bloqueados</Text>
+  </TouchableOpacity>
+</View>
 
-        {/* Botón Agregar Servicio */}
-        <TouchableOpacity 
-          style={estilos.botonAgregarServicio} 
-          onPress={() => navigation.navigate('AgregarServicio1')}
-        >
-          <Ionicons name="add" size={20} color="#197278" />
-          <Text style={estilos.textoBoton}>Agregar servicio</Text>
-        </TouchableOpacity>
 
-         {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
+         {/* Muestra la lista de usuarios bloqueados y en caso de que aun no tenga ninguno muestra un mensaje 
          {loading ? (
-          <Text style={estilos.cargando}>Cargando servicios...</Text>
+          <Text style={estilos.cargando}>Cargando usuarios bloqueados...</Text>
         ) : services.length === 0 ? (
-          <Text style={estilos.sinServicios}>Aún no tienes servicios vinculados.</Text>
+          <Text style={estilos.sinServicios}>Aún no tienes usuarios bloqueados.</Text>
         ) : (
           <FlatList
             data={services}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={renderServiceItem}
+            renderItem={null}
             contentContainerStyle={estilos.listaServicios}
           />
         )}
+     */}
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -382,4 +354,4 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default MisServicios;
+export default UsuariosBloqueados;

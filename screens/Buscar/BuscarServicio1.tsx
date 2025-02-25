@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Checkbox } from 'react-native-paper';  // Importar Checkbox de react-native-paper
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
 const BuscarServicio1 = () => {
@@ -14,6 +14,13 @@ const BuscarServicio1 = () => {
     // Seleccionar un solo servicio, desmarcando el anterior
     setSelectedService(service === selectedService ? null : service);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Limpiar la selección al ganar el foco
+      setSelectedService(null);
+    }, [])
+  );
 
   const handleNext = () => {
     if (!selectedService) {

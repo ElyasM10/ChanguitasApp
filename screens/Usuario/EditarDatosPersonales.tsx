@@ -477,6 +477,9 @@ const EditarDatosPersonales = () => {
         <TouchableOpacity style={EstilosEditarDatosPersonales.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
           <Text style={EstilosEditarDatosPersonales.textoPestanaInactiva}>Mis servicios</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={EstilosEditarDatosPersonales.pestanaInactiva} onPress={() => navigation.navigate('UsuariosBloqueados')}>
+          <Text style={EstilosEditarDatosPersonales.textoPestanaInactiva}>Bloqueados</Text>
+        </TouchableOpacity>
       </View>
 
        {/* Sección para cambiar la foto */}

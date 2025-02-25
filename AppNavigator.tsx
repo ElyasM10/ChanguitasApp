@@ -15,7 +15,6 @@ import PantallaEditarUsuario from './screens/Admin/PantallaEditarUsuario';
 import PantallaEditarDatosUsuario from './screens/Admin/PantallaEditarDatosUsuario'
 import PantallaPerfilEditarUsuario from './screens/Usuario/PantallaPerfilEditarUsuario';
 import EditarDatosPersonales from './screens/Usuario/EditarDatosPersonales';
-//import pruebaUsuario from './screens/pruebaUsuario';
 import AgregarServicio1 from './screens/Servicios/AgregarServicio1';
 import AgregarServicio2 from './screens/Servicios/AgregarServicio2';
 import AgregarServicio3 from './screens/Servicios/AgregarServicio3';
@@ -38,6 +37,7 @@ import { AuthContext } from './screens/Autenticacion/auth';
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
+import UsuariosBloqueados from './screens/Usuario/UsuariosBloqueados';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -79,7 +79,7 @@ export type RootStackParamList = {
   CrearCategoria: undefined;
   EditarCategoria: undefined;
   EditarDatosCategoria: undefined;
-  SeleccionImagenes: undefined;
+  UsuariosBloqueados: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -272,6 +272,11 @@ export default function AppNavigator() {
       <Stack.Screen 
         name="EditarDatosCategoria" 
         component={EditarDatosCategoria} 
+        options={{ headerShown: false }}  
+      /> 
+        <Stack.Screen 
+        name="UsuariosBloqueados" 
+        component={UsuariosBloqueados} 
         options={{ headerShown: false }}  
       /> 
         </>

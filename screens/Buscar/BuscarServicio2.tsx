@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Switch } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text,TouchableOpacity, StyleSheet, ScrollView, Switch } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import API_URL from "../API_URL"; 
-import ResultadosBusqueda from './ResultadosBusqueda';
 import { Picker } from '@react-native-picker/picker';
+import { Snackbar } from 'react-native-paper';
 
 const BuscarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -15,7 +15,8 @@ const BuscarServicio2 = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [providers, setProviders] = useState([]);
-
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
 
   const buscarProveedores = async (nombreServicio: string) => {
     setLoading(true);
@@ -64,19 +65,26 @@ const BuscarServicio2 = () => {
 
   const handleNext = () => {
     if (!route.params || !route.params.selectedService) {
-      setErrorMessage('No se seleccionó ningún servicio.');
+      setMessage('No se seleccionó ningún servicio.');
+      setVisible(true);
+      return;
+    }
+  
+    // Verificar si al menos un día está seleccionado
+    const diasSeleccionados = Object.keys(days).filter((day) => days[day]);
+    if (diasSeleccionados.length === 0) {
+      setMessage('Debe seleccionar al menos un día.');
+      setVisible(true);
       return;
     }
   
     console.log('BuscarServicio2: servicio seleccionado:', route.params.selectedService);
-     
+    
     // Mostrar las horas seleccionadas para cada día
-     Object.keys(days).forEach((day) => {
-      if (days[day]) { // Solo mostrar días activos
-        console.log(`${day}: Desde ${hours[day].inicio} hasta ${hours[day].fin}`);
-      }
+    diasSeleccionados.forEach((day) => {
+      console.log(`${day}: Desde ${hours[day].inicio} hasta ${hours[day].fin}`);
     });
-
+  
     buscarProveedores(route.params.selectedService[0]);
   };
 
@@ -211,6 +219,21 @@ const BuscarServicio2 = () => {
         </TouchableOpacity>
       </View>
       
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
+        duration={Snackbar.DURATION_SHORT}    // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
+        style={{
+          position: 'absolute',
+          top: -150,
+          left: 0,
+          right: 0,
+          zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos
+        }}
+      >
+        {message}
+      </Snackbar>
+
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity,Alert, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity,Alert, FlatList,Image  } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -17,11 +17,25 @@ const UsuariosBloqueados = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [state,setState] = useContext(AuthContext);
+  const [usuariosBloqueados, setUsuariosBloqueados] = useState([]);
+
   
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
+  useEffect(() => {
+    const usuarioEjemplo = [
+      { 
+        id: 1, 
+        nombre: 'Juan Pérez', 
+        foto: 'https://randomuser.me/api/portraits/men/1.jpg' 
+      }
+    ];
+    
+    setUsuariosBloqueados(usuarioEjemplo);
+    setLoading(false);
+  }, []);
  
   const logout = async () => {
     try {
@@ -54,28 +68,28 @@ const UsuariosBloqueados = () => {
   };
 
 
-  const fetchUsuario = async () => {
+  const obtenerUsuariosBloqueados = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
-      const userId = await AsyncStorage.getItem('userId');
-
-      if (!accessToken || !userId) {
-        throw new Error('Token de acceso o ID de usuario no encontrado');
+  
+      if (!accessToken) {
+        throw new Error('Token de acceso no encontrado');
       }
-
-      const response = await fetch(`${API_URL}/servicios/por-usuario/${userId}/`, {
+  
+      const response = await fetch(`${API_URL}/usuarios/bloqueados/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
       });
-
-      if (!response.ok) {
-        throw new Error(`Error al obtener los usuarios: ${response.status}`);
-      }
-
   
+      if (!response.ok) {
+        throw new Error(`Error al obtener los usuarios bloqueados: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      setUsuariosBloqueados(data.usuarios_bloqueados); // Asumiendo que el backend devuelve { "usuarios_bloqueados": [...] }
     } catch (error) {
       console.error('Error al cargar los usuarios bloqueados:', error);
     } finally {
@@ -83,11 +97,9 @@ const UsuariosBloqueados = () => {
     }
   };
   
-
   useEffect(() => {
-    fetchUsuario();
+    obtenerUsuariosBloqueados();
   }, []);
-
  
   return (
     <SafeAreaView style={estilos.contenedor}>
@@ -133,20 +145,30 @@ const UsuariosBloqueados = () => {
 </View>
 
 
-         {/* Muestra la lista de usuarios bloqueados y en caso de que aun no tenga ninguno muestra un mensaje 
-         {loading ? (
-          <Text style={estilos.cargando}>Cargando usuarios bloqueados...</Text>
-        ) : services.length === 0 ? (
-          <Text style={estilos.sinServicios}>Aún no tienes usuarios bloqueados.</Text>
-        ) : (
-          <FlatList
-            data={services}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={null}
-            contentContainerStyle={estilos.listaServicios}
-          />
-        )}
-     */}
+{loading ? (
+  <Text style={estilos.cargando}>Cargando usuarios bloqueados...</Text>
+) : usuariosBloqueados.length === 0 ? (
+  <Text style={estilos.sinServicios}>Aún no tienes usuarios bloqueados.</Text>
+) : (
+
+<FlatList
+  data={usuariosBloqueados}
+  keyExtractor={(item) => item.id.toString()}
+  renderItem={({ item }) => (
+    <View style={estilos.usuarioBloqueado}>
+      <Image 
+        source={{ uri: item.foto || 'https://via.placeholder.com/50' }} 
+        style={estilos.image} 
+      />
+      <Text>{item.nombre}</Text>
+      <TouchableOpacity>
+        <Text>Desbloquear</Text>
+      </TouchableOpacity>
+    </View>
+  )}
+  contentContainerStyle={estilos.listaUsuarios}
+/>
+)}
 
       {/* Barra de navegación inferior */}
       <View style={estilos.barraNavegacion}>
@@ -174,12 +196,11 @@ const UsuariosBloqueados = () => {
   );
 };
 
-
 const estilos = StyleSheet.create({
   contenedor: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop:43,
+    marginTop: 43,
   },
   header: {
     flexDirection: 'row',
@@ -193,7 +214,7 @@ const estilos = StyleSheet.create({
   textoEncabezado: {
     fontSize: 24,
     fontWeight: '600',
-    marginRight:300,
+    marginRight: 300,
   },
   encabezado: {
     flexDirection: 'row',
@@ -234,6 +255,37 @@ const estilos = StyleSheet.create({
   opcionSeleccionada: {
     color: '#197278',
     fontWeight: '600',
+  },
+  cargando: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginVertical: 20,
+    color: '#197278',
+  },
+  sinServicios: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#666',
+    marginVertical: 20,
+  },
+  listaUsuarios: {
+    paddingHorizontal: 15,
+    paddingBottom: 80, 
+  },
+  usuarioBloqueado: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 8,
+    elevation: 2,
+  },
+  botonDesbloquear: {
+    color: '#FF3B30',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   seccionFoto: {
     alignItems: 'center',
@@ -290,45 +342,23 @@ const estilos = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 50,
     alignItems: 'center',
-    width: '80%',  
+    width: '80%',
     alignSelf: 'center',
-    marginTop:-130, 
+    marginTop: -130,
   },
   textoBotonGuardar: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  botonAgregarServicio: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '80%',
-    alignSelf: 'center',
-    marginTop: 20, 
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderColor: '#197278',
-    borderRadius: 50,
+  opcionDesplegable: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
-  textoBoton: {
-    color: '#197278',
+  textoDesplegable: {
     fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 5,
+    color: '#333333',
   },
-  cargando: { 
-    textAlign: 'center', 
-    marginTop: 20, 
-    color: 'gray' 
-  },
-  listaServicios: { paddingHorizontal: 16 },
-  servicioCard: { padding: 16, marginBottom: 8, backgroundColor: '#fff', borderRadius: 8, elevation: 2 },
-  nombreServicio: { fontSize: 16, fontWeight: 'bold' },
-  descripcion: { fontSize: 14, color: 'gray' },
-  horario: { fontSize: 12, color: '#197278' },
-  sinServicios: { textAlign: 'center', marginTop: 20, color: 'gray', fontSize: 16 },
   desplegable: {
     position: 'absolute',
     top: 70,
@@ -344,14 +374,13 @@ const estilos = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  opcionDesplegable: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: '#E0E0E0',
   },
-  textoDesplegable: {
-    fontSize: 16,
-    color: '#333333',
-  },
+
 });
 
 export default UsuariosBloqueados;

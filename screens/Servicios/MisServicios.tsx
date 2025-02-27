@@ -30,6 +30,7 @@ const MisServicios = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [state,setState] = useContext(AuthContext);
+  const [idServicioSeleccionado, setIdServicioSeleccionado] = useState(null);
   
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -66,6 +67,41 @@ const MisServicios = () => {
 
   };
 
+  const EliminarServicio = async (serviceId) => {
+    try {
+      // Almacena el id del servicio en la variable de estado antes de borrar
+      setIdServicioSeleccionado(serviceId);
+
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('Token de acceso no encontrado');
+      }
+
+     console.log("Eliminado el servicio: ",serviceId);
+
+      const response = await fetch(`${API_URL}/servicios/${serviceId}/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 204) {
+     
+        // Actualiza la lista de servicios eliminando el servicio borrado.
+        setServices(services.filter(servicio => servicio.id !== serviceId));
+
+        // Reinicia la variable de id a null después de borrar el servicio
+        setIdServicioSeleccionado(null);
+      } else {
+        alert("Error al eliminar el servicio");
+      }
+    } catch (error) {
+      console.error("Error eliminando el servicio:", error);
+    }
+  };
+
   const fetchUsuario = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -99,7 +135,6 @@ const MisServicios = () => {
   useEffect(() => {
     fetchUsuario();
   }, []);
-
   const renderServiceItem = ({ item }: { item: Servicio }) => (
     <View style={estilos.servicioCard}>
       <Text style={estilos.nombreServicio}>{item.nombreServicio}</Text>
@@ -115,9 +150,16 @@ const MisServicios = () => {
           {item.dia}: {item.desdeHora} - {item.hastaHora}
         </Text>
       )}
+  
+      {/* Botón para eliminar el servicio */}
+          <TouchableOpacity 
+      style={estilos.botonEliminar} 
+      onPress={() => EliminarServicio(item.id)}
+        >
+        <Ionicons name="trash-outline" size={24} color="red" />
+      </TouchableOpacity>
     </View>
   );
-
   return (
     <SafeAreaView style={estilos.contenedor}>
       {/* Header con Perfil*/}
@@ -379,6 +421,13 @@ const estilos = StyleSheet.create({
   textoDesplegable: {
     fontSize: 16,
     color: '#333333',
+  },
+  botonEliminar: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: "#ffe5e5",
+    alignSelf: 'flex-end', // Lo posiciona a la derecha
+    marginTop: -40,
   },
 });
 

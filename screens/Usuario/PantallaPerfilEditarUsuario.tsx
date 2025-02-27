@@ -176,6 +176,9 @@ const PantallaPerfiEditarUsuario: React.FC = () => {
         <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>
           <Text style={estilos.textoPestanaInactiva}>Mis servicios</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={estilos.pestanaInactiva} onPress={() => navigation.navigate('UsuariosBloqueados')}>
+          <Text style={estilos.textoPestanaInactiva}>Bloqueados</Text>
+        </TouchableOpacity>
       </View>
 
         {/* Información del Usuario */}

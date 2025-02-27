@@ -87,8 +87,9 @@ const MisServicios = () => {
         },
       });
   
-      if (response.status === 204) {
+      if (response.status === 200) {
      
+        console.log("Se elimino el servicio correctamente");
         // Actualiza la lista de servicios eliminando el servicio borrado.
         setServices(services.filter(servicio => servicio.id !== serviceId));
 

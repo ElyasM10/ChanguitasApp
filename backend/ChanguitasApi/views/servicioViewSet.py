@@ -55,6 +55,6 @@ class ServicioViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
     
     def destroy(self, request, *args, **kwargs):
-         instance = self.get_object()  # Obtiene el servicio a eliminar
-         self.perform_destroy(instance)  # Elimina el servicio de la base de datos
-         return Response({"message": "Servicio eliminado correctamente."}, status=status.HTTP_204_NO_CONTENT)
+        instance = self.get_object()  # Obtiene el servicio a eliminar
+        self.perform_destroy(instance)  # Elimina el servicio de la base de datos
+        return Response({"message": "Servicio eliminado correctamente."}, status=status.HTTP_200_OK)

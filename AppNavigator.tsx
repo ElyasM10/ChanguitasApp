@@ -39,6 +39,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import UsuariosBloqueados from './screens/Usuario/UsuariosBloqueados';
 import RecuperarNombreUsuario from './screens/RecuperarAcceso/RecuperarNombreUsuario';
+import RecuperarContrasena1 from './screens/RecuperarAcceso/RecuperarContrasena1';
+import RecuperarContrasena2 from './screens/RecuperarAcceso/RecuperarContrasena2';
+import RecuperarContrasena3 from './screens/RecuperarAcceso/RecuperarContrasena3';
 //import PantallaChat from './screens/chat/PantallaChat';
 
 //Aca se definen las pantallas que tendra la aplicacion serian como las urls en Django
@@ -82,6 +85,9 @@ export type RootStackParamList = {
   EditarDatosCategoria: undefined;
   UsuariosBloqueados: undefined;
   RecuperarNombreUsuario: undefined;
+  RecuperarContrasena1: undefined;
+  RecuperarContrasena2: undefined;
+  RecuperarContrasena3: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -312,6 +318,21 @@ export default function AppNavigator() {
           <Stack.Screen 
             name="RecuperarNombreUsuario" 
             component={RecuperarNombreUsuario} 
+            options={{ headerShown: false }}  
+          />
+          <Stack.Screen 
+            name="RecuperarContrasena1" 
+            component={RecuperarContrasena1} 
+            options={{ headerShown: false }}  
+          />
+          <Stack.Screen 
+            name="RecuperarContrasena2" 
+            component={RecuperarContrasena2} 
+            options={{ headerShown: false }}  
+          />
+          <Stack.Screen 
+            name="RecuperarContrasena3" 
+            component={RecuperarContrasena3} 
             options={{ headerShown: false }}  
           />
         </>

@@ -4,17 +4,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
 
-const RecuperarNombreUsuario = () => {
+const RecuperarContrasena2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <SafeAreaView style={estilos.areaSegura}>
       <View style={estilos.contenedor}>
         {/* Título de la pantalla */}
-        <Text style={estilos.titulo}>Recuperar usuario</Text>
+        <Text style={estilos.titulo}>Recuperar contraseña</Text>
 
         {/* Paso de verificación */}
-        <Text style={estilos.instruccion}>Para recuperar tu nombre de usuario, escribe tu correo electrónico para recibir tu nombre de usuario.</Text>
+        <Text style={estilos.instruccion}>Ingrese el código numérico que se ha enviado.</Text>
 
         {/* Campo de entrada */}
         <TextInput
@@ -26,9 +26,9 @@ const RecuperarNombreUsuario = () => {
         {/* Botón de siguiente */}
         <TouchableOpacity 
           style={estilos.botonSiguiente} 
-          onPress={() => navigation.navigate('PantallaInicioSesion')}
+          onPress={() => navigation.navigate('RecuperarContrasena3')}
         >
-          <Text style={estilos.textoBoton}>Enviar</Text>
+          <Text style={estilos.textoBoton}>Verificar código</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -89,4 +89,4 @@ const estilos = StyleSheet.create({
   },
 });
 
-export default RecuperarNombreUsuario;
+export default RecuperarContrasena2;

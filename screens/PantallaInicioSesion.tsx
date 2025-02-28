@@ -128,6 +128,22 @@ const PantallaInicioSesion = () => {
         <Text style={estilos.textoRegistrarse}>¿No tienes una cuenta? Regístrate</Text>
       </TouchableOpacity>
 
+      {/* Botón de recuperar nombre de usuario */}
+      <TouchableOpacity
+        style={estilos.botonRecuperacion}
+        onPress={() => navigation.navigate('RecuperarNombreUsuario')} 
+      >
+        <Text style={estilos.textoRegistrarse}>Olvidé mi nombre de usuario</Text>
+      </TouchableOpacity>
+
+      {/* Botón de recuperar contraseña */}
+      <TouchableOpacity
+        style={estilos.botonRecuperacion}
+        onPress={() => navigation.navigate('RecuperarContrasena1')} 
+      >
+        <Text style={estilos.textoRegistrarse}>Olvidé mi contraseña</Text>
+      </TouchableOpacity>
+
         {/* Texto de pie de página */}
         <Text style={estilos.textoPie}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -226,6 +242,10 @@ const estilos = StyleSheet.create({
   },
   botonRegistrarse: {
     marginTop: 20, // Espaciado entre el botón de "Ingresar" y el de "Registrarse"
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  botonRecuperacion: {
     paddingVertical: 10,
     alignItems: 'center',
   },

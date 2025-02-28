@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image,Modal, TouchableWithoutFeedback } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../AppNavigator';
@@ -11,17 +11,27 @@ const ResultadosBusqueda = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
     const { proveedores, error } = route.params;
+    const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
+    const [selectedImage, setSelectedImage] = useState(null);
+
 
     console.log("Datos del arreglo de proveedores: ", proveedores);
 
 
-    const obtenerFotoPerfil = (proveedor) => {
-      console.log(proveedor.fotoPerfil); // Verificar qué valor tiene proveedor.fotoPerfil
-      if (proveedor.fotoPerfil) {
-        return `${API_URL}${proveedor.fotoPerfil}`;
-      }
-      return "https://via.placeholder.com/100";
+    const handleImagePress = (imageUri) => {
+      setSelectedImage(imageUri);
+      setModalVisible(true);
+  };
+
+  
+    const handleCloseModal = () => {
+      setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
     };
+
+
+    const obtenerFotoPerfil = (proveedor) => {
+      return proveedor.fotoPerfil ? `${API_URL}${proveedor.fotoPerfil}` : "https://via.placeholder.com/100";
+  };
   
 
     return (
@@ -37,46 +47,56 @@ const ResultadosBusqueda = () => {
   
 
   
-         
-        {/* Mostrar mensaje de error si existe */}
-        {error ? (
-           <View style={styles.errorContainer}>
-           <Text style={styles.errorText}>{error}</Text>
-         </View>
-        ) : (
-          /* Lista de resultados */
-          proveedores.map((item, index) => (
-            <View key={index} style={styles.resultItem}>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: obtenerFotoPerfil(item),
-                }}
-              />
-              <View style={styles.resultDetails}>
-                <Text style={styles.name}>{item.nombre} {item.apellido}</Text>
-                <Text style={styles.category}>{item.nombreServicio || "Categoría no especificada"}</Text>
-                <View style={styles.rating}>
-                  {[...Array(5)].map((_, i) => (
-                    <Ionicons
-                      key={i}
-                      name="star"
-                      size={16}
-                      color={i < item.puntaje ? "black" : "#CCCCCC"}
-                    />
-                  ))}
-                </View>
-              </View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('PantallaPerfilDeOtro', { id: item.id })}
-                style={styles.arrowButton}
-              >
-                <Ionicons name="chevron-forward" size={20} color="#333" />
-              </TouchableOpacity>
+          {/* Mostrar mensaje de error si existe */}
+          {error ? (
+                    <View style={styles.errorContainer}>
+                        <Text style={styles.errorText}>{error}</Text>
+                    </View>
+                ) : (
+                    proveedores.map((item, index) => (
+                        <View key={index} style={styles.resultItem}>
+                            <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))} style={styles.image}>
+                                <Image
+                                    style={styles.image}
+                                    source={{ uri: obtenerFotoPerfil(item) }}
+                                />
+                            </TouchableOpacity>
+                            <View style={styles.resultDetails}>
+                                <Text style={styles.name}>{item.nombre} {item.apellido}</Text>
+                                <Text style={styles.category}>{item.nombreServicio || "Categoría no especificada"}</Text>
+                                <View style={styles.rating}>
+                                    {[...Array(5)].map((_, i) => (
+                                        <Ionicons
+                                            key={i}
+                                            name="star"
+                                            size={16}
+                                            color={i < item.puntaje ? "black" : "#CCCCCC"}
+                                        />
+                                    ))}
+                                </View>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('PantallaPerfilDeOtro', { id: item.id })}
+                                style={styles.arrowButton}
+                            >
+                                <Ionicons name="chevron-forward" size={20} color="#333" />
+                            </TouchableOpacity>
+                        </View>
+                    ))
+                )}
             </View>
-          ))
-        )}
-      </View>
+
+
+       {/* Modal para la imagen ampliada */}
+       <Modal visible={modalVisible} animationType="fade" transparent>
+                <TouchableWithoutFeedback onPress={handleCloseModal}>
+                    <View style={styles.modalContainer}>
+                        {selectedImage && (
+                            <Image source={{ uri: selectedImage }} style={styles.imagenModal} />
+                        )}
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
 
         {/* Barra de navegación inferior */}
         <View style={styles.barraNavegacion}>
@@ -184,6 +204,18 @@ const styles = StyleSheet.create({
     color: '#A94442',
     fontSize: 14,
     textAlign: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  imagenModal: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    resizeMode: 'cover',
   },
 });
 
